@@ -1,0 +1,150 @@
+{
+  "name": "oscd-academy",
+  "version": "0.0.1",
+  "description": "Omicron Academy distribution - To support IEC 61850 training.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OMICRONEnergyOSS/oscd-academy.git"
+  },
+  "keywords": [
+    "scl",
+    "xml",
+    "iec",
+    "61850",
+    "iec61850",
+    "scd",
+    "omicronenergy"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/OMICRONEnergyOSS/oscd-academy/issues"
+  },
+  "homepage": "https://OMICRONEnergyOSS.github.io/oscd-academy/index.html",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "format": "eslint . --fix",
+    "bundle": "rimraf bundle && rollup -c rollup.config.js",
+    "deploy": "npm run bundle && gh-pages -d bundle",
+    "start": "wds --node-resolve",
+    "start:bundle": "concurrently -k -r \"npm run bundle -- --watch\" \"sleep 10 && wds --watch --root-dir ./bundle\"",
+    "electron:pack": "rimraf dist && electron-builder build  --win --linux --x64 --dir",
+    "electron:build": "rimraf dist && electron-builder build  --win --linux --x64",
+    "electron": "electron ."
+  },
+  "build": {
+    "productName": "OmicronEnergy OpenSCD",
+    "appId": "com.omicronenergy.openscd-ce",
+    "artifactName": "${name}_${os}_${arch}_${version}.${ext}",
+    "extends": "electron-builder.cjs",
+    "linux": {
+      "icon": "build/icons/linux/icon.png",
+      "target": [
+        "AppImage",
+        "deb",
+        "rpm"
+      ],
+      "category": "Omicron Energy"
+    },
+    "win": {
+      "icon": "build/icons/win/icon.ico",
+      "target": [
+        "nsis",
+        "portable",
+        "msi"
+      ],
+      "executableName": "OpenSCD-ce-alpha",
+      "fileAssociations": [
+        {
+          "ext": "scd"
+        },
+        {
+          "ext": "ssd"
+        },
+        {
+          "ext": "cid"
+        },
+        {
+          "ext": "icd"
+        },
+        {
+          "ext": "iid"
+        }
+      ],
+      "signAndEditExecutable": true
+    },
+    "msi": {
+      "createDesktopShortcut": "always",
+      "createStartMenuShortcut": true,
+      "menuCategory": "Omicron Energy",
+      "oneClick": false,
+      "perMachine": true
+    },
+    "nsis": {
+      "artifactName": "${name}_${os}_${arch}_${version}_nsis.${ext}",
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "license": "LICENCE.md",
+      "oneClick": false,
+      "perMachine": true,
+      "selectPerMachineByDefault": true,
+      "menuCategory": "Omicron Energy"
+    }
+  },
+  "dependencies": {
+    "@omicronenergy/oscd-background-editv1": "^0.0.6",
+    "@omicronenergy/oscd-background-wizard-events": "^0.0.1",
+    "@omicronenergy/oscd-menu-commons": "file:../oscd-menu-commons",
+    "@omicronenergy/oscd-menu-open": "^0.0.6",
+    "@omicronenergy/oscd-menu-save": "^0.0.2",
+    "@omicronenergy/oscd-shell": "file:../oscd-shell",
+    "@open-wc/scoped-elements": "^3.0.6",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.3",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@custom-elements-manifest/analyzer": "^0.10.5",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.33.0",
+    "@open-wc/eslint-config": "^13.0.0",
+    "@open-wc/testing": "4.0.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@types/mocha": "^10.0.10",
+    "@typescript-eslint/eslint-plugin": "^8.40.0",
+    "@typescript-eslint/parser": "^8.40.0",
+    "@web/dev-server": "^0.4.6",
+    "@web/rollup-plugin-html": "^2.3.0",
+    "@web/rollup-plugin-import-meta-assets": "^2.3.0",
+    "@web/test-runner": "0.20.2",
+    "@web/test-runner-commands": "^0.9.0",
+    "@web/test-runner-playwright": "^0.11.1",
+    "babel-plugin-template-html-minifier": "^4.1.0",
+    "concurrently": "^9.2.0",
+    "electron": "^37.3.1",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9.33.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-html": "^8.1.3",
+    "eslint-plugin-lit": "^2.1.1",
+    "eslint-plugin-lit-a11y": "^5.1.1",
+    "eslint-plugin-no-only-tests": "^3.3.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "eslint-plugin-wc": "^3.0.1",
+    "gh-pages": "^6.3.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "rollup": "^4.47.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "rollup-plugin-workbox": "^8.1.2",
+    "typescript": "^5.9.2"
+  }
+}
