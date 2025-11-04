@@ -44,6 +44,15 @@ export const plugins = {
       requireDoc: true,
       src: "https://danyill.github.io/oscd-rename-ieds/oscd-rename-ieds.js",
     },
+    {
+      name: "Virtual Template IED",
+      translations: {
+        de: "Virtual Template IED",
+      },
+      icon: "edit",
+      requireDoc: true,
+      src: "https://openenergytools.github.io/virtual-template-ied/virtual-template-ied.js",
+    },
     // Needs to be forked and published
     // https://github.com/danyill/oscd-remove-ieds
     // {
@@ -69,13 +78,14 @@ export const plugins = {
     //   requireDoc: true,
     //   src: "??",
     // },
-    {
-      name: "Plugin Store (Beta)",
-      translations: { de: "Plugin Store (Beta)" },
-      requireDoc: false,
-      icon: "shopping_bag",
-      src: "https://sprinteins.github.io/oscd-plugin-store/index.js",
-    },
+    // The plugin store could work if we added a background plugin to catch the plugin-store events and use them to manipulate the oscd-shell plugins.
+    // {
+    //   name: "Plugin Store (Beta)",
+    //   translations: { de: "Plugin Store (Beta)" },
+    //   requireDoc: false,
+    //   icon: "shopping_bag",
+    //   src: "https://sprinteins.github.io/oscd-plugin-store/index.js",
+    // },
     // Doesn't exist as a plugin
     // {
     //   name: "Pro Mode",
@@ -84,6 +94,20 @@ export const plugins = {
     //   requireDoc: true,
     //   src: "??",
     // },
+    {
+      name: "Undo",
+      translations: { de: "Undo" },
+      icon: "undo",
+      requireDoc: true,
+      tagName: "oscd-menu-undo",
+    },
+    {
+      name: "Redo",
+      translations: { de: "Redo" },
+      icon: "redo",
+      requireDoc: true,
+      tagName: "oscd-menu-redo",
+    },
   ],
   editor: [
     {
@@ -132,7 +156,7 @@ export const plugins = {
       src: "https://omicronenergyoss.github.io/oscd-editor-template/oscd-editor-template.js",
     },
     {
-      name: "Bay Template Editor??",
+      name: "Bay Template Editor",
       translations: {
         de: "Bay Template Editor",
       },
@@ -140,15 +164,7 @@ export const plugins = {
       requireDoc: true,
       src: "https://openenergytools.github.io/scl-bay-template/scl-bay-template.js",
     },
-    {
-      name: "Virtual Template IED",
-      translations: {
-        de: "Virtual Template IED",
-      },
-      icon: "edit",
-      requireDoc: true,
-      src: "https://openenergytools.github.io/virtual-template-ied/virtual-template-ied.js",
-    },
+
     {
       name: "Communication",
       translations: {
