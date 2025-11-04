@@ -35,7 +35,7 @@ export const plugins = {
       translations: { de: "Import IEDs" },
       requireDoc: true,
       icon: "snippet_folder",
-      src: "https://openscd.github.io/plugins/src/menu/ImportIEDs.js",
+      src: "https://openenergytools.github.io/scl-import-ied/scl-import-ied.js",
     },
     {
       name: "Rename IEDs",
