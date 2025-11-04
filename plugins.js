@@ -201,7 +201,7 @@ export const plugins = {
       translations: {
         de: "Publisher",
       },
-      src: "https://openscd.github.io/external-plugins/oscd-publisher/oscd-publisher.js",
+      src: "https://openenergytools.github.io/oscd-publisher/oscd-publisher.js",
       icon: "publish",
       requireDoc: true,
     },
