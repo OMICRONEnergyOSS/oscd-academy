@@ -1,0 +1,16 @@
+[submodule "plugins/scl-validating"]
+	path = plugins/scl-validating
+	url = https://github.com/openenergytools/scl-validating
+	branch = gh-pages
+[submodule "plugins/oscd-subscriber-later-binding"]
+	path = plugins/oscd-subscriber-later-binding
+	url = https://github.com/openenergytools/oscd-subscriber-later-binding
+	branch = gh-pages
+[submodule "plugins/oscd-publisher"]
+	path = plugins/oscd-publisher
+	url = https://github.com/openenergytools/oscd-publisher
+	branch = deploy
+[submodule "plugins/scl-import-ied"]
+	path = plugins/scl-import-ied
+	url = https://github.com/openenergytools/scl-import-ied
+	branch = gh-pages

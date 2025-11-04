@@ -28,14 +28,14 @@ export const plugins = {
       },
       icon: "rule_folder",
       requireDoc: true,
-      src: "https://openenergytools.github.io/scl-validating/scl-validating.js",
+      src: "plugins/scl-validating/scl-validating.js",
     },
     {
       name: "Import IEDs",
       translations: { de: "Import IEDs" },
       requireDoc: true,
       icon: "snippet_folder",
-      src: "https://openenergytools.github.io/scl-import-ied/scl-import-ied.js",
+      src: "plugins/scl-import-ied/scl-import-ied.js",
     },
     {
       name: "Rename IEDs",
@@ -201,7 +201,7 @@ export const plugins = {
       translations: {
         de: "Publisher",
       },
-      src: "https://openenergytools.github.io/oscd-publisher/oscd-publisher.js",
+      src: "plugins/oscd-publisher/oscd-publisher.js",
       icon: "publish",
       requireDoc: true,
     },
@@ -248,7 +248,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "https://openscd.github.io/external-plugins/oscd-subscriber-later-binding/oscd-subscriber-later-binding.js",
+      src: "plugins/oscd-subscriber-later-binding/oscd-subscriber-later-binding.js",
     },
     {
       name: "Communication Mapping",

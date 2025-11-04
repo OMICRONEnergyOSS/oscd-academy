@@ -23,6 +23,7 @@
   "main": "main.js",
   "type": "module",
   "scripts": {
+    "preinstall": "git submodule update --init --recursive --remote",
     "lint": "eslint .",
     "format": "eslint . --fix",
     "bundle": "rimraf bundle && rollup -c rollup.config.js",
