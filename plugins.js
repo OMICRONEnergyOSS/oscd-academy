@@ -269,11 +269,11 @@ export const plugins = {
       requireDoc: true,
       tagName: "oscd-background-editv1",
     },
-    // {
-    //   name: "Wizard Events Listener",
-    //   icon: "none",
-    //   requireDoc: true,
-    //   tagName: "oscd-background-wizard-events",
-    // },
+    {
+      name: "Wizard Events Listener",
+      icon: "none",
+      requireDoc: true,
+      tagName: "oscd-background-wizard-events",
+    },
   ],
 };
