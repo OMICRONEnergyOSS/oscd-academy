@@ -4,25 +4,14 @@ import { plugins } from "./plugins.js";
 
 import OscdMenuOpen from "@omicronenergy/oscd-menu-open";
 import OscdMenuSave from "@omicronenergy/oscd-menu-save";
-import OscdMenuNew from "@omicronenergy/oscd-menu-commons/oscd-menu-new.js";
+import {
+  OscdMenuNew,
+  OscdMenuUndo,
+  OscdMenuRedo,
+} from "@omicronenergy/oscd-menu-commons";
 
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
 import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
-
-const oscdShell = document.querySelector("oscd-shell");
-const registry = oscdShell.registry;
-registry.define("oscd-menu-open", OscdMenuOpen);
-registry.define("oscd-menu-save", OscdMenuSave);
-registry.define("oscd-menu-new", OscdMenuNew);
-registry.define("oscd-background-editv1", OscdBackgroundEditV1);
-registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
-
-oscdShell.plugins = plugins;
-
-const params = new URL(document.location).searchParams;
-for (const [name, value] of params) {
-  oscdShell.setAttribute(name, value);
-}
 
 const _customElementsDefine = window.customElements.define;
 window.customElements.define = (name, cl, conf) => {
@@ -34,6 +23,23 @@ window.customElements.define = (name, cl, conf) => {
     }
   }
 };
+
+const oscdShell = document.querySelector("oscd-shell");
+const registry = oscdShell.registry;
+registry.define("oscd-menu-open", OscdMenuOpen);
+registry.define("oscd-menu-save", OscdMenuSave);
+registry.define("oscd-menu-new", OscdMenuNew);
+registry.define("oscd-menu-undo", OscdMenuUndo);
+registry.define("oscd-menu-redo", OscdMenuRedo);
+registry.define("oscd-background-editv1", OscdBackgroundEditV1);
+registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
+
+oscdShell.plugins = plugins;
+
+const params = new URL(document.location).searchParams;
+for (const [name, value] of params) {
+  oscdShell.setAttribute(name, value);
+}
 
 const isElectron = !!window?.electronAPI;
 
