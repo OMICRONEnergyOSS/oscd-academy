@@ -106,6 +106,8 @@
 
   --mdc-typography-font-family: var(--oscd-text-font);
   --mdc-icon-font: var(--oscd-icon-font);
+
+  --mdc-dialog-max-height: 90vh;
 }
 
 abbr {
