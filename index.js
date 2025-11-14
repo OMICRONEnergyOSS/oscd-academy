@@ -12,6 +12,11 @@ import {
 
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
 import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
+import {
+  registerTranslateConfig,
+  use,
+} from "./plugins/sprinteins_open-scd/_snowpack/pkg/lit-translate.js";
+import { loader as sprinteinsTranslationLoader } from "./plugins/sprinteins_open-scd/openscd/dist/translations/loader.js";
 
 const _customElementsDefine = window.customElements.define;
 window.customElements.define = (name, cl, conf) => {
@@ -35,6 +40,16 @@ registry.define("oscd-background-editv1", OscdBackgroundEditV1);
 registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
 
 oscdShell.plugins = plugins;
+
+/*
+ * The plugins currently located in the SprintEins monorepo are using the lit-translate library.
+ * This requires us to register their loader with their copy of the lit-translate, so that translations work properly.
+ */
+registerTranslateConfig({
+  loader: sprinteinsTranslationLoader,
+  empty: (key) => key,
+});
+use("en");
 
 const params = new URL(document.location).searchParams;
 for (const [name, value] of params) {
