@@ -135,7 +135,7 @@ export const plugins = {
       },
       icon: "copy_all",
       requireDoc: true,
-      src: "https://omicronenergyoss.github.io/oscd-editor-template-generator/oscd-editor-template-generator.js",
+      src: "./plugins/oscd-template-generator/oscd-template-generator.js",
     },
     {
       name: "Template Update",
@@ -144,7 +144,7 @@ export const plugins = {
       },
       icon: "copy_all",
       requireDoc: true,
-      src: "https://omicronenergyoss.github.io/oscd-editor-template-update/oscd-editor-template-update.js",
+      src: "./plugins/scl-template-update/scl-template-update.js",
     },
     {
       name: "Template Editor",

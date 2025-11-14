@@ -3,6 +3,7 @@
   --slate-100: #dce0e5;
   --slate-35: #4f5a69;
   --french-blue-15: #0b335b;
+  --french-blue-55: #2485e5;
 
   --Omicron-yellow: #f5e214;
   --error: #dc322f;
@@ -13,7 +14,7 @@
   --oscd-theme-text-font: "Roboto";
   --oscd-theme-icon-font: "Material Symbols Outlined";
   --oscd-theme-primary: var(--french-blue-15);
-  --oscd-theme-secondary: var(--french-blue-15);
+  --oscd-theme-secondary: var(--french-blue-55);
   --primary: var(--oscd-theme-primary);
   --secondary: var(--oscd-theme-secondary);
   --oscd-secondary: var(--oscd-theme-secondary);

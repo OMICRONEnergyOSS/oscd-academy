@@ -27,6 +27,10 @@ export default [
             src: ["favicon.ico", "fonts", "background.svg", "*.css"],
             dest: `${outputDir}/assets`,
           },
+          {
+            src: ["plugins"],
+            dest: `${outputDir}`,
+          },
           // Add more patterns if you have more assets
         ],
         verbose: true,
@@ -47,6 +51,8 @@ export default [
         ],
         skipWaiting: true,
         clientsClaim: true,
+        // Check for updates every time the page loads
+        cleanupOutdatedCaches: true,
         runtimeCaching: [
           { urlPattern: "polyfills/*.js", handler: "CacheFirst" },
         ],
@@ -59,10 +65,6 @@ export default [
             url: "assets/fonts/material-symbols-outlined.woff2",
             revision: null,
           },
-          {
-            url: "index.js",
-            revision: null,
-          },
         ],
       }),
     ],
@@ -70,6 +72,8 @@ export default [
       dir: outputDir,
       format: "es",
       sourcemap: false,
+      entryFileNames: "[name]-[hash].js",
+      chunkFileNames: "[name]-[hash].js",
     },
   },
 ];

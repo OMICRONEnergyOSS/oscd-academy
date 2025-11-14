@@ -14,3 +14,15 @@
 	path = plugins/scl-import-ied
 	url = https://github.com/openenergytools/scl-import-ied
 	branch = gh-pages
+[submodule "plugins/oscd-template-generator"]
+	path = plugins/oscd-template-generator
+	url = https://github.com/com-pas/oscd-template-generator.git
+	branch = deploy
+[submodule "plugins/scl-template-update"]
+	path = plugins/scl-template-update
+	url = https://github.com/com-pas/scl-template-update.git
+	branch = deploy
+[submodule "plugins/sprinteins_open-scd"]
+	path = plugins/sprinteins_open-scd
+	url = https://github.com/sprinteins/open-scd.git
+	branch = gh-pages
