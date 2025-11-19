@@ -22,11 +22,10 @@
 	path = plugins/scl-template-update
 	url = https://github.com/com-pas/scl-template-update.git
 	branch = deploy
-[submodule "plugins/sprinteins_open-scd"]
-	path = plugins/sprinteins_open-scd
-	url = https://github.com/sprinteins/open-scd.git
-	branch = gh-pages
 [submodule "plugins/process-icd-creator"]
 	path = plugins/process-icd-creator
 	url = https://github.com/JakobVogelsang/process-icd-creator.git
 	branch = gh-pages
+[submodule "plugins/openscd.github.io"]
+	path = plugins/openscd.github.io
+	url = https://github.com/openscd/openscd.github.io.git

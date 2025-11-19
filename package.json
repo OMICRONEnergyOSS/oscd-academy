@@ -35,8 +35,8 @@
     "electron": "electron ."
   },
   "build": {
-    "productName": "OmicronEnergy OpenSCD",
-    "appId": "com.omicronenergy.openscd-ce",
+    "productName": "Academy OpenSCD",
+    "appId": "openscd-academy",
     "artifactName": "${name}_${os}_${arch}_${version}.${ext}",
     "extends": "electron-builder.cjs",
     "linux": {
@@ -78,7 +78,7 @@
     "msi": {
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "menuCategory": "Omicron Energy",
+      "menuCategory": "OpenSCD Academy",
       "oneClick": false,
       "perMachine": true
     },
@@ -91,7 +91,7 @@
       "oneClick": false,
       "perMachine": true,
       "selectPerMachineByDefault": true,
-      "menuCategory": "Omicron Energy"
+      "menuCategory": "OpenSCD Academy"
     }
   },
   "dependencies": {

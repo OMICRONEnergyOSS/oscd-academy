@@ -176,13 +176,23 @@ export const plugins = {
     },
 
     {
-      name: "Edit IED",
+      name: "Edit IED (Tree)",
       translations: {
         de: "Edit IED",
       },
       icon: "developer_board",
       requireDoc: true,
       src: "https://meinberg-sync.github.io/mbg-ied-editor/mbg-ied-editor.js",
+    },
+
+    {
+      name: "Edit IED (Grid)",
+      translations: {
+        de: "Edit IED",
+      },
+      icon: "developer_board",
+      requireDoc: true,
+      src: "./plugins/stee-re/openscd/plugins/src/editors/IED.js",
     },
 
     {
@@ -200,7 +210,7 @@ export const plugins = {
       translations: {
         de: "Publisher",
       },
-      src: "plugins/oscd-publisher/oscd-publisher.js",
+      src: "./plugins/oscd-publisher/oscd-publisher.js",
       icon: "publish",
       requireDoc: true,
     },
@@ -220,7 +230,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "https://openscd.github.io/plugins/src/editors/GooseSubscriberMessageBinding.js",
+      src: "./plugins/openscd.github.io/plugins/src/editors/GooseSubscriberMessageBinding.js",
     },
     {
       name: "Subscriber Data Binding (GOOSE)",
@@ -229,7 +239,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "https://openscd.github.io/plugins/src/editors/GooseSubscriberDataBinding.js",
+      src: "./plugins/stee-re/openscd/plugins/src/editors/GooseSubscriberDataBinding.js",
     },
     {
       name: "Subscriber Message Binding (SMV)",
@@ -238,7 +248,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "https://openscd.github.io/plugins/src/editors/SMVSubscriberMessageBinding.js",
+      src: "./plugins/openscd.github.io/plugins/src/editors/SMVSubscriberMessageBinding.js",
     },
     {
       name: "Subscriber Later Binding (SMV/GOOSE)",
