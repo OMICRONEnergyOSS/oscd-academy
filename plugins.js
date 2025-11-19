@@ -185,16 +185,15 @@ export const plugins = {
       src: "https://meinberg-sync.github.io/mbg-ied-editor/mbg-ied-editor.js",
     },
 
-    //I cannot find this plugin :-()
-    // {
-    //   name: "LNode Mapping",
-    //   translations: {
-    //     de: "LNOde Mapping",
-    //   },
-    //   icon: "",
-    //   requireDoc: true,
-    //   src: "",
-    // },
+    {
+      name: "LNode Mapping",
+      translations: {
+        de: "LNode Mapping",
+      },
+      icon: "copy_all",
+      requireDoc: true,
+      src: "./plugins/process-icd-creator/process-icd-creator.js",
+    },
 
     {
       name: "Publisher",

@@ -26,3 +26,7 @@
 	path = plugins/sprinteins_open-scd
 	url = https://github.com/sprinteins/open-scd.git
 	branch = gh-pages
+[submodule "plugins/process-icd-creator"]
+	path = plugins/process-icd-creator
+	url = https://github.com/JakobVogelsang/process-icd-creator.git
+	branch = gh-pages
