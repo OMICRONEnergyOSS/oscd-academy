@@ -13,8 +13,8 @@ import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-ev
 import {
   registerTranslateConfig,
   use,
-} from "./plugins/stee-re/open-scd/build/_snowpack/pkg/lit-translate.js";
-import { loader as sprinteinsTranslationLoader } from "./plugins/stee-re/open-scd/build/openscd/dist/translations/loader.js";
+} from "./plugins/openscd.github.io/_snowpack/pkg/lit-translate.js";
+import { loader as openscdTranslationLoader } from "./plugins/openscd.github.io/openscd/dist/translations/loader.js";
 
 const _customElementsDefine = window.customElements.define;
 window.customElements.define = (name, cl, conf) => {
@@ -44,7 +44,7 @@ oscdShell.plugins = plugins;
  * This requires us to register their loader with their copy of the lit-translate, so that translations work properly.
  */
 registerTranslateConfig({
-  loader: sprinteinsTranslationLoader,
+  loader: openscdTranslationLoader,
   empty: (key) => key,
 });
 use("en");
