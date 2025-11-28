@@ -4,11 +4,9 @@ import { plugins } from "./plugins.js";
 
 import OscdMenuOpen from "@omicronenergy/oscd-menu-open";
 import OscdMenuSave from "@omicronenergy/oscd-menu-save";
-import {
-  OscdMenuNew,
-  OscdMenuUndo,
-  OscdMenuRedo,
-} from "@omicronenergy/oscd-menu-commons";
+import OscdMenuNew from "@omicronenergy/oscd-menu-commons/oscd-menu-new.js";
+import OscdMenuUndo from "@omicronenergy/oscd-menu-commons/oscd-menu-undo.js";
+import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
 
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
 import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
