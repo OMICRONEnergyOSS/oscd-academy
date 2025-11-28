@@ -13,8 +13,8 @@ export default [
     plugins: [
       html({
         minify: true,
-        injectServiceWorker: true,
-        serviceWorkerPath: "bundle/sw.js",
+        // injectServiceWorker: true,
+        // serviceWorkerPath: "bundle/sw.js",
       }),
       /** Resolve bare module imports */
       nodeResolve(),
@@ -37,36 +37,36 @@ export default [
         flatten: false,
       }),
       /** Create and inject a service worker */
-      generateSW({
-        globIgnores: ["polyfills/*.js", "nomodule-*.js"],
-        navigateFallback: "/index.html",
-        // where to output the generated sw
-        swDest: path.join(outputDir, "sw.js"),
-        // directory to match patterns against to be precached
-        globDirectory: path.join(outputDir),
-        // cache any html js and css by default
-        globPatterns: [
-          "*.{html,js,css}",
-          "**/*.{html,js,css,webmanifest,ttf,ico,woff,woff2,svg,json}",
-        ],
-        skipWaiting: true,
-        clientsClaim: true,
-        // Check for updates every time the page loads
-        cleanupOutdatedCaches: true,
-        runtimeCaching: [
-          { urlPattern: "polyfills/*.js", handler: "CacheFirst" },
-        ],
+      // generateSW({
+      //   globIgnores: ["polyfills/*.js", "nomodule-*.js"],
+      //   navigateFallback: "/index.html",
+      //   // where to output the generated sw
+      //   swDest: path.join(outputDir, "sw.js"),
+      //   // directory to match patterns against to be precached
+      //   globDirectory: path.join(outputDir),
+      //   // cache any html js and css by default
+      //   globPatterns: [
+      //     "*.{html,js,css}",
+      //     "**/*.{html,js,css,webmanifest,ttf,ico,woff,woff2,svg,json}",
+      //   ],
+      //   skipWaiting: true,
+      //   clientsClaim: true,
+      //   // Check for updates every time the page loads
+      //   cleanupOutdatedCaches: true,
+      //   runtimeCaching: [
+      //     { urlPattern: "polyfills/*.js", handler: "CacheFirst" },
+      //   ],
 
-        // For reasons, which remain unexplained, the workbox plugin does not
-        // automatically include the material symbols font, so we add it manually
-        // to the precache manifest.
-        additionalManifestEntries: [
-          {
-            url: "assets/fonts/material-symbols-outlined.woff2",
-            revision: null,
-          },
-        ],
-      }),
+      //   // For reasons, which remain unexplained, the workbox plugin does not
+      //   // automatically include the material symbols font, so we add it manually
+      //   // to the precache manifest.
+      //   additionalManifestEntries: [
+      //     {
+      //       url: "assets/fonts/material-symbols-outlined.woff2",
+      //       revision: null,
+      //     },
+      //   ],
+      // }),
     ],
     output: {
       dir: outputDir,
