@@ -1,11 +1,17 @@
 * {
   /* color variables names taken from Omicron Pallet (for reference) */
-  --slate-100: #dce0e5;
-  --slate-35: #4f5a69;
   --french-blue-15: #0b335b;
   --french-blue-55: #2485e5;
 
-  --Omicron-yellow: #f5e214;
+  --omicron-yellow: #f5e214;
+
+  --slate-0: #121417; /* L* ≈ 7% */
+  --slate-5: #1a1e23; /* L* ≈ 10% */
+  --slate-25: #3d4651; /* L* ≈ 26% */
+  --slate-30: #46505d; /* L* ≈ 30% */
+  --slate-65: #8b97a7; /* L* ≈ 58% */
+  --slate-70: #96a1b0; /* L* ≈ 62% */
+  --slate-110: #f3f5f6; /* L* ≈ 94% */
   --error: #dc322f;
 }
 
@@ -15,21 +21,25 @@
   --oscd-theme-icon-font: "Material Symbols Outlined";
   --oscd-theme-primary: var(--french-blue-15);
   --oscd-theme-secondary: var(--french-blue-55);
+  --oscd-theme-error: var(--oscd-theme-error, #dc322f);
+  --oscd-theme-base03: var(--slate-0);
+  --oscd-theme-base02: var(--slate-5);
+  --oscd-theme-base01: var(--slate-25);
+  --oscd-theme-base00: var(--slate-30);
+  --oscd-theme-base0: var(--slate-65);
+  --oscd-theme-base1: var(--slate-70);
+  --oscd-theme-base2: var(--slate-110);
+  --oscd-theme-base3: white;
+
   --primary: var(--oscd-theme-primary);
   --secondary: var(--oscd-theme-secondary);
+
+  --oscd-primary: var(--oscd-theme-primary);
   --oscd-secondary: var(--oscd-theme-secondary);
-  --oscd-theme-error: var(--error);
-  --oscd-theme-base03: var(var(--slate-35));
-  --oscd-theme-base02: var(#073642);
-  --oscd-theme-base01: var(#586e75);
-  --oscd-theme-base00: var(var(--slate-35));
-  --oscd-theme-base0: var(#839496);
-  --oscd-theme-base1: var(#93a1a1);
-  --oscd-theme-base2: var(--oscd-base2);
-  --oscd-theme-base3: var(white);
+
   --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
 
-  --md-list-item-activated-background: #f5e214;
+  /* --md-list-item-activated-background: #f5e214; */
 
   margin: 0px;
   padding: 0px;
