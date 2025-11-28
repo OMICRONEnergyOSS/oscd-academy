@@ -13,8 +13,8 @@ import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-ev
 import {
   registerTranslateConfig,
   use,
-} from "./plugins/stee-re/openscd/_snowpack/pkg/lit-translate.js";
-import { loader as sprinteinsTranslationLoader } from "./plugins/stee-re/openscd/openscd/dist/translations/loader.js";
+} from "./plugins/stee-re/open-scd/build/_snowpack/pkg/lit-translate.js";
+import { loader as sprinteinsTranslationLoader } from "./plugins/stee-re/open-scd/build/openscd/dist/translations/loader.js";
 
 const _customElementsDefine = window.customElements.define;
 window.customElements.define = (name, cl, conf) => {

@@ -185,15 +185,15 @@ export const plugins = {
       src: "https://meinberg-sync.github.io/mbg-ied-editor/mbg-ied-editor.js",
     },
 
-    {
-      name: "Edit IED (Grid)",
-      translations: {
-        de: "Edit IED",
-      },
-      icon: "developer_board",
-      requireDoc: true,
-      src: "./plugins/stee-re/openscd/plugins/src/editors/IED.js",
-    },
+    // {
+    //   name: "Edit IED (Grid)",
+    //   translations: {
+    //     de: "Edit IED",
+    //   },
+    //   icon: "developer_board",
+    //   requireDoc: true,
+    //   src: "./plugins/stee-re/openscd/plugins/src/editors/IED.js",
+    // },
 
     {
       name: "LNode Mapping",
@@ -239,7 +239,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "./plugins/stee-re/openscd/plugins/src/editors/GooseSubscriberDataBinding.js",
+      src: "./plugins/openscd.github.io/plugins/src/editors/GooseSubscriberDataBinding.js",
     },
     {
       name: "Subscriber Message Binding (SMV)",
