@@ -27,7 +27,7 @@
     "lint": "eslint .",
     "format": "eslint . --fix",
     "bundle": "rimraf bundle && rollup -c rollup.config.js",
-    "deploy": "npm run bundle && gh-pages -d bundle",
+    "deploy": "npm run bundle && gh-pages -d bundle --nojekyll",
     "start": "wds --node-resolve",
     "start:bundle": "concurrently -k -r \"npm run bundle -- --watch\" \"sleep 10 && wds --watch --root-dir ./bundle\"",
     "electron:pack": "rimraf dist && electron-builder build  --win --linux --x64 --dir",
