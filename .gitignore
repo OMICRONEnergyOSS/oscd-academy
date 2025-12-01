@@ -1,8 +1,4 @@
 node_modules
-dist
-bundle
-
-node_modules
 *.tsbuildinfo
 
 ## editors
@@ -10,7 +6,8 @@ node_modules
 /.vscode
 
 ## build artifacts
-dist
+/dist
+/bundle
 coverage
 doc
 screenshots/*/failed/

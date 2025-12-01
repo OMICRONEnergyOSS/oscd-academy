@@ -10,6 +10,9 @@ import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
 
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
 import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
+
+import OscdEditorDiff from "@omicronenergy/oscd-editor-diff";
+
 import {
   registerTranslateConfig,
   use,
@@ -36,6 +39,7 @@ registry.define("oscd-menu-undo", OscdMenuUndo);
 registry.define("oscd-menu-redo", OscdMenuRedo);
 registry.define("oscd-background-editv1", OscdBackgroundEditV1);
 registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
+registry.define("oscd-editor-diff", OscdEditorDiff);
 
 oscdShell.plugins = plugins;
 

@@ -286,6 +286,13 @@ export const plugins = {
       icon: "settings_ethernet",
       requireDoc: true,
     },
+    {
+      name: "Compare",
+      translations: { de: "Vergleichen" },
+      icon: "difference",
+      requireDoc: true,
+      tagName: "oscd-editor-diff",
+    },
   ],
   background: [
     {

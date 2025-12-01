@@ -97,6 +97,7 @@
   "dependencies": {
     "@omicronenergy/oscd-background-editv1": "^0.0.6",
     "@omicronenergy/oscd-background-wizard-events": "^0.0.1",
+    "@omicronenergy/oscd-editor-diff": "^0.0.2",
     "@omicronenergy/oscd-menu-commons": "^0.0.1",
     "@omicronenergy/oscd-menu-open": "^0.0.6",
     "@omicronenergy/oscd-menu-save": "^0.0.2",
