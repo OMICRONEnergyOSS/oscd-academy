@@ -25,6 +25,17 @@ export default [
 
       /** Bundle assets references via import.meta.url */
       importMetaAssets({ warnOnError: true }),
+
+      copy({
+        targets: [
+          {
+            src: "node_modules/ace-builds/src-noconflict/*.js",
+            dest: `${outputDir}/ace`,
+          },
+        ],
+        verbose: true,
+        flatten: true,
+      }),
       copy({
         targets: [
           {
@@ -40,6 +51,7 @@ export default [
         verbose: true,
         flatten: false,
       }),
+
       /** Create and inject a service worker */
       // generateSW({
       //   globIgnores: ["polyfills/*.js", "nomodule-*.js"],

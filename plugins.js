@@ -117,8 +117,17 @@ export const plugins = {
       },
       icon: "add_box",
       requireDoc: true,
-      src: "https://omicronenergyoss.github.io/oscd-editor-sld/oscd-editor-sld.js",
+      src: "https://stee-re.github.io/oscd-editor-sld/oscd-editor-sld.js",
     },
+    // {
+    //   name: "SLD Designer (new)",
+    //   translations: {
+    //     de: "SLD Designer(new)",
+    //   },
+    //   icon: "add_box",
+    //   requireDoc: true,
+    //   tagName: "oscd-editor-sld",
+    // },
     {
       name: "Substation",
       translations: {
@@ -164,6 +173,14 @@ export const plugins = {
       requireDoc: true,
       src: "https://openenergytools.github.io/scl-bay-template/scl-bay-template.js",
     },
+    {
+      name: "Cleanup",
+      src: "./plugins/openscd.github.io/plugins/dist/editors/Cleanup.js",
+      icon: "cleaning_services",
+      activeByDefault: false,
+      kind: "editor",
+      requireDoc: true,
+    },
 
     {
       name: "Communication",
@@ -185,15 +202,15 @@ export const plugins = {
       src: "https://meinberg-sync.github.io/mbg-ied-editor/mbg-ied-editor.js",
     },
 
-    // {
-    //   name: "Edit IED (Grid)",
-    //   translations: {
-    //     de: "Edit IED",
-    //   },
-    //   icon: "developer_board",
-    //   requireDoc: true,
-    //   src: "./plugins/stee-re/openscd/plugins/src/editors/IED.js",
-    // },
+    {
+      name: "Edit IED (Grid)",
+      translations: {
+        de: "Edit IED",
+      },
+      icon: "developer_board",
+      requireDoc: true,
+      tagName: "oscd-editor-ied",
+    },
 
     {
       name: "LNode Mapping",
@@ -230,7 +247,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "./plugins/openscd.github.io/plugins/src/editors/GooseSubscriberMessageBinding.js",
+      src: "./plugins/openscd.github.io/plugins/dist/editors/GooseSubscriberMessageBinding.js",
     },
     {
       name: "Subscriber Data Binding (GOOSE)",
@@ -239,7 +256,7 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "./plugins/openscd.github.io/plugins/src/editors/GooseSubscriberDataBinding.js",
+      src: "./plugins/openscd.github.io/plugins/dist/editors/GooseSubscriberDataBinding.js",
     },
     {
       name: "Subscriber Message Binding (SMV)",
@@ -248,7 +265,16 @@ export const plugins = {
       },
       icon: "link",
       requireDoc: true,
-      src: "./plugins/openscd.github.io/plugins/src/editors/SMVSubscriberMessageBinding.js",
+      src: "./plugins/openscd.github.io/plugins/dist/editors/SMVSubscriberMessageBinding.js",
+    },
+    {
+      name: "Subscriber Data Binding (SMV)",
+      translations: {
+        de: "Subscriber Data Binding (SMV)",
+      },
+      icon: "link",
+      requireDoc: true,
+      src: "./plugins/openscd.github.io/plugins/dist/editors/SMVSubscriberDataBinding.js",
     },
     {
       name: "Subscriber Later Binding (SMV/GOOSE)",
@@ -292,6 +318,13 @@ export const plugins = {
       icon: "difference",
       requireDoc: true,
       tagName: "oscd-editor-diff",
+    },
+    {
+      name: "Source Editor",
+      translations: { de: "Source Editor" },
+      icon: "code",
+      requireDoc: true,
+      tagName: "oscd-editor-source",
     },
   ],
   background: [

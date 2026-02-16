@@ -98,12 +98,16 @@
     "@omicronenergy/oscd-background-editv1": "^0.0.6",
     "@omicronenergy/oscd-background-wizard-events": "^0.0.1",
     "@omicronenergy/oscd-editor-diff": "^0.0.2",
+    "@omicronenergy/oscd-editor-ied": "^0.0.1",
+    "@omicronenergy/oscd-editor-sld": "file:../../stee-re/oscd-editor-sld",
+    "@omicronenergy/oscd-editor-source": "^0.0.3",
     "@omicronenergy/oscd-menu-commons": "^0.0.1",
     "@omicronenergy/oscd-menu-open": "^0.0.6",
     "@omicronenergy/oscd-menu-save": "^0.0.2",
-    "@omicronenergy/oscd-shell": "^0.0.10",
+    "@omicronenergy/oscd-shell": "file:../../stee-re/oscd-shell",
     "@open-wc/scoped-elements": "^3.0.6",
-    "@webcomponents/scoped-custom-element-registry": "^0.0.10"
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
+    "ace-builds": "^1.43.6"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.3",
