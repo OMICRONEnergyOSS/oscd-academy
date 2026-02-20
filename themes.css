@@ -1,10 +1,34 @@
 * {
   /* color variables names taken from Omicron Pallet (for reference) */
-  --slate-100: #dce0e5;
-  --slate-35: #4f5a69;
+  --slate-0: #121417; /* L* ≈ 7% */
+  --slate-5: #1a1e23; /* L* ≈ 10% */
+  --slate-10: #23282f; /* L* ≈ 14% */
+  --slate-15: #2c323a; /* L* ≈ 18% base03 */
+  --slate-20: #363d47; /* L* ≈ 22% base02 */
+  --slate-25: #3d4651; /* L* ≈ 26% */
+  --slate-30: #46505d; /* L* ≈ 30% */
+  --slate-35: #4f5a69; /* L* ≈ 34% */
+  --slate-40: #586474; /* L* ≈ 38% */
+  --slate-45: #606e80; /* L* ≈ 42% */
+  --slate-50: #69788c; /* L* ≈ 46% base01*/
+  --slate-55: #738296; /* L* ≈ 50% base00*/
+  --slate-60: #7f8c9f; /* L* ≈ 54% */
+  --slate-65: #8b97a7; /* L* ≈ 58% */
+  --slate-70: #96a1b0; /* L* ≈ 62% base0*/
+  --slate-75: #a2abb9; /* L* ≈ 66% base1*/
+  --slate-80: #aeb6c2; /* L* ≈ 70% */
+  --slate-85: #b9c0ca; /* L* ≈ 74% */
+  --slate-90: #c5cbd3; /* L* ≈ 78% */
+  --slate-95: #d0d5dc; /* L* ≈ 82% */
+  --slate-100: #dce0e5; /* L* ≈ 86% */
+  --slate-105: #e8eaed; /* L* ≈ 90% */
+  --slate-110: #f3f5f6; /* L* ≈ 94% base2 */
+  /* --slate-white: '#FFF'; L* ≈ 100% base3 */
   --french-blue-15: #0b335b;
+  --french-blue-55: #2485e5;
+  --french-blue-100: #c8e0f9;
 
-  --Omicron-yellow: #f5e214;
+  --omicron-yellow: #f5e214;
   --error: #dc322f;
 }
 
@@ -13,28 +37,40 @@
   --oscd-theme-text-font: "Roboto";
   --oscd-theme-icon-font: "Material Symbols Outlined";
   --oscd-theme-primary: var(--french-blue-15);
-  --oscd-theme-secondary: var(--french-blue-15);
+  --oscd-theme-secondary: var(--french-blue-55);
+
+  --oscd-theme-base03: var(--slate-15);
+  --oscd-theme-base02: var(--slate-20);
+  --oscd-theme-base01: var(--slate-50);
+  --oscd-theme-base00: var(--slate-55);
+  --oscd-theme-base0: var(--slate-70);
+  --oscd-theme-base1: var(--slate-75);
+  --oscd-theme-base2: var(--slate-100);
+  --oscd-theme-base3: white;
+
   --primary: var(--oscd-theme-primary);
   --secondary: var(--oscd-theme-secondary);
   --oscd-secondary: var(--oscd-theme-secondary);
   --oscd-theme-error: var(--error);
-  --oscd-theme-base03: var(var(--slate-35));
-  --oscd-theme-base02: var(#073642);
-  --oscd-theme-base01: var(#586e75);
-  --oscd-theme-base00: var(var(--slate-35));
-  --oscd-theme-base0: var(#839496);
-  --oscd-theme-base1: var(#93a1a1);
-  --oscd-theme-base2: var(--oscd-base2);
-  --oscd-theme-base3: var(white);
+
+  --oscd-base03: var(--oscd-theme-base03, var(--slate-15));
+  --oscd-base02: var(--oscd-theme-base02, var(--slate-20));
+  --oscd-base01: var(--oscd-theme-base01, var(--slate-50));
+  --oscd-base00: var(--oscd-theme-base00, var(--slate-55));
+  --oscd-base0: var(--oscd-theme-base0, var(--slate-70));
+  --oscd-base1: var(--oscd-theme-base1, var(--slate-75));
+  --oscd-base2: var(--oscd-theme-base2, var(--slate-100));
+  --oscd-base3: var(--oscd-theme-base3, white);
+
   --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
 
-  --md-list-item-activated-background: #f5e214;
+  /* --md-list-item-activated-background: #f5e214; */
 
   margin: 0px;
   padding: 0px;
 }
 
-:root {
+* {
   /* SHOULD have been built with Figma plugin as per guidance for Material Web Components */
   /* see https://github.com/material-components/material-web/blob/main/docs/theming/color.md */
 
@@ -45,6 +81,8 @@
   --oscd-text-font-mono: var(--oscd-theme-text-font-mono, "Roboto Mono");
 
   --oscd-warning: var(--oscd-theme-warning, #b58900);
+
+  --oscd-action-pane-theme-on-primary: var(--oscd-theme-base02);
   --md-sys-color-primary: var(--oscd-primary);
   --md-sys-color-on-primary: var(--oscd-theme-base3);
 
