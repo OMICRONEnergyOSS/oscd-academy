@@ -10,6 +10,10 @@ html {
   width: 100%;
 }
 
+oscd-shell * img[alt="logo"] {
+  height: 28px;
+}
+
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined";
   font-weight: normal;

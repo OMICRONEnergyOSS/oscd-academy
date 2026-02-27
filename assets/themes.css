@@ -28,13 +28,7 @@
   --oscd-theme-base2: var(--slate-110);
   --oscd-theme-base3: white;
 
-  --primary: var(--oscd-theme-primary);
-  --secondary: var(--oscd-theme-secondary);
-
-  --oscd-primary: var(--oscd-theme-primary);
-  --oscd-secondary: var(--oscd-theme-secondary);
-
-  --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
+  --oscd-shell-app-bar-icon-height: 24px;
 }
 
 * {
@@ -69,9 +63,9 @@
   --md-sys-color-surface-container-high: var(--oscd-theme-base3);
   --md-sys-color-surface-container-highest: var(--oscd-theme-base3);
 
-  --md-sys-color-outline-variant: var(--oscd-primary);
+  --md-sys-color-outline-variant: var(--oscd-theme-primary);
   --md-sys-color-scrim: #000000;
-  --md-sys-color-error: var(--oscd-error);
+  --md-sys-color-error: var(--oscd-theme-error);
   --md-sys-color-on-error: var(--oscd-theme-base3);
 
   /* --md-menu-item-selected-label-text-color: var(--oscd-theme-base01); */
@@ -80,42 +74,37 @@
   /* MDC Theme Colors 
        * Needed for supporting any pluggins still using the depricated MWC Components
        */
-  --mdc-theme-primary: var(--oscd-primary);
-  --mdc-theme-secondary: var(--oscd-secondary);
+  --mdc-theme-primary: var(--oscd-theme-primary);
+  --mdc-theme-secondary: var(--oscd-theme-secondary);
   --mdc-theme-background: var(--oscd-theme-base3);
   --mdc-theme-surface: var(--oscd-theme-base3);
   --mdc-theme-on-primary: var(--oscd-theme-base2);
-  --mdc-theme-on-secondary: var(--oscd-theme-base02);
+  --mdc-theme-on-secondary: var(--oscd-theme-base2);
   --mdc-theme-on-background: var(--oscd-theme-base00);
   --mdc-theme-on-surface: var(--oscd-theme-base00);
   --mdc-theme-text-primary-on-background: var(--oscd-theme-base01);
   --mdc-theme-text-secondary-on-background: var(--oscd-theme-base00);
   --mdc-theme-text-icon-on-background: var(--oscd-theme-base00);
-  --mdc-theme-error: var(--oscd-error);
-
+  --mdc-theme-error: var(--oscd-theme-error);
   --mdc-button-disabled-ink-color: var(--oscd-theme-base1);
-
   --mdc-drawer-heading-ink-color: var(--oscd-theme-base00);
-
   --mdc-dialog-heading-ink-color: var(--oscd-theme-base00);
-
   --mdc-text-field-fill-color: var(--oscd-theme-base2);
-  --mdc-text-field-ink-color: var(--oscd-theme-base02);
-  --mdc-text-field-label-ink-color: var(--oscd-theme-base01);
+  --mdc-text-field-disabled-fill-color: var(--oscd-theme-base3);
+  --mdc-text-field-ink-color: var(--oscd-theme-base00);
+  --mdc-text-field-label-ink-color: var(--oscd-theme-base00);
   --mdc-text-field-idle-line-color: var(--oscd-theme-base00);
   --mdc-text-field-hover-line-color: var(--oscd-theme-base02);
-
   --mdc-select-fill-color: var(--oscd-theme-base2);
-  --mdc-select-ink-color: var(--oscd-theme-base02);
-  --mdc-select-label-ink-color: var(--oscd-theme-base01);
+  --mdc-select-disabled-fill-color: var(--oscd-theme-base3);
+  --mdc-select-ink-color: var(--oscd-theme-base00);
+  --mdc-select-label-ink-color: var(--oscd-theme-base00);
   --mdc-select-idle-line-color: var(--oscd-theme-base00);
   --mdc-select-hover-line-color: var(--oscd-theme-base02);
   --mdc-select-dropdown-icon-color: var(--oscd-theme-base01);
-
   --mdc-typography-font-family: var(--oscd-text-font);
   --mdc-icon-font: var(--oscd-icon-font);
-
-  --mdc-dialog-max-height: 90vh;
+  --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
 }
 
 abbr {
