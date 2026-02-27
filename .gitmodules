@@ -29,3 +29,11 @@
 [submodule "plugins/openscd.github.io"]
 	path = plugins/openscd.github.io
 	url = https://github.com/openscd/openscd.github.io.git
+[submodule "plugins/scl-bay-template"]
+	path = plugins/scl-bay-template
+	url = https://github.com/com-pas/scl-bay-template.git
+	branch = deploy
+[submodule "plugins/oscd-remove-ieds"]
+	path = plugins/oscd-remove-ieds
+	url = https://github.com/danyill/oscd-remove-ieds.git
+	branch = gh-pages

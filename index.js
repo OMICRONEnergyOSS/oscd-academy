@@ -1,20 +1,6 @@
 import "@webcomponents/scoped-custom-element-registry";
 import "@omicronenergy/oscd-shell/oscd-shell.js";
-import { plugins } from "./plugins.js";
-
-import OscdMenuOpen from "@omicronenergy/oscd-menu-open";
-import OscdMenuSave from "@omicronenergy/oscd-menu-save";
-import OscdMenuNew from "@omicronenergy/oscd-menu-commons/oscd-menu-new.js";
-import OscdMenuUndo from "@omicronenergy/oscd-menu-commons/oscd-menu-undo.js";
-import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
-
-// import OscdEditorSld from "@omicronenergy/oscd-editor-sld";
-import OscdEditorDiff from "@omicronenergy/oscd-editor-diff";
-import OscdEditorSource from "@omicronenergy/oscd-editor-source";
-import { OscdEditorIED } from "@omicronenergy/oscd-editor-ied";
-
-import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
-import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
+import { loadPlugins } from "./plugins.js";
 
 import {
   registerTranslateConfig,
@@ -34,20 +20,11 @@ window.customElements.define = (name, cl, conf) => {
 };
 
 const oscdShell = document.querySelector("oscd-shell");
-const registry = oscdShell.registry;
-registry.define("oscd-menu-open", OscdMenuOpen);
-registry.define("oscd-menu-save", OscdMenuSave);
-registry.define("oscd-menu-new", OscdMenuNew);
-registry.define("oscd-menu-undo", OscdMenuUndo);
-registry.define("oscd-menu-redo", OscdMenuRedo);
-registry.define("oscd-background-editv1", OscdBackgroundEditV1);
-registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
-// registry.define("oscd-editor-sld", OscdEditorSld);
-registry.define("oscd-editor-diff", OscdEditorDiff);
-registry.define("oscd-editor-source", OscdEditorSource);
-registry.define("oscd-editor-ied", OscdEditorIED);
-
-oscdShell.plugins = plugins;
+try {
+  loadPlugins(oscdShell);
+} catch (err) {
+  console.error("Error loading plugins:", err);
+}
 
 /*
  * The plugins currently located in the SprintEins monorepo are using the lit-translate library.
