@@ -39,8 +39,12 @@ export default [
       copy({
         targets: [
           {
-            src: ["favicon.ico", "fonts", "background.svg", "*.css"],
+            src: ["fonts", "background.svg", "*.css"],
             dest: `${outputDir}/assets`,
+          },
+          {
+            src: ["openscd-logo.svg", "openscd-icon.svg"],
+            dest: `${outputDir}/`,
           },
           {
             src: ["plugins"],
