@@ -18,10 +18,6 @@
 	path = plugins/oscd-template-generator
 	url = https://github.com/com-pas/oscd-template-generator.git
 	branch = deploy
-[submodule "plugins/scl-template-update"]
-	path = plugins/scl-template-update
-	url = https://github.com/com-pas/scl-template-update.git
-	branch = deploy
 [submodule "plugins/process-icd-creator"]
 	path = plugins/process-icd-creator
 	url = https://github.com/JakobVogelsang/process-icd-creator.git
