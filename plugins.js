@@ -243,45 +243,46 @@ export const loadPlugins = async (oscdShell) => {
         src: "https://danyill.github.io/oscd-tp-multicast-naming/oscd-tp-multicast-naming.js",
       },
       {
-        name: "Subscriber Message Binding (GOOSE)",
+        //Low priority plugin
+        name: "Sub Message Binding (GOOSE)",
         translations: {
-          de: "Subscriber Message Binding (GOOSE)",
+          de: "Sub Message Binding (GOOSE)",
         },
         icon: "link",
         requireDoc: true,
         src: "./plugins/openscd.github.io/plugins/dist/editors/GooseSubscriberMessageBinding.js",
       },
       {
-        name: "Subscriber Data Binding (GOOSE)",
+        name: "Sub Data Binding (GOOSE)",
         translations: {
-          de: "Subscriber Data Binding (GOOSE)",
+          de: "Sub Data Binding (GOOSE)",
         },
         icon: "link",
         requireDoc: true,
         src: "./plugins/openscd.github.io/plugins/dist/editors/GooseSubscriberDataBinding.js",
       },
       {
-        name: "Subscriber Message Binding (SMV)",
+        name: "Sub Message Binding (SMV)",
         translations: {
-          de: "Subscriber Message Binding (SMV)",
+          de: "Sub Message Binding (SMV)",
         },
         icon: "link",
         requireDoc: true,
         src: "./plugins/openscd.github.io/plugins/dist/editors/SMVSubscriberMessageBinding.js",
       },
       {
-        name: "Subscriber Data Binding (SMV)",
+        name: "Sub Data Binding (SMV)",
         translations: {
-          de: "Subscriber Data Binding (SMV)",
+          de: "Sub Data Binding (SMV)",
         },
         icon: "link",
         requireDoc: true,
         src: "./plugins/openscd.github.io/plugins/dist/editors/SMVSubscriberDataBinding.js",
       },
       {
-        name: "Subscriber Later Binding (SMV/GOOSE)",
+        name: "Sub Later Binding (SMV/GOOSE)",
         translations: {
-          de: "Subscriber Later Binding (SMV/GOOSE)",
+          de: "Sub Later Binding (SMV/GOOSE)",
         },
         icon: "link",
         requireDoc: true,
