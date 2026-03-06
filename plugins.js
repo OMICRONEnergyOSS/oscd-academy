@@ -12,7 +12,7 @@ import { OscdEditorIED } from "@omicronenergy/oscd-editor-ied";
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
 import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
 
-export const loadPlugins = (oscdShell) => {
+export const loadPlugins = async (oscdShell) => {
   const registry = oscdShell.registry;
   registry.define("oscd-menu-open", OscdMenuOpen);
   registry.define("oscd-menu-save", OscdMenuSave);
@@ -51,7 +51,7 @@ export const loadPlugins = (oscdShell) => {
       },
       {
         name: "Validating",
-        translation: {
+        translations: {
           de: "Validieren",
         },
         icon: "rule_folder",
@@ -155,7 +155,9 @@ export const loadPlugins = (oscdShell) => {
         },
         icon: "copy_all",
         requireDoc: true,
-        src: "./plugins/scl-template-update/scl-template-update.js",
+        // src: "./plugins/scl-template-update/scl-template-update.js",
+        src: "https://openenergytools.github.io/scl-editor/plugins/template-update/scl-template-update.js",
+        // tagName: "scl-template-update",
       },
       {
         name: "Template Editor",
@@ -167,23 +169,23 @@ export const loadPlugins = (oscdShell) => {
         src: "https://omicronenergyoss.github.io/oscd-editor-template/oscd-editor-template.js",
       },
       {
-        name: "Bay Template Editor (OpenEnergyTools)",
+        name: "Bay Template Editor",
         translations: {
-          de: "Bay Template Editor (OpenEnergyTools)",
+          de: "Bay Template Editor",
         },
         icon: "edit",
         requireDoc: true,
         src: "https://openenergytools.github.io/scl-bay-template/scl-bay-template.js",
       },
-      {
-        name: "Bay Template Editor (ComPAS)",
-        translations: {
-          de: "Bay Template Editor (ComPAS)",
-        },
-        icon: "edit",
-        requireDoc: true,
-        src: "./plugins/scl-bay-template/scl-bay-template.js",
-      },
+      // {
+      //   name: "Bay Template Editor (ComPAS)",
+      //   translations: {
+      //     de: "Bay Template Editor (ComPAS)",
+      //   },
+      //   icon: "edit",
+      //   requireDoc: true,
+      //   src: "./plugins/scl-bay-template/scl-bay-template.js",
+      // },
       {
         name: "Cleanup",
         src: "./plugins/openscd.github.io/plugins/dist/editors/Cleanup.js",
