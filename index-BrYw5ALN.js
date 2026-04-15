@@ -159515,7 +159515,7 @@ const loadPlugins = async (oscdShell) => {
         },
         icon: "link",
         requireDoc: true,
-        tagName: "oscd-editor-subscriber-databinding",
+        tagName: "oscd-editor-subscriber-msgbinding",
       },
       {
         name: "Subscriber Data Binding",
