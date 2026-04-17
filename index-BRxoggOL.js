@@ -125003,6 +125003,12 @@ VirtualizedFilteredList$1.styles = i$7 `
       flex: 1 1 auto;
       min-height: 0;
     }
+
+    oscd-list-item.selected {
+      --md-sys-color-on-surface: var(--oscd-base3);
+      --md-sys-color-on-surface-variant: var(--oscd-base2);
+      background-color: var(--oscd-primary);
+    }
   `;
 __decorate$1([
     n$5({ attribute: false })
@@ -127781,9 +127787,13 @@ class ControlBlockList extends ScopedElementsMixin(i$4) {
         }
     }
     renderControl(control) {
+        const classes = {
+            selected: this.selectedControl === control,
+        };
         return b `<oscd-list-item
-      @click=${() => this.onSelect(control)}
       type="button"
+      class="${e$1(classes)}"
+      @click=${() => this.onSelect(control)}
       data-value="${identity$1(control)}"
     >
       <oscd-icon slot="start">${this.controlIcon}</oscd-icon>
@@ -127936,17 +127946,23 @@ __decorate$1([
     e$4('.control-block-menu')
 ], ControlBlockList.prototype, "controlBlockMenu", void 0);
 
-let selectedIed;
 class IedList extends ScopedElementsMixin(i$4) {
     constructor() {
         super(...arguments);
         this.onOpenDocReset = () => {
-            selectedIed = undefined;
+            this.selectedIed = undefined;
         };
         this.renderIedItem = (item) => {
             const ied = item;
+            const classes = {
+                selected: this.selectedIed === ied,
+            };
             return b `
-      <oscd-list-item @click=${() => this.onIedSelect(ied)} type="button">
+      <oscd-list-item
+        type="button"
+        class="${e$1(classes)}"
+        @click=${() => this.onIedSelect(ied)}
+      >
         <span>${getNameAttribute$1(ied)}</span>
         <oscd-icon slot="start">developer_board</oscd-icon>
       </oscd-list-item>
@@ -127970,14 +127986,14 @@ class IedList extends ScopedElementsMixin(i$4) {
         super.disconnectedCallback();
     }
     onIedSelect(element) {
-        selectedIed = element;
-        this.dispatchEvent(newIEDSelectEvent(selectedIed));
+        this.selectedIed = element;
+        this.dispatchEvent(newIEDSelectEvent(this.selectedIed));
     }
     updated() {
-        this.dispatchEvent(newIEDSelectEvent(selectedIed));
+        this.dispatchEvent(newIEDSelectEvent(this.selectedIed));
     }
     firstUpdated() {
-        selectedIed = undefined;
+        this.selectedIed = undefined;
     }
     render() {
         return b ` <section tabindex="0">
@@ -128019,6 +128035,9 @@ __decorate$1([
 __decorate$1([
     n$5({ type: String })
 ], IedList.prototype, "serviceType", void 0);
+__decorate$1([
+    r$4()
+], IedList.prototype, "selectedIed", void 0);
 
 const serviceTypeStorageKey = 'oscd-editor-subscriber-msgbinding$serviceType';
 const viewStorageKey$1 = 'oscd-editor-subscriber-msgbinding$view';
@@ -136949,7 +136968,6 @@ VirtualizedFilteredList.styles = i$7 `
       --md-sys-color-on-surface: var(--oscd-base3);
       --md-sys-color-on-surface-variant: var(--oscd-base2);
       background-color: var(--oscd-primary);
-      transition: background-color 200ms linear;
     }
 
     oscd-list-item.control > div[slot='headline'] {
