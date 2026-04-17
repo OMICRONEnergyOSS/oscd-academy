@@ -125043,7 +125043,7 @@ function newControlSubscriptionEvent(element, subscribeStatus) {
 }
 
 /** Defining view outside the class, which makes it persistent. */
-let view$1 = View$1.PUBLISHER;
+let view = View$1.PUBLISHER;
 /** An element for subscribing and unsubscribing IEDs to GOOSE/SMV messages. */
 class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
     constructor() {
@@ -125131,7 +125131,7 @@ class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
         };
         this.onControlSubscriptionEvent = (event) => {
             let iedToSubscribe = event.detail.element;
-            if (view$1 == View$1.SUBSCRIBER) {
+            if (view == View$1.SUBSCRIBER) {
                 const dataSetName = event.detail.element.getAttribute('datSet');
                 this.currentUsedDataset =
                     event.detail.element.parentElement?.querySelector(`DataSet[name="${dataSetName}"]`);
@@ -125157,7 +125157,7 @@ class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
             }
         };
         this.onViewChange = (event) => {
-            view$1 = event.detail.view;
+            view = event.detail.view;
             this.currentSelectedIed = undefined;
             this.currentSelectedControl = undefined;
             this.resetElements();
@@ -125260,7 +125260,7 @@ class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
         let firstSubscribedExtRef = null;
         let supervisionNode = null;
         if (status !== SubscribeStatus$1.None) {
-            if (view$1 === View$1.PUBLISHER) {
+            if (view === View$1.PUBLISHER) {
                 firstSubscribedExtRef = getFirstSubscribedExtRef(this.currentSelectedControl, element);
                 supervisionNode = getExistingSupervision$1(firstSubscribedExtRef);
             }
@@ -125276,7 +125276,7 @@ class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
       type="button"
     >
       <span
-        >${view$1 == View$1.PUBLISHER
+        >${view == View$1.PUBLISHER
             ? element.getAttribute('name')
             : element.getAttribute('name') +
                 ` (${element.closest('IED')?.getAttribute('name')})`}</span
@@ -125329,7 +125329,7 @@ class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
     }
     renderTitle() {
         const controlName = this.currentSelectedControl?.getAttribute('name') ?? undefined;
-        return view$1 == View$1.PUBLISHER
+        return view == View$1.PUBLISHER
             ? b `<h2>
           ${controlName
                 ? msg(`IEDs subscribed to ${this.currentControlIedName} > ${controlName}`)
@@ -125359,7 +125359,7 @@ class SubscriberList extends ScopedElementsMixin(SubscriberListContainer$1) {
             : b `<div class="empty-state">
               <oscd-icon class="empty-state__icon">list_alt_check</oscd-icon>
               <h3 class="empty-state__title">
-                ${view$1 == View$1.PUBLISHER
+                ${view == View$1.PUBLISHER
                 ? msg('No control block selected')
                 : msg('No IED selected')}
               </h3>
@@ -128022,24 +128022,24 @@ __decorate$1([
 
 const serviceTypeStorageKey = 'oscd-editor-subscriber-msgbinding$serviceType';
 const viewStorageKey$1 = 'oscd-editor-subscriber-msgbinding$view';
-/** Defining view outside the class, which makes it persistent. */
-let view = localStorage.getItem(viewStorageKey$1) === 'subscriber'
-    ? View$1.SUBSCRIBER
-    : View$1.PUBLISHER;
 /** An editor plugin for subscribing IEDs to GOOSE and SMV messages. */
 class OscdEditorSubscriberMsgBinding extends ScopedElementsMixin(i$4) {
     constructor() {
         super();
         this.serviceType = localStorage.getItem(serviceTypeStorageKey) ??
             'goose';
-        this.handleEditDialogEvent = (event) => {
+        this.view = localStorage.getItem(viewStorageKey$1) === 'subscriber'
+            ? View$1.SUBSCRIBER
+            : View$1.PUBLISHER;
+        this.handleEditDialogEvent = async (event) => {
             event.stopPropagation();
             const detail = event.detail;
-            this.sclDialogs.edit(detail);
+            const edits = await this.sclDialogs.edit(detail);
+            this.dispatchEvent(newEditEventV2(edits));
         };
         this.addEventListener('view', ((evt) => {
-            view = evt.detail.view;
-            localStorage.setItem(viewStorageKey$1, view === View$1.PUBLISHER ? 'publisher' : 'subscriber');
+            this.view = evt.detail.view;
+            localStorage.setItem(viewStorageKey$1, this.view === View$1.PUBLISHER ? 'publisher' : 'subscriber');
             this.requestUpdate();
         }));
     }
@@ -128064,19 +128064,19 @@ class OscdEditorSubscriberMsgBinding extends ScopedElementsMixin(i$4) {
         <oscd-outlined-segmented-button
           label="${msg('Publishers')}"
           no-checkmark
-          ?selected=${view === View$1.PUBLISHER}
+          ?selected=${this.view === View$1.PUBLISHER}
           @click=${() => this.setView(View$1.PUBLISHER)}
         >
         </oscd-outlined-segmented-button>
         <oscd-outlined-segmented-button
           label="${msg('Subscribers')}"
           no-checkmark
-          ?selected=${view === View$1.SUBSCRIBER}
+          ?selected=${this.view === View$1.SUBSCRIBER}
           @click=${() => this.setView(View$1.SUBSCRIBER)}
         >
         </oscd-outlined-segmented-button>
       </oscd-outlined-segmented-button-set>
-      ${view === View$1.PUBLISHER
+      ${this.view === View$1.PUBLISHER
             ? b `<control-block-list
             .docVersion=${this.docVersion}
             .doc=${this.doc}
@@ -128085,7 +128085,7 @@ class OscdEditorSubscriberMsgBinding extends ScopedElementsMixin(i$4) {
             : b `<ied-list
             .docVersion=${this.docVersion}
             .doc=${this.doc}
-            serviceType=${this.serviceType}
+            .serviceType=${this.serviceType}
           ></ied-list>`}
     </div>`;
     }
@@ -128262,6 +128262,9 @@ __decorate$1([
 __decorate$1([
     n$5({ type: String })
 ], OscdEditorSubscriberMsgBinding.prototype, "serviceType", void 0);
+__decorate$1([
+    r$4()
+], OscdEditorSubscriberMsgBinding.prototype, "view", void 0);
 __decorate$1([
     e$4('div[class="container"]')
 ], OscdEditorSubscriberMsgBinding.prototype, "listDiv", void 0);
@@ -136815,13 +136818,6 @@ const sharedStyles = i$7 `
     opacity: 1;
   }
 
-  section:focus {
-    box-shadow:
-      0 8px 10px 1px rgba(0, 0, 0, 0.14),
-      0 3px 14px 2px rgba(0, 0, 0, 0.12),
-      0 5px 5px -3px rgba(0, 0, 0, 0.2);
-  }
-
   h2 {
     color: var(--md-sys-color-on-surface);
     font-family: 'Roboto', sans-serif;
@@ -136833,11 +136829,6 @@ const sharedStyles = i$7 `
     line-height: 48px;
     padding-left: 0.3em;
     transition: background-color 150ms linear;
-  }
-
-  h1 > nav,
-  h1 > abbr > oscd-icon-button {
-    float: right;
   }
 
   abbr[title] {
@@ -137025,7 +137016,7 @@ function getAssociatedDataSet(control) {
 }
 /**
  * Returns the communication element associated with a control block.
- * The element is located in Communication > SubNetwork > ConnectedAP and matched
+ * The element is located in Communication \> SubNetwork \> ConnectedAP and matched
  * by iedName, apName, ldInst, and cbName.
  */
 function getAssociatedCommunication(control) {
@@ -137102,17 +137093,17 @@ const removeActionTitle = {
  */
 class FcdaBindingList extends ScopedElementsMixin(i$4) {
     get hideSubscribed() {
-        return (localStorage.getItem(`fcda-binding-list-${this.includeLaterBinding ? 'later-binding' : 'data-binding'}-${this.controlTag}$hideSubscribed`) === 'true');
+        return (localStorage.getItem(`fcda-binding-list-data-binding-${this.controlTag}$hideSubscribed`) === 'true');
     }
     set hideSubscribed(value) {
-        localStorage.setItem(`fcda-binding-list-${this.includeLaterBinding ? 'later-binding' : 'data-binding'}-${this.controlTag}$hideSubscribed`, `${value}`);
+        localStorage.setItem(`fcda-binding-list-data-binding-${this.controlTag}$hideSubscribed`, `${value}`);
         this.requestUpdate();
     }
     get hideNotSubscribed() {
-        return (localStorage.getItem(`fcda-binding-list-${this.includeLaterBinding ? 'later-binding' : 'data-binding'}-${this.controlTag}$hideNotSubscribed`) === 'true');
+        return (localStorage.getItem(`fcda-binding-list-data-binding-${this.controlTag}$hideNotSubscribed`) === 'true');
     }
     set hideNotSubscribed(value) {
-        localStorage.setItem(`fcda-binding-list-${this.includeLaterBinding ? 'later-binding' : 'data-binding'}-${this.controlTag}$hideNotSubscribed`, `${value}`);
+        localStorage.setItem(`fcda-binding-list-data-binding-${this.controlTag}$hideNotSubscribed`, `${value}`);
         this.requestUpdate();
     }
     get filterItems() {
@@ -137129,7 +137120,6 @@ class FcdaBindingList extends ScopedElementsMixin(i$4) {
     }
     constructor() {
         super();
-        this.includeLaterBinding = false;
         this.extRefCounters = new Map();
         this.subscriptionCountIndex = new Map();
         this.resetSelection = this.resetSelection.bind(this);
@@ -137200,8 +137190,7 @@ class FcdaBindingList extends ScopedElementsMixin(i$4) {
             return;
         }
         const isEdition2003 = getSclSchemaVersion(this.doc) === '2003';
-        const extRefElements = Array.from(this.doc.querySelectorAll('ExtRef')).filter(element => ((this.includeLaterBinding && element.hasAttribute('intAddr')) ||
-            (!this.includeLaterBinding && !element.hasAttribute('intAddr'))) &&
+        const extRefElements = Array.from(this.doc.querySelectorAll('ExtRef')).filter(element => !element.hasAttribute('intAddr') &&
             (isEdition2003 ||
                 element.getAttribute('serviceType') ===
                     serviceTypes[this.controlTag]));
@@ -137534,9 +137523,6 @@ __decorate$1([
     n$5()
 ], FcdaBindingList.prototype, "controlTag", void 0);
 __decorate$1([
-    n$5()
-], FcdaBindingList.prototype, "includeLaterBinding", void 0);
-__decorate$1([
     r$4()
 ], FcdaBindingList.prototype, "selectedControlElement", void 0);
 __decorate$1([
@@ -137640,12 +137626,12 @@ function isSubscribedTo(controlTag, controlElement, fcdaElement, extRefElement) 
         sameAttributeValue(fcdaElement, extRefElement, 'daName') &&
         checkEditionSpecificRequirements(controlTag, controlElement, extRefElement));
 }
-function getExtRefElements(rootElement, fcdaElement, includeLaterBinding) {
+function getExtRefElements(rootElement, fcdaElement) {
     return Array.from(rootElement.querySelectorAll('ExtRef'))
-        .filter(element => (!element.hasAttribute('intAddr')))
+        .filter(element => !element.hasAttribute('intAddr'))
         .filter(element => element.closest('IED') !== fcdaElement?.closest('IED'));
 }
-function getSubscribedExtRefElements(rootElement, controlTag, fcdaElement, controlElement, includeLaterBinding) {
+function getSubscribedExtRefElements(rootElement, controlTag, fcdaElement, controlElement) {
     return getExtRefElements(rootElement, fcdaElement).filter(extRefElement => isSubscribedTo(controlTag, controlElement, fcdaElement, extRefElement));
 }
 
@@ -137783,6 +137769,7 @@ class ExtRefLnBindingList extends ScopedElementsMixin(i$4) {
         const supervisionNode = getExistingSupervision(extRefs[0]);
         return b `<oscd-list-item
       type="button"
+      style="inline-size: 100%;"
       ?disabled=${this.bindingNotSupported(lnElement)}
       data-value="${identity$1(lnElement)}"
       @click=${() => {
@@ -138010,10 +137997,11 @@ class OscdEditorSubscriberDatabinding extends ScopedElementsMixin(i$4) {
         this.nsdoc = initializeNsdoc$1();
         this.controlTag = localStorage.getItem(viewStorageKey) ??
             'SampledValueControl';
-        this.handleEditDialogEvent = (event) => {
+        this.handleEditDialogEvent = async (event) => {
             event.stopPropagation();
             const detail = event.detail;
-            this.sclDialogs.edit(detail);
+            const edits = await this.sclDialogs.edit(detail);
+            this.dispatchEvent(newEditEventV2(edits));
         };
     }
     connectedCallback() {
@@ -138054,7 +138042,6 @@ class OscdEditorSubscriberDatabinding extends ScopedElementsMixin(i$4) {
         <fcda-binding-list
           class="column"
           controlTag=${this.controlTag}
-          .includeLaterBinding="${false}"
           .docVersion=${this.docVersion}
           .doc="${this.doc}"
         >
