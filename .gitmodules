@@ -1,7 +1,3 @@
-[submodule "plugins/scl-validating"]
-	path = plugins/scl-validating
-	url = https://github.com/openenergytools/scl-validating
-	branch = gh-pages
 [submodule "plugins/oscd-publisher"]
 	path = plugins/oscd-publisher
 	url = https://github.com/openenergytools/oscd-publisher

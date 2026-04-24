@@ -3,10 +3,14 @@ import OscdMenuSave from "@omicronenergy/oscd-menu-save";
 import OscdMenuNew from "@omicronenergy/oscd-menu-commons/oscd-menu-new.js";
 import OscdMenuUndo from "@omicronenergy/oscd-menu-commons/oscd-menu-undo.js";
 import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
+import OscdMenuValidate from "@omicronenergy/oscd-menu-validate";
 
 // import OscdEditorSld from "@omicronenergy/oscd-editor-sld";
 import OscdEditorDiff from "@omicronenergy/oscd-editor-diff";
 import OscdEditorSource from "@omicronenergy/oscd-editor-source";
+import OscdEditorCommunication from "@omicronenergy/oscd-editor-communication/oscd-editor-communication.js";
+import OscdEditorSubscriberMsgBinding from "@omicronenergy/oscd-editor-subscriber-msgbinding";
+import OscdEditorSubscriberDataBinding from "@omicronenergy/oscd-editor-subscriber-databinding";
 import { OscdEditorIED } from "@omicronenergy/oscd-editor-ied";
 
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
@@ -19,12 +23,22 @@ export const loadPlugins = async (oscdShell) => {
   registry.define("oscd-menu-new", OscdMenuNew);
   registry.define("oscd-menu-undo", OscdMenuUndo);
   registry.define("oscd-menu-redo", OscdMenuRedo);
+  registry.define("oscd-menu-validate", OscdMenuValidate);
   registry.define("oscd-background-editv1", OscdBackgroundEditV1);
   registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
   // registry.define("oscd-editor-sld", OscdEditorSld);
   registry.define("oscd-editor-diff", OscdEditorDiff);
   registry.define("oscd-editor-source", OscdEditorSource);
   registry.define("oscd-editor-ied", OscdEditorIED);
+  registry.define("oscd-editor-communication", OscdEditorCommunication);
+  registry.define(
+    "oscd-editor-subscriber-msgbinding",
+    OscdEditorSubscriberMsgBinding,
+  );
+  registry.define(
+    "oscd-editor-subscriber-databinding",
+    OscdEditorSubscriberDataBinding,
+  );
 
   oscdShell.plugins = {
     menu: [
@@ -56,7 +70,8 @@ export const loadPlugins = async (oscdShell) => {
         },
         icon: "rule_folder",
         requireDoc: true,
-        src: "plugins/scl-validating/scl-validating.js",
+        tagName: "oscd-menu-validate",
+        // src: "https://omicronenergyoss.github.io/oscd-menu-validate/oscd-menu-validate.js",
       },
       {
         name: "Import IEDs",
@@ -202,7 +217,8 @@ export const loadPlugins = async (oscdShell) => {
         },
         icon: "settings_ethernet",
         requireDoc: true,
-        src: "https://omicronenergyoss.github.io/oscd-editor-communication/oscd-editor-communication.js",
+        // src: "https://omicronenergyoss.github.io/oscd-editor-communication/oscd-editor-communication.js",
+        tagName: "oscd-editor-communication",
       },
       {
         name: "IED Editor",
@@ -244,45 +260,27 @@ export const loadPlugins = async (oscdShell) => {
       },
       {
         //Low priority plugin
-        name: "Sub Message Binding (GOOSE)",
+        name: "Subscriber Message Binding",
         translations: {
-          de: "Sub Message Binding (GOOSE)",
+          de: "Subscriber Message Binding",
         },
         icon: "link",
         requireDoc: true,
-        src: "./plugins/openscd.github.io/plugins/dist/editors/GooseSubscriberMessageBinding.js",
+        tagName: "oscd-editor-subscriber-msgbinding",
       },
       {
-        name: "Sub Data Binding (GOOSE)",
+        name: "Subscriber Data Binding",
         translations: {
-          de: "Sub Data Binding (GOOSE)",
+          de: "Subscriber Data Binding",
         },
         icon: "link",
         requireDoc: true,
-        src: "./plugins/openscd.github.io/plugins/dist/editors/GooseSubscriberDataBinding.js",
+        tagName: "oscd-editor-subscriber-databinding",
       },
       {
-        name: "Sub Message Binding (SMV)",
+        name: "Subscriber Later Binding",
         translations: {
-          de: "Sub Message Binding (SMV)",
-        },
-        icon: "link",
-        requireDoc: true,
-        src: "./plugins/openscd.github.io/plugins/dist/editors/SMVSubscriberMessageBinding.js",
-      },
-      {
-        name: "Sub Data Binding (SMV)",
-        translations: {
-          de: "Sub Data Binding (SMV)",
-        },
-        icon: "link",
-        requireDoc: true,
-        src: "./plugins/openscd.github.io/plugins/dist/editors/SMVSubscriberDataBinding.js",
-      },
-      {
-        name: "Sub Later Binding (SMV/GOOSE)",
-        translations: {
-          de: "Sub Later Binding (SMV/GOOSE)",
+          de: "Subscriber Later Binding",
         },
         icon: "link",
         requireDoc: true,
