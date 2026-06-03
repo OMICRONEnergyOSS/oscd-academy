@@ -203377,7 +203377,7 @@ const loadPlugins = async (oscdShell) => {
         translations: {
           de: "Publisher",
         },
-        src: "./plugins/oscd-publisher/oscd-publisher.js",
+        src: "https://omicronenergyoss.github.io/oscd-editor-publisher/oscd-editor-publisher.js",
         icon: "publish",
         requireDoc: true,
       },
