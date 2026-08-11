@@ -7757,12 +7757,6 @@ function childState(node) {
     }
     return node.children.length > 0 ? 'branch' : 'leaf';
 }
-function nextIndex(current, max) {
-    if (max < 0) {
-        return -1;
-    }
-    return Math.min(max, Math.max(0, current));
-}
 /**
  * Internal base class for `oscd-tree`.
  */
@@ -7820,20 +7814,74 @@ class Tree extends ScopedElementsMixin$2(i$X) {
          * expansion (`ArrowRight`/`ArrowLeft`) is unaffected by this option.
          */
         this.togglePosition = 'leading';
-    }
-    willUpdate(changedProperties) {
-        if (changedProperties.has('data') ||
-            changedProperties.has('expandedIds') ||
-            changedProperties.has('selectedIds')) {
-            const rows = this.visibleRows();
-            if (!rows.length) {
-                this.activeId = undefined;
+        /** Currently active keyboard row. Controlled by the caller when needed. */
+        this.activeId = null;
+        /**
+         * Whether focusing the active row should scroll it into the nearest
+         * scrollable ancestor when it is outside the visible area.
+         */
+        this.scrollActiveIntoView = true;
+        this.handleTreeKeyDown = (event) => {
+            if (event.target !== this) {
                 return;
             }
-            if (!this.activeId || !rows.some(row => row.id === this.activeId)) {
-                this.activeId = rows[0].id;
+            const rows = this.navigableRows();
+            const rowIndex = rows.findIndex(row => row.id === this.activeId);
+            switch (event.key) {
+                case 'ArrowDown':
+                    event.preventDefault();
+                    this.navigateNext(rows, rowIndex);
+                    break;
+                case 'ArrowUp':
+                    event.preventDefault();
+                    this.navigatePrevious(rows, rowIndex);
+                    break;
+                case 'Home':
+                    event.preventDefault();
+                    this.activeId = this.getFirstNodeId();
+                    break;
+                case 'End':
+                    event.preventDefault();
+                    this.activeId = this.getLastNodeId();
+                    break;
+                case 'Enter': {
+                    const activeRow = rows[rowIndex];
+                    if (activeRow) {
+                        event.preventDefault();
+                        this.toggleSelection(activeRow);
+                    }
+                    break;
+                }
             }
+        };
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this.tabIndex = 0;
+        this.addEventListener('keydown', this.handleTreeKeyDown);
+    }
+    disconnectedCallback() {
+        this.removeEventListener('keydown', this.handleTreeKeyDown);
+        super.disconnectedCallback();
+    }
+    willUpdate(changedProperties) {
+        if (!changedProperties.has('activeId') || this.activeId === null) {
+            return;
         }
+        const isNavigable = this.navigableRows().some(row => row.id === this.activeId);
+        if (!isNavigable) {
+            console.warn(`Ignoring invalid oscd-tree activeId: ${this.activeId}`);
+            this.activeId = changedProperties.get('activeId') ?? null;
+        }
+    }
+    /** Returns the first visible, enabled row ID, or null when none exists. */
+    getFirstNodeId() {
+        return this.navigableRows()[0]?.id ?? null;
+    }
+    /** Returns the last visible, enabled row ID, or null when none exists. */
+    getLastNodeId() {
+        const rows = this.navigableRows();
+        return rows[rows.length - 1]?.id ?? null;
     }
     /**
      * Expands a node by ID.
@@ -7893,6 +7941,9 @@ class Tree extends ScopedElementsMixin$2(i$X) {
         };
         walk(this.data, 1, [], []);
         return rows;
+    }
+    navigableRows() {
+        return this.visibleRows().filter(row => !this.isRowDisabled(row));
     }
     renderContext(row) {
         const selected = this.selectedIds.includes(row.id);
@@ -8005,25 +8056,25 @@ class Tree extends ScopedElementsMixin$2(i$X) {
         this.toggleExpansion(row);
     }
     handleKeyDown(row, event) {
-        const rows = this.visibleRows();
+        event.stopPropagation();
+        const rows = this.navigableRows();
         const rowIndex = rows.findIndex(candidate => candidate.id === row.id);
-        const lastIndex = rows.length - 1;
         switch (event.key) {
             case 'ArrowDown':
                 event.preventDefault();
-                this.activeId = rows[nextIndex(rowIndex + 1, lastIndex)]?.id;
+                this.navigateNext(rows, rowIndex);
                 break;
             case 'ArrowUp':
                 event.preventDefault();
-                this.activeId = rows[nextIndex(rowIndex - 1, lastIndex)]?.id;
+                this.navigatePrevious(rows, rowIndex);
                 break;
             case 'Home':
                 event.preventDefault();
-                this.activeId = rows[0]?.id;
+                this.activeId = this.getFirstNodeId();
                 break;
             case 'End':
                 event.preventDefault();
-                this.activeId = rows[lastIndex]?.id;
+                this.activeId = this.getLastNodeId();
                 break;
             case 'ArrowRight':
                 event.preventDefault();
@@ -8035,8 +8086,7 @@ class Tree extends ScopedElementsMixin$2(i$X) {
                 break;
             case 'Enter':
                 event.preventDefault();
-                this.activateRow(row);
-                this.fireNodeEvent('node-activate', row);
+                this.activeId = row.id;
                 this.toggleSelection(row);
                 break;
             case ' ':
@@ -8044,6 +8094,32 @@ class Tree extends ScopedElementsMixin$2(i$X) {
                 this.toggleSelection(row);
                 break;
         }
+    }
+    navigateNext(rows, rowIndex) {
+        const nextRow = rows[rowIndex < 0 ? 0 : rowIndex + 1];
+        if (!nextRow) {
+            this.dispatchEvent(new CustomEvent('navigation-boundary', {
+                detail: { direction: 'last' },
+            }));
+            return;
+        }
+        this.activeId = nextRow.id;
+        this.dispatchEvent(new CustomEvent('active-changed', {
+            detail: { activeId: nextRow.id },
+        }));
+    }
+    navigatePrevious(rows, rowIndex) {
+        const previousRow = rows[rowIndex < 0 ? rows.length - 1 : rowIndex - 1];
+        if (!previousRow) {
+            this.dispatchEvent(new CustomEvent('navigation-boundary', {
+                detail: { direction: 'first' },
+            }));
+            return;
+        }
+        this.activeId = previousRow.id;
+        this.dispatchEvent(new CustomEvent('active-changed', {
+            detail: { activeId: previousRow.id },
+        }));
     }
     stepIn(row, rows, rowIndex) {
         const state = childState(row.node);
@@ -8180,6 +8256,9 @@ class Tree extends ScopedElementsMixin$2(i$X) {
         const activeRow = this.renderRoot.querySelector('.row[data-active="true"]');
         if (activeRow && this.matches(':focus-within')) {
             activeRow.focus();
+            if (this.scrollActiveIntoView) {
+                activeRow.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+            }
         }
     }
     render() {
@@ -8266,6 +8345,13 @@ Tree.styles = i$_ `
       padding-inline-start: var(--oscd-tree-row-padding-start, 16px);
       padding-inline-end: var(--oscd-tree-row-padding-end, 8px);
       user-select: none;
+    }
+
+    :host(:focus-within) .row[data-active='true'] {
+      outline: var(--oscd-tree-row-active-border-width, 1px) solid
+        var(--oscd-tree-row-active-border-color, currentColor);
+      outline-offset: -1px;
+      color: var(--oscd-tree-row-active-text-color, inherit);
     }
 
     oscd-ripple,
@@ -8479,8 +8565,11 @@ __decorate$2([
     n$1f({ reflect: true, attribute: 'toggle-position' })
 ], Tree.prototype, "togglePosition", void 0);
 __decorate$2([
-    r$J()
+    n$1f({ attribute: false })
 ], Tree.prototype, "activeId", void 0);
+__decorate$2([
+    n$1f({ type: Boolean, attribute: 'scroll-active-into-view' })
+], Tree.prototype, "scrollActiveIntoView", void 0);
 
 /**
  * Displays hierarchical data as an accessible, keyboard-navigable tree.
@@ -8568,7 +8657,6 @@ __decorate$2([
  * @fires selected-ids-changed - Fired when user interaction changes selected IDs.
  * @fires expanded-ids-changed - Fired when expansion state changes.
  * @fires node-click - Fired when a row is clicked.
- * @fires node-activate - Fired when a row is activated with the keyboard.
  * @fires node-expand - Cancelable event fired before a row expands.
  * @fires node-collapse - Fired after a row collapses.
  * @fires node-toggle - Fired after a row expansion state toggles.
@@ -10496,10 +10584,29 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
             },
         ];
         this.searchValue = '';
+        this.focusedTree = null;
         this.handleKeydown = (event) => {
+            const fromSearchField = event.currentTarget?.localName ===
+                'oscd-outlined-text-field' ||
+                event
+                    .composedPath()
+                    .some(target => target.localName === 'oscd-outlined-text-field');
             if (event.key === 'Escape' && this.searchMode) {
                 event.stopPropagation();
                 this.exitSearchMode();
+                return;
+            }
+            if (fromSearchField &&
+                (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.startTreeNavigation(event.key === 'ArrowDown' ? 'down' : 'up');
+                return;
+            }
+            if (fromSearchField && event.key === 'Enter') {
+                event.preventDefault();
+                event.stopPropagation();
+                this.activateKeyboardTarget();
             }
         };
     }
@@ -10584,16 +10691,92 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
     /** Opens the panel transiently for searching (does not persist `expanded`). */
     enterSearchMode() {
         this.searchMode = true;
+        this.focusSearch(true);
+    }
+    /** Focuses the search field, optionally selecting its current query. */
+    focusSearch(selectQuery = false) {
+        const focusField = () => {
+            const searchField = this.shadowRoot?.querySelector('oscd-outlined-text-field');
+            searchField?.focus();
+            if (selectQuery) {
+                searchField?.select();
+            }
+        };
         this.updateComplete.then(() => {
-            this.shadowRoot
-                ?.querySelector('oscd-outlined-text-field')
-                ?.focus();
+            focusField();
+            requestAnimationFrame(() => requestAnimationFrame(focusField));
         });
     }
     /** Returns the panel to the collapsed rail and clears the search query. */
     exitSearchMode() {
         this.searchMode = false;
         this.searchValue = '';
+        this.focusedTree = null;
+    }
+    getTree(kind) {
+        return (this.shadowRoot?.querySelector(`oscd-tree.${kind}-tree`) ?? null);
+    }
+    focusTree(kind, activeId) {
+        const tree = this.getTree(kind);
+        if (!tree || !activeId) {
+            return false;
+        }
+        tree.activeId = activeId;
+        this.focusedTree = kind;
+        tree.focus();
+        return true;
+    }
+    startTreeNavigation(direction) {
+        const first = direction === 'down';
+        const pinnedTree = this.getTree('pinned');
+        if (this.searchValue.trim().length === 0 && pinnedTree) {
+            const activeId = this.focusTree('pinned', first ? pinnedTree.getFirstNodeId() : pinnedTree.getLastNodeId());
+            if (activeId) {
+                return;
+            }
+        }
+        const editorsTree = this.getTree('editors');
+        this.focusTree('editors', editorsTree
+            ? first
+                ? editorsTree.getFirstNodeId()
+                : editorsTree.getLastNodeId()
+            : null);
+    }
+    handleTreeActiveChanged(kind) {
+        this.focusedTree = kind;
+    }
+    handleTreeFocus(kind) {
+        this.focusedTree = kind;
+    }
+    handleTreeSelection(kind, selectedIds) {
+        const tree = this.getTree(kind);
+        const selectedId = selectedIds[0];
+        const selectedNode = tree?.data.find(node => node.id === selectedId);
+        if (tree && selectedNode?.children?.length && selectedId) {
+            tree.toggle(selectedId);
+            return;
+        }
+        this.selectEditor(selectedIds);
+    }
+    handleTreeBoundary(kind, direction) {
+        if (kind === 'pinned' && direction === 'last') {
+            this.focusTree('editors', this.getTree('editors')?.getFirstNodeId() ?? null);
+        }
+        else if (kind === 'editors' &&
+            direction === 'first' &&
+            this.searchValue.trim().length === 0) {
+            this.focusTree('pinned', this.getTree('pinned')?.getLastNodeId() ?? null);
+        }
+    }
+    activateKeyboardTarget() {
+        if (!this.focusedTree) {
+            if (this.shadowRoot?.activeElement?.localName ===
+                'oscd-outlined-text-field' &&
+                flattenPluginEntries(filterBySearchTerm(this.editors, this.searchValue, this.locale)).length === 1) {
+                this.dispatchEditorSelect(flattenPluginEntries(filterBySearchTerm(this.editors, this.searchValue, this.locale))[0]);
+            }
+            return;
+        }
     }
     /** Toggles the persisted expanded/collapsed state via the footer control. */
     toggleExpanded() {
@@ -10617,9 +10800,9 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
             menu.show();
         }
     }
-    renderPluginItem({ node, level, disabled, }) {
+    renderPluginItem({ node, level, disabled, active, }) {
         const label = node.translations?.[this.locale] ?? node.name;
-        return b$2 `<oscd-tree-item ?disabled=${disabled}>
+        return b$2 `<oscd-tree-item ?disabled=${disabled} ?active=${active}>
       ${level === 1 && !('kind' in node)
             ? b$2 `<oscd-icon slot="start">${node.icon}</oscd-icon>`
             : A$c}
@@ -10644,6 +10827,7 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
         <oscd-outlined-text-field
           label=${msg$1('Search')}
           .value=${this.searchValue}
+          @keydown=${this.handleKeydown}
           @input=${(event) => {
             const input = event.target;
             this.searchValue = input.value;
@@ -10663,19 +10847,25 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
                 .isDisabled=${(node) => 'kind' in node && node.kind === 'placeholder'}
                 .isSelectable=${(node) => !('kind' in node && node.kind === 'placeholder')}
                 class="pinned-tree"
+                ?keyboard-active=${this.focusedTree === 'pinned'}
+                @focusin=${() => this.handleTreeFocus('pinned')}
                 .renderItem=${(context) => this.renderPluginItem(context)}
                 toggle-position="trailing"
                 collapse-icon="arrow_drop_up"
                 expand-icon="arrow_drop_down"
-                @selected-ids-changed=${(event) => this.selectEditor(event.detail.selectedIds)}
+                @selected-ids-changed=${(event) => this.handleTreeSelection('pinned', event.detail.selectedIds)}
                 @expanded-ids-changed=${(event) => {
                 this.pinnedExpanded = event.detail.expandedIds;
             }}
+                @active-changed=${() => this.handleTreeActiveChanged('pinned')}
+                @navigation-boundary=${(event) => this.handleTreeBoundary('pinned', event.detail.direction)}
               ></oscd-tree>
               <oscd-divider></oscd-divider>`
             : A$c}
         <oscd-tree
           class="editors-tree"
+          ?keyboard-active=${this.focusedTree === 'editors'}
+          @focusin=${() => this.handleTreeFocus('editors')}
           .data=${this.editorTreeNodes}
           .expandedIds=${this.searchValue.length === 0
             ? this.expandedIds
@@ -10691,10 +10881,12 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
           toggle-position="trailing"
           collapse-icon="arrow_drop_down"
           expand-icon="arrow_drop_up"
-          @selected-ids-changed=${(event) => this.selectEditor(event.detail.selectedIds)}
+          @selected-ids-changed=${(event) => this.handleTreeSelection('editors', event.detail.selectedIds)}
           @expanded-ids-changed=${(event) => {
             this.expandedIds = event.detail.expandedIds;
         }}
+          @active-changed=${() => this.handleTreeActiveChanged('editors')}
+          @navigation-boundary=${(event) => this.handleTreeBoundary('editors', event.detail.direction)}
         ></oscd-tree>
       </div>
     `;
@@ -10963,6 +11155,17 @@ EditorPluginsPanel.styles = i$_ `
       gap: 12px;
     }
 
+    oscd-tree {
+      --oscd-tree-row-active-border-width: 0px;
+      --oscd-tree-row-active-border-color: var(--oscd-base3, #fff);
+      --oscd-tree-row-active-text-color: var(--oscd-base3, #fff);
+      --oscd-tree-row-focus-ring-color: var(--oscd-base3, #fff);
+    }
+
+    oscd-tree.keyboard-active {
+      --oscd-tree-row-active-border-width: 1px;
+    }
+
     oscd-outlined-text-field {
       border-radius: 5px;
       background: #6dadee66;
@@ -11128,6 +11331,9 @@ __decorate$2([
 __decorate$2([
     r$J()
 ], EditorPluginsPanel.prototype, "searchValue", void 0);
+__decorate$2([
+    r$J()
+], EditorPluginsPanel.prototype, "focusedTree", void 0);
 __decorate$2([
     localstorage({ default: [] }),
     r$J()
@@ -12873,6 +13079,18 @@ let OscdShell = class OscdShell extends ScopedElementsMixin$2(i$X) {
             this.redo();
         };
         this.handleKeyPress = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'f') {
+                const panel = this.shadowRoot?.querySelector('editor-plugins-panel');
+                if (panel) {
+                    if (!panel.expanded) {
+                        panel.searchMode = true;
+                    }
+                    panel.focusSearch(true);
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                return;
+            }
             if (!e.ctrlKey) {
                 return;
             }
@@ -12928,7 +13146,7 @@ let OscdShell = class OscdShell extends ScopedElementsMixin$2(i$X) {
     }
     connectedCallback() {
         super.connectedCallback();
-        document.addEventListener('keydown', this.handleKeyPress);
+        document.addEventListener('keydown', this.handleKeyPress, true);
         this.addEventListener('oscd-open', this.handleOpenDoc);
         this.addEventListener('oscd-rename', this.handleRenameDoc);
         this.addEventListener('oscd-close', this.handleCloseDoc);
@@ -12939,7 +13157,7 @@ let OscdShell = class OscdShell extends ScopedElementsMixin$2(i$X) {
     disconnectedCallback() {
         super.disconnectedCallback();
         // Remove event listeners
-        document.removeEventListener('keydown', this.handleKeyPress);
+        document.removeEventListener('keydown', this.handleKeyPress, true);
         this.removeEventListener('oscd-open', this.handleOpenDoc);
         this.removeEventListener('oscd-rename', this.handleRenameDoc);
         this.removeEventListener('oscd-edit-v2', this.handleEditV2);
