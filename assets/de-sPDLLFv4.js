@@ -14,5 +14,6 @@ export const templates = {
     'sd1fdd3cc8714d686': str `${0} anheften`,
     'sf8256ec799969cb7': str `${0} lösen`,
     's3e2b2947e76caf9c': `Items you pin will appear here`,
+    's5f4586bc1e2740e6': `Clear search`,
 };
 //# sourceMappingURL=de.js.map

@@ -1811,6 +1811,180 @@ function ariaAttributeToDataProperty$3(ariaAttribute) {
 
 /**
  * @license
+ * Copyright 2022 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * Returns `true` if the given element is in a right-to-left direction.
+ *
+ * @param el Element to determine direction from
+ * @param shouldCheck Optional. If `false`, return `false` without checking
+ *     direction. Determining the direction of `el` is somewhat expensive, so
+ *     this parameter can be used as a conditional guard. Defaults to `true`.
+ */
+function isRtl$3(el, shouldCheck = true) {
+    return (shouldCheck &&
+        getComputedStyle(el).getPropertyValue('direction').trim() === 'rtl');
+}
+
+/**
+ * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * A symbol used to access dispatch hooks on an event.
+ */
+const dispatchHooks$3 = Symbol('dispatchHooks');
+/**
+ * Add a hook for an event that is called after the event is dispatched and
+ * propagates to other event listeners.
+ *
+ * This is useful for behaviors that need to check if an event is canceled.
+ *
+ * The callback is invoked synchronously, which allows for better integration
+ * with synchronous platform APIs (like `<form>` or `<label>` clicking).
+ *
+ * Note: `setupDispatchHooks()` must be called on the element before adding any
+ * other event listeners. Call it in the constructor of an element or
+ * controller.
+ *
+ * @example
+ * ```ts
+ * class MyControl extends LitElement {
+ *   constructor() {
+ *     super();
+ *     setupDispatchHooks(this, 'click');
+ *     this.addEventListener('click', event => {
+ *       afterDispatch(event, () => {
+ *         if (event.defaultPrevented) {
+ *           return
+ *         }
+ *
+ *         // ... perform logic
+ *       });
+ *     });
+ *   }
+ * }
+ * ```
+ *
+ * @example
+ * ```ts
+ * class MyController implements ReactiveController {
+ *   constructor(host: ReactiveElement) {
+ *     // setupDispatchHooks() may be called multiple times for the same
+ *     // element and events, making it safe for multiple controllers to use it.
+ *     setupDispatchHooks(host, 'click');
+ *     host.addEventListener('click', event => {
+ *       afterDispatch(event, () => {
+ *         if (event.defaultPrevented) {
+ *           return;
+ *         }
+ *
+ *         // ... perform logic
+ *       });
+ *     });
+ *   }
+ * }
+ * ```
+ *
+ * @param event The event to add a hook to.
+ * @param callback A hook that is called after the event finishes dispatching.
+ */
+function afterDispatch$3(event, callback) {
+    const hooks = event[dispatchHooks$3];
+    if (!hooks) {
+        throw new Error(`'${event.type}' event needs setupDispatchHooks().`);
+    }
+    hooks.addEventListener('after', callback, { once: true });
+}
+/**
+ * A lookup map of elements and event types that have a dispatch hook listener
+ * set up. Used to ensure we don't set up multiple hook listeners on the same
+ * element for the same event.
+ */
+const ELEMENT_DISPATCH_HOOK_TYPES$3 = new WeakMap();
+/**
+ * Sets up an element to add dispatch hooks to given event types. This must be
+ * called before adding any event listeners that need to use dispatch hooks
+ * like `afterDispatch()`.
+ *
+ * This function is safe to call multiple times with the same element or event
+ * types. Call it in the constructor of elements, mixins, and controllers to
+ * ensure it is set up before external listeners.
+ *
+ * @example
+ * ```ts
+ * class MyControl extends LitElement {
+ *   constructor() {
+ *     super();
+ *     setupDispatchHooks(this, 'click');
+ *     this.addEventListener('click', this.listenerUsingAfterDispatch);
+ *   }
+ * }
+ * ```
+ *
+ * @param element The element to set up event dispatch hooks for.
+ * @param eventTypes The event types to add dispatch hooks to.
+ */
+function setupDispatchHooks$3(element, ...eventTypes) {
+    let typesAlreadySetUp = ELEMENT_DISPATCH_HOOK_TYPES$3.get(element);
+    if (!typesAlreadySetUp) {
+        typesAlreadySetUp = new Set();
+        ELEMENT_DISPATCH_HOOK_TYPES$3.set(element, typesAlreadySetUp);
+    }
+    for (const eventType of eventTypes) {
+        // Don't register multiple dispatch hook listeners. A second registration
+        // would lead to the second listener calling `afterDispatch()` hooks twice.
+        if (typesAlreadySetUp.has(eventType)) {
+            continue;
+        }
+        element.addEventListener(eventType, (event) => {
+            // Add hooks onto the event.
+            const hooks = new EventTarget();
+            event[dispatchHooks$3] = hooks;
+            const cleanupLastNodeListener = new AbortController();
+            const callAfterDispatch = () => {
+                cleanupLastNodeListener.abort();
+                hooks.dispatchEvent(new Event('after'));
+            };
+            const patchStopPropagation = (superMethod) => {
+                return function () {
+                    superMethod.call(this);
+                    // Synchronously call afterDispatch() hooks when interrupted.
+                    callAfterDispatch();
+                };
+            };
+            event.stopPropagation = patchStopPropagation(event.stopPropagation);
+            event.stopImmediatePropagation = patchStopPropagation(event.stopImmediatePropagation);
+            // Add an event listener to detect the end of the event's propagation.
+            const composedPath = event.composedPath();
+            let lastNodeForEvent;
+            if (event.composed && event.bubbles) {
+                lastNodeForEvent = composedPath[composedPath.length - 1];
+            }
+            else if (!event.bubbles) {
+                lastNodeForEvent = composedPath[0];
+            }
+            else {
+                lastNodeForEvent = composedPath[0].getRootNode();
+            }
+            lastNodeForEvent.addEventListener(eventType, () => {
+                // Synchronously call afterDispatch() hooks.
+                callAfterDispatch();
+            }, { once: true, signal: cleanupLastNodeListener.signal });
+        }, {
+            // Ensure this listener runs before other listeners.
+            // `setupDispatchHooks()` should be called in constructors to also
+            // ensure they run before any other externally-added capture listeners.
+            capture: true,
+        });
+        typesAlreadySetUp.add(eventType);
+    }
+}
+
+/**
+ * @license
  * Copyright 2023 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -1861,80 +2035,239 @@ function mixinElementInternals$3(base) {
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * Sets up an element's constructor to enable form submission. The element
- * instance should be form associated and have a `type` property.
+ * A symbol property to retrieve the form value for an element.
+ */
+const getFormValue$3 = Symbol('getFormValue');
+/**
+ * A symbol property to retrieve the form state for an element.
+ */
+const getFormState$3 = Symbol('getFormState');
+/**
+ * Mixes in form-associated behavior for a class. This allows an element to add
+ * values to `<form>` elements.
+ *
+ * Implementing classes should provide a `[formValue]` to return the current
+ * value of the element, as well as reset and restore callbacks.
+ *
+ * @example
+ * ```ts
+ * const base = mixinFormAssociated(mixinElementInternals(LitElement));
+ *
+ * class MyControl extends base {
+ *   \@property()
+ *   value = '';
+ *
+ *   override [getFormValue]() {
+ *     return this.value;
+ *   }
+ *
+ *   override formResetCallback() {
+ *     const defaultValue = this.getAttribute('value');
+ *     this.value = defaultValue;
+ *   }
+ *
+ *   override formStateRestoreCallback(state: string) {
+ *     this.value = state;
+ *   }
+ * }
+ * ```
+ *
+ * Elements may optionally provide a `[formState]` if their values do not
+ * represent the state of the component.
+ *
+ * @example
+ * ```ts
+ * const base = mixinFormAssociated(mixinElementInternals(LitElement));
+ *
+ * class MyCheckbox extends base {
+ *   \@property()
+ *   value = 'on';
+ *
+ *   \@property({type: Boolean})
+ *   checked = false;
+ *
+ *   override [getFormValue]() {
+ *     return this.checked ? this.value : null;
+ *   }
+ *
+ *   override [getFormState]() {
+ *     return String(this.checked);
+ *   }
+ *
+ *   override formResetCallback() {
+ *     const defaultValue = this.hasAttribute('checked');
+ *     this.checked = defaultValue;
+ *   }
+ *
+ *   override formStateRestoreCallback(state: string) {
+ *     this.checked = Boolean(state);
+ *   }
+ * }
+ * ```
+ *
+ * @param base The class to mix functionality into. The base class must use
+ *     `mixinElementInternals()`.
+ * @return The provided class with `FormAssociated` mixed in.
+ */
+function mixinFormAssociated$3(base) {
+    class FormAssociatedElement extends base {
+        get form() {
+            return this[internals$3].form;
+        }
+        get labels() {
+            return this[internals$3].labels;
+        }
+        // Use @property for the `name` and `disabled` properties to add them to the
+        // `observedAttributes` array and trigger `attributeChangedCallback()`.
+        //
+        // We don't use Lit's default getter/setter (`noAccessor: true`) because
+        // the attributes need to be updated synchronously to work with synchronous
+        // form APIs, and Lit updates attributes async by default.
+        get name() {
+            return this.getAttribute('name') ?? '';
+        }
+        set name(name) {
+            // Note: setting name to null or empty does not remove the attribute.
+            this.setAttribute('name', name);
+            // We don't need to call `requestUpdate()` since it's called synchronously
+            // in `attributeChangedCallback()`.
+        }
+        get disabled() {
+            return this.hasAttribute('disabled');
+        }
+        set disabled(disabled) {
+            // Coerce `disabled` in `Boolean()` to ensure that setting to `null` or
+            // `undefined` sets the attribute to `false`.
+            this.toggleAttribute('disabled', Boolean(disabled));
+            // We don't need to call `requestUpdate()` since it's called synchronously
+            // in `attributeChangedCallback()`.
+        }
+        attributeChangedCallback(name, old, value) {
+            // Manually `requestUpdate()` for `name` and `disabled` when their
+            // attribute or property changes.
+            // The properties update their attributes, so this callback is invoked
+            // immediately when the properties are set. We call `requestUpdate()` here
+            // instead of letting Lit set the properties from the attribute change.
+            // That would cause the properties to re-set the attribute and invoke this
+            // callback again in a loop. This leads to stale state when Lit tries to
+            // determine if a property changed or not.
+            if (name === 'name' || name === 'disabled') {
+                // Disabled's value is only false if the attribute is missing and null.
+                const oldValue = name === 'disabled' ? old !== null : old;
+                // Trigger a lit update when the attribute changes.
+                this.requestUpdate(name, oldValue);
+                return;
+            }
+            super.attributeChangedCallback(name, old, value);
+        }
+        requestUpdate(name, oldValue, options) {
+            super.requestUpdate(name, oldValue, options);
+            // If any properties change, update the form value, which may have changed
+            // as well.
+            // Update the form value synchronously in `requestUpdate()` rather than
+            // `update()` or `updated()`, which are async. This is necessary to ensure
+            // that form data is updated in time for synchronous event listeners.
+            this[internals$3].setFormValue(this[getFormValue$3](), this[getFormState$3]());
+        }
+        [getFormValue$3]() {
+            return this.getAttribute('value');
+        }
+        [getFormState$3]() {
+            return this[getFormValue$3]();
+        }
+        formDisabledCallback(disabled) {
+            this.disabled = disabled;
+        }
+    }
+    /** @nocollapse */
+    FormAssociatedElement.formAssociated = true;
+    __decorate$2([
+        n$1f({ noAccessor: true })
+    ], FormAssociatedElement.prototype, "name", null);
+    __decorate$2([
+        n$1f({ type: Boolean, noAccessor: true })
+    ], FormAssociatedElement.prototype, "disabled", null);
+    return FormAssociatedElement;
+}
+
+/**
+ * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * Mixes in form submitter behavior for a class.
  *
  * A click listener is added to each element instance. If the click is not
  * default prevented, it will submit the element's form, if any.
  *
  * @example
  * ```ts
- * class MyElement extends mixinElementInternals(LitElement) {
- *   static {
- *     setupFormSubmitter(MyElement);
- *   }
- *
+ * const base = mixinFormSubmitter(mixinElementInternals(LitElement));
+ * class MyButton extends base {
  *   static formAssociated = true;
- *
- *   type: FormSubmitterType = 'submit';
  * }
  * ```
  *
- * @param ctor The form submitter element's constructor.
+ * @param base The class to mix functionality into.
+ * @return The provided class with `FormSubmitter` mixed in.
  */
-function setupFormSubmitter$3(ctor) {
-    ctor.addInitializer((instance) => {
-        const submitter = instance;
-        submitter.addEventListener('click', async (event) => {
-            const { type, [internals$3]: elementInternals } = submitter;
-            const { form } = elementInternals;
-            if (!form || type === 'button') {
-                return;
-            }
-            // Wait a full task for event bubbling to complete.
-            await new Promise((resolve) => {
-                setTimeout(resolve);
-            });
-            if (event.defaultPrevented) {
-                return;
-            }
-            if (type === 'reset') {
-                form.reset();
-                return;
-            }
-            // form.requestSubmit(submitter) does not work with form associated custom
-            // elements. This patches the dispatched submit event to add the correct
-            // `submitter`.
-            // See https://github.com/WICG/webcomponents/issues/814
-            form.addEventListener('submit', (submitEvent) => {
-                Object.defineProperty(submitEvent, 'submitter', {
-                    configurable: true,
-                    enumerable: true,
-                    get: () => submitter,
+function mixinFormSubmitter(base) {
+    class FormSubmitterElement extends base {
+        // Name attribute must reflect synchronously for form integration.
+        get name() {
+            return this.getAttribute('name') ?? '';
+        }
+        set name(name) {
+            this.setAttribute('name', name);
+        }
+        // Mixins must have a constructor with `...args: any[]`
+        // tslint:disable-next-line:no-any
+        constructor(...args) {
+            super(...args);
+            this.type = 'submit';
+            this.value = '';
+            setupDispatchHooks$3(this, 'click');
+            this.addEventListener('click', async (event) => {
+                const isReset = this.type === 'reset';
+                const isSubmit = this.type === 'submit';
+                const elementInternals = this[internals$3];
+                const { form } = elementInternals;
+                if (!form || !(isSubmit || isReset)) {
+                    return;
+                }
+                afterDispatch$3(event, () => {
+                    if (event.defaultPrevented) {
+                        return;
+                    }
+                    if (isReset) {
+                        form.reset();
+                        return;
+                    }
+                    // form.requestSubmit(submitter) does not work with form associated custom
+                    // elements. This patches the dispatched submit event to add the correct
+                    // `submitter`.
+                    // See https://github.com/WICG/webcomponents/issues/814
+                    form.addEventListener('submit', (submitEvent) => {
+                        Object.defineProperty(submitEvent, 'submitter', {
+                            configurable: true,
+                            enumerable: true,
+                            get: () => this,
+                        });
+                    }, { capture: true, once: true });
+                    elementInternals.setFormValue(this.value);
+                    form.requestSubmit();
                 });
-            }, { capture: true, once: true });
-            elementInternals.setFormValue(submitter.value);
-            form.requestSubmit();
-        });
-    });
-}
-
-/**
- * @license
- * Copyright 2022 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
- * Returns `true` if the given element is in a right-to-left direction.
- *
- * @param el Element to determine direction from
- * @param shouldCheck Optional. If `false`, return `false` without checking
- *     direction. Determining the direction of `el` is somewhat expensive, so
- *     this parameter can be used as a conditional guard. Defaults to `true`.
- */
-function isRtl$3(el, shouldCheck = true) {
-    return (shouldCheck &&
-        getComputedStyle(el).getPropertyValue('direction').trim() === 'rtl');
+            });
+        }
+    }
+    __decorate$2([
+        n$1f()
+    ], FormSubmitterElement.prototype, "type", void 0);
+    __decorate$2([
+        n$1f({ reflect: true })
+    ], FormSubmitterElement.prototype, "value", void 0);
+    return FormSubmitterElement;
 }
 
 /**
@@ -1943,7 +2276,7 @@ function isRtl$3(el, shouldCheck = true) {
  * SPDX-License-Identifier: Apache-2.0
  */
 // Separate variable needed for closure.
-const iconButtonBaseClass$3 = mixinDelegatesAria$3(mixinElementInternals$3(i$X));
+const iconButtonBaseClass$3 = mixinDelegatesAria$3(mixinFormSubmitter(mixinFormAssociated$3(mixinElementInternals$3(i$X))));
 /**
  * A button for rendering icons.
  *
@@ -1952,30 +2285,8 @@ const iconButtonBaseClass$3 = mixinDelegatesAria$3(mixinElementInternals$3(i$X))
  * @fires change {Event} Dispatched when a toggle button toggles --bubbles
  */
 let IconButton$4 = class IconButton extends iconButtonBaseClass$3 {
-    get name() {
-        return this.getAttribute('name') ?? '';
-    }
-    set name(name) {
-        this.setAttribute('name', name);
-    }
-    /**
-     * The associated form element with which this element's value will submit.
-     */
-    get form() {
-        return this[internals$3].form;
-    }
-    /**
-     * The labels this element is associated with.
-     */
-    get labels() {
-        return this[internals$3].labels;
-    }
     constructor() {
         super();
-        /**
-         * Disables the icon button and makes it non-interactive.
-         */
-        this.disabled = false;
         /**
          * "Soft-disables" the icon button (disabled but still focusable).
          *
@@ -2017,20 +2328,32 @@ let IconButton$4 = class IconButton extends iconButtonBaseClass$3 {
          * icon is provided.
          */
         this.selected = false;
-        /**
-         * The default behavior of the button. May be "button", "reset", or "submit"
-         * (default).
-         */
-        this.type = 'submit';
-        /**
-         * The value added to a form with the button's name when the button submits a
-         * form.
-         */
-        this.value = '';
         this.flipIcon = isRtl$3(this, this.flipIconInRtl);
-        {
-            this.addEventListener('click', this.handleClick.bind(this));
-        }
+        setupDispatchHooks$3(this, 'click');
+        this.addEventListener('click', (event) => {
+            // If the button is soft-disabled or a disabled link, we need to
+            // explicitly prevent the click from propagating to other event listeners
+            // as well as prevent the default action. This is because the underlying
+            // `<button>` or `<a>` element is not actually `:disabled`.
+            if (this.softDisabled || (this.disabled && this.href)) {
+                event.stopImmediatePropagation();
+                event.preventDefault();
+                return;
+            }
+            // Save current selected state to toggle, since an external event listener
+            // may also change the selected state on click.
+            const wasSelected = this.selected;
+            afterDispatch$3(event, () => {
+                if (!this.toggle || this.disabled || event.defaultPrevented) {
+                    return;
+                }
+                this.selected = !wasSelected;
+                this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+                // Bubbles but does not compose to mimic native browser <input> & <select>
+                // Additionally, native change event is not an InputEvent.
+                this.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+        });
     }
     willUpdate() {
         // Link buttons cannot be disabled or soft-disabled.
@@ -2060,8 +2383,7 @@ let IconButton$4 = class IconButton extends iconButtonBaseClass$3 {
         aria-expanded="${(!this.href && ariaExpanded) || A$c}"
         aria-pressed="${ariaPressedValue}"
         aria-disabled=${(!this.href && this.softDisabled) || A$c}
-        ?disabled="${!this.href && this.disabled}"
-        @click="${this.handleClickOnChild}">
+        ?disabled="${!this.href && this.disabled}">
         ${this.renderFocusRing()}
         ${this.renderRipple()}
         ${!this.selected ? this.renderIcon() : A$c}
@@ -2119,50 +2441,12 @@ let IconButton$4 = class IconButton extends iconButtonBaseClass$3 {
         this.flipIcon = isRtl$3(this, this.flipIconInRtl);
         super.connectedCallback();
     }
-    /** Handles a click on this element. */
-    handleClick(event) {
-        // If the icon button is soft-disabled, we need to explicitly prevent the
-        // click from propagating to other event listeners as well as prevent the
-        // default action.
-        if (!this.href && this.softDisabled) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            return;
-        }
-    }
-    /**
-     * Handles a click on the child <div> or <button> element within this
-     * element's shadow DOM.
-     */
-    async handleClickOnChild(event) {
-        // Allow the event to propagate
-        await 0;
-        if (!this.toggle ||
-            this.disabled ||
-            this.softDisabled ||
-            event.defaultPrevented) {
-            return;
-        }
-        this.selected = !this.selected;
-        this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
-        // Bubbles but does not compose to mimic native browser <input> & <select>
-        // Additionally, native change event is not an InputEvent.
-        this.dispatchEvent(new Event('change', { bubbles: true }));
-    }
 };
-(() => {
-    setupFormSubmitter$3(IconButton$4);
-})();
-/** @nocollapse */
-IconButton$4.formAssociated = true;
 /** @nocollapse */
 IconButton$4.shadowRootOptions = {
     mode: 'open',
     delegatesFocus: true,
 };
-__decorate$2([
-    n$1f({ type: Boolean, reflect: true })
-], IconButton$4.prototype, "disabled", void 0);
 __decorate$2([
     n$1f({ type: Boolean, attribute: 'soft-disabled', reflect: true })
 ], IconButton$4.prototype, "softDisabled", void 0);
@@ -2187,12 +2471,6 @@ __decorate$2([
 __decorate$2([
     n$1f({ type: Boolean, reflect: true })
 ], IconButton$4.prototype, "selected", void 0);
-__decorate$2([
-    n$1f()
-], IconButton$4.prototype, "type", void 0);
-__decorate$2([
-    n$1f({ reflect: true })
-], IconButton$4.prototype, "value", void 0);
 __decorate$2([
     r$J()
 ], IconButton$4.prototype, "flipIcon", void 0);
@@ -2707,7 +2985,7 @@ const { getLocale, setLocale } = window.localization ??
         sourceLocale,
         targetLocales,
         loadLocale: _locale => {
-            return import(new URL(new URL('assets/de-85qoZDsQ.js', import.meta.url).href).href);
+            return import(new URL(new URL('assets/de-sPDLLFv4.js', import.meta.url).href).href);
         },
     });
 /*
@@ -2777,7 +3055,7 @@ OscdIconButton$4.styles = [styles$2l, styles$2k];
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * TODO(b/265336902): add docs
+ * An icon element.
  */
 let Icon$7 = class Icon extends i$X {
     render() {
@@ -4060,7 +4338,10 @@ function isItemNotDisabled$3(item) {
 const listItemBaseClass$3 = mixinDelegatesAria$3(i$X);
 /**
  * @fires request-activation {Event} Requests the list to set `tabindex=0` on
- * the item and focus it. --bubbles --composed
+ * the item and focus it. Used internally for list keyboard navigation; most
+ * applications do not need to listen for this event. It is exposed for
+ * authors building their own list-item replacements or wrapping items in a
+ * custom controller. --bubbles --composed
  */
 let ListItemEl$3 = class ListItemEl extends listItemBaseClass$3 {
     constructor() {
@@ -6935,178 +7216,6 @@ function mixinConstraintValidation$3(base) {
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
- * A symbol property to retrieve the form value for an element.
- */
-const getFormValue$3 = Symbol('getFormValue');
-/**
- * A symbol property to retrieve the form state for an element.
- */
-const getFormState$3 = Symbol('getFormState');
-/**
- * Mixes in form-associated behavior for a class. This allows an element to add
- * values to `<form>` elements.
- *
- * Implementing classes should provide a `[formValue]` to return the current
- * value of the element, as well as reset and restore callbacks.
- *
- * @example
- * ```ts
- * const base = mixinFormAssociated(mixinElementInternals(LitElement));
- *
- * class MyControl extends base {
- *   \@property()
- *   value = '';
- *
- *   override [getFormValue]() {
- *     return this.value;
- *   }
- *
- *   override formResetCallback() {
- *     const defaultValue = this.getAttribute('value');
- *     this.value = defaultValue;
- *   }
- *
- *   override formStateRestoreCallback(state: string) {
- *     this.value = state;
- *   }
- * }
- * ```
- *
- * Elements may optionally provide a `[formState]` if their values do not
- * represent the state of the component.
- *
- * @example
- * ```ts
- * const base = mixinFormAssociated(mixinElementInternals(LitElement));
- *
- * class MyCheckbox extends base {
- *   \@property()
- *   value = 'on';
- *
- *   \@property({type: Boolean})
- *   checked = false;
- *
- *   override [getFormValue]() {
- *     return this.checked ? this.value : null;
- *   }
- *
- *   override [getFormState]() {
- *     return String(this.checked);
- *   }
- *
- *   override formResetCallback() {
- *     const defaultValue = this.hasAttribute('checked');
- *     this.checked = defaultValue;
- *   }
- *
- *   override formStateRestoreCallback(state: string) {
- *     this.checked = Boolean(state);
- *   }
- * }
- * ```
- *
- * IMPORTANT: Requires declares for lit-analyzer
- * @example
- * ```ts
- * const base = mixinFormAssociated(mixinElementInternals(LitElement));
- * class MyControl extends base {
- *   // Writable mixin properties for lit-html binding, needed for lit-analyzer
- *   declare disabled: boolean;
- *   declare name: string;
- * }
- * ```
- *
- * @param base The class to mix functionality into. The base class must use
- *     `mixinElementInternals()`.
- * @return The provided class with `FormAssociated` mixed in.
- */
-function mixinFormAssociated$3(base) {
-    class FormAssociatedElement extends base {
-        get form() {
-            return this[internals$3].form;
-        }
-        get labels() {
-            return this[internals$3].labels;
-        }
-        // Use @property for the `name` and `disabled` properties to add them to the
-        // `observedAttributes` array and trigger `attributeChangedCallback()`.
-        //
-        // We don't use Lit's default getter/setter (`noAccessor: true`) because
-        // the attributes need to be updated synchronously to work with synchronous
-        // form APIs, and Lit updates attributes async by default.
-        get name() {
-            return this.getAttribute('name') ?? '';
-        }
-        set name(name) {
-            // Note: setting name to null or empty does not remove the attribute.
-            this.setAttribute('name', name);
-            // We don't need to call `requestUpdate()` since it's called synchronously
-            // in `attributeChangedCallback()`.
-        }
-        get disabled() {
-            return this.hasAttribute('disabled');
-        }
-        set disabled(disabled) {
-            this.toggleAttribute('disabled', disabled);
-            // We don't need to call `requestUpdate()` since it's called synchronously
-            // in `attributeChangedCallback()`.
-        }
-        attributeChangedCallback(name, old, value) {
-            // Manually `requestUpdate()` for `name` and `disabled` when their
-            // attribute or property changes.
-            // The properties update their attributes, so this callback is invoked
-            // immediately when the properties are set. We call `requestUpdate()` here
-            // instead of letting Lit set the properties from the attribute change.
-            // That would cause the properties to re-set the attribute and invoke this
-            // callback again in a loop. This leads to stale state when Lit tries to
-            // determine if a property changed or not.
-            if (name === 'name' || name === 'disabled') {
-                // Disabled's value is only false if the attribute is missing and null.
-                const oldValue = name === 'disabled' ? old !== null : old;
-                // Trigger a lit update when the attribute changes.
-                this.requestUpdate(name, oldValue);
-                return;
-            }
-            super.attributeChangedCallback(name, old, value);
-        }
-        requestUpdate(name, oldValue, options) {
-            super.requestUpdate(name, oldValue, options);
-            // If any properties change, update the form value, which may have changed
-            // as well.
-            // Update the form value synchronously in `requestUpdate()` rather than
-            // `update()` or `updated()`, which are async. This is necessary to ensure
-            // that form data is updated in time for synchronous event listeners.
-            this[internals$3].setFormValue(this[getFormValue$3](), this[getFormState$3]());
-        }
-        [getFormValue$3]() {
-            // Closure does not allow abstract symbol members, so a default
-            // implementation is needed.
-            throw new Error('Implement [getFormValue]');
-        }
-        [getFormState$3]() {
-            return this[getFormValue$3]();
-        }
-        formDisabledCallback(disabled) {
-            this.disabled = disabled;
-        }
-    }
-    /** @nocollapse */
-    FormAssociatedElement.formAssociated = true;
-    __decorate$2([
-        n$1f({ noAccessor: true })
-    ], FormAssociatedElement.prototype, "name", null);
-    __decorate$2([
-        n$1f({ type: Boolean, noAccessor: true })
-    ], FormAssociatedElement.prototype, "disabled", null);
-    return FormAssociatedElement;
-}
-
-/**
- * @license
- * Copyright 2023 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
  * A class that computes and caches `ValidityStateFlags` for a component with
  * a given `State` interface.
  *
@@ -8668,12 +8777,202 @@ class OscdTree extends Tree {
 
 /**
  * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * A divider component.
+ */
+let Divider$3 = class Divider extends i$X {
+    constructor() {
+        super(...arguments);
+        /**
+         * Indents the divider with equal padding on both sides.
+         */
+        this.inset = false;
+        /**
+         * Indents the divider with padding on the leading side.
+         */
+        this.insetStart = false;
+        /**
+         * Indents the divider with padding on the trailing side.
+         */
+        this.insetEnd = false;
+    }
+};
+__decorate$2([
+    n$1f({ type: Boolean, reflect: true })
+], Divider$3.prototype, "inset", void 0);
+__decorate$2([
+    n$1f({ type: Boolean, reflect: true, attribute: 'inset-start' })
+], Divider$3.prototype, "insetStart", void 0);
+__decorate$2([
+    n$1f({ type: Boolean, reflect: true, attribute: 'inset-end' })
+], Divider$3.prototype, "insetEnd", void 0);
+
+/**
+ * @license
  * Copyright 2024 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-// Generated stylesheet for ./textfield/internal/outlined-styles.css.
-const styles$2c = i$_ `:host{--_caret-color: var(--md-outlined-text-field-caret-color, var(--md-sys-color-primary, #6750a4));--_disabled-input-text-color: var(--md-outlined-text-field-disabled-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-input-text-opacity: var(--md-outlined-text-field-disabled-input-text-opacity, 0.38);--_disabled-label-text-color: var(--md-outlined-text-field-disabled-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-label-text-opacity: var(--md-outlined-text-field-disabled-label-text-opacity, 0.38);--_disabled-leading-icon-color: var(--md-outlined-text-field-disabled-leading-icon-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-leading-icon-opacity: var(--md-outlined-text-field-disabled-leading-icon-opacity, 0.38);--_disabled-outline-color: var(--md-outlined-text-field-disabled-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-outline-opacity: var(--md-outlined-text-field-disabled-outline-opacity, 0.12);--_disabled-outline-width: var(--md-outlined-text-field-disabled-outline-width, 1px);--_disabled-supporting-text-color: var(--md-outlined-text-field-disabled-supporting-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-supporting-text-opacity: var(--md-outlined-text-field-disabled-supporting-text-opacity, 0.38);--_disabled-trailing-icon-color: var(--md-outlined-text-field-disabled-trailing-icon-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-trailing-icon-opacity: var(--md-outlined-text-field-disabled-trailing-icon-opacity, 0.38);--_error-focus-caret-color: var(--md-outlined-text-field-error-focus-caret-color, var(--md-sys-color-error, #b3261e));--_error-focus-input-text-color: var(--md-outlined-text-field-error-focus-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_error-focus-label-text-color: var(--md-outlined-text-field-error-focus-label-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-leading-icon-color: var(--md-outlined-text-field-error-focus-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-focus-outline-color: var(--md-outlined-text-field-error-focus-outline-color, var(--md-sys-color-error, #b3261e));--_error-focus-supporting-text-color: var(--md-outlined-text-field-error-focus-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-trailing-icon-color: var(--md-outlined-text-field-error-focus-trailing-icon-color, var(--md-sys-color-error, #b3261e));--_error-hover-input-text-color: var(--md-outlined-text-field-error-hover-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_error-hover-label-text-color: var(--md-outlined-text-field-error-hover-label-text-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-leading-icon-color: var(--md-outlined-text-field-error-hover-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-hover-outline-color: var(--md-outlined-text-field-error-hover-outline-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-supporting-text-color: var(--md-outlined-text-field-error-hover-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-hover-trailing-icon-color: var(--md-outlined-text-field-error-hover-trailing-icon-color, var(--md-sys-color-on-error-container, #410e0b));--_error-input-text-color: var(--md-outlined-text-field-error-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_error-label-text-color: var(--md-outlined-text-field-error-label-text-color, var(--md-sys-color-error, #b3261e));--_error-leading-icon-color: var(--md-outlined-text-field-error-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-outline-color: var(--md-outlined-text-field-error-outline-color, var(--md-sys-color-error, #b3261e));--_error-supporting-text-color: var(--md-outlined-text-field-error-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-trailing-icon-color: var(--md-outlined-text-field-error-trailing-icon-color, var(--md-sys-color-error, #b3261e));--_focus-input-text-color: var(--md-outlined-text-field-focus-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_focus-label-text-color: var(--md-outlined-text-field-focus-label-text-color, var(--md-sys-color-primary, #6750a4));--_focus-leading-icon-color: var(--md-outlined-text-field-focus-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-outline-color: var(--md-outlined-text-field-focus-outline-color, var(--md-sys-color-primary, #6750a4));--_focus-outline-width: var(--md-outlined-text-field-focus-outline-width, 3px);--_focus-supporting-text-color: var(--md-outlined-text-field-focus-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-trailing-icon-color: var(--md-outlined-text-field-focus-trailing-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-input-text-color: var(--md-outlined-text-field-hover-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-label-text-color: var(--md-outlined-text-field-hover-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-leading-icon-color: var(--md-outlined-text-field-hover-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-outline-color: var(--md-outlined-text-field-hover-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-outline-width: var(--md-outlined-text-field-hover-outline-width, 1px);--_hover-supporting-text-color: var(--md-outlined-text-field-hover-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-trailing-icon-color: var(--md-outlined-text-field-hover-trailing-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-color: var(--md-outlined-text-field-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_input-text-font: var(--md-outlined-text-field-input-text-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_input-text-line-height: var(--md-outlined-text-field-input-text-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_input-text-placeholder-color: var(--md-outlined-text-field-input-text-placeholder-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-prefix-color: var(--md-outlined-text-field-input-text-prefix-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-size: var(--md-outlined-text-field-input-text-size, var(--md-sys-typescale-body-large-size, 1rem));--_input-text-suffix-color: var(--md-outlined-text-field-input-text-suffix-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-weight: var(--md-outlined-text-field-input-text-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_label-text-color: var(--md-outlined-text-field-label-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_label-text-font: var(--md-outlined-text-field-label-text-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_label-text-line-height: var(--md-outlined-text-field-label-text-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_label-text-populated-line-height: var(--md-outlined-text-field-label-text-populated-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_label-text-populated-size: var(--md-outlined-text-field-label-text-populated-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_label-text-size: var(--md-outlined-text-field-label-text-size, var(--md-sys-typescale-body-large-size, 1rem));--_label-text-weight: var(--md-outlined-text-field-label-text-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_leading-icon-color: var(--md-outlined-text-field-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_leading-icon-size: var(--md-outlined-text-field-leading-icon-size, 24px);--_outline-color: var(--md-outlined-text-field-outline-color, var(--md-sys-color-outline, #79747e));--_outline-width: var(--md-outlined-text-field-outline-width, 1px);--_supporting-text-color: var(--md-outlined-text-field-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_supporting-text-font: var(--md-outlined-text-field-supporting-text-font, var(--md-sys-typescale-body-small-font, var(--md-ref-typeface-plain, Roboto)));--_supporting-text-line-height: var(--md-outlined-text-field-supporting-text-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_supporting-text-size: var(--md-outlined-text-field-supporting-text-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_supporting-text-weight: var(--md-outlined-text-field-supporting-text-weight, var(--md-sys-typescale-body-small-weight, var(--md-ref-typeface-weight-regular, 400)));--_trailing-icon-color: var(--md-outlined-text-field-trailing-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_trailing-icon-size: var(--md-outlined-text-field-trailing-icon-size, 24px);--_container-shape-start-start: var(--md-outlined-text-field-container-shape-start-start, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-start-end: var(--md-outlined-text-field-container-shape-start-end, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-end: var(--md-outlined-text-field-container-shape-end-end, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-start: var(--md-outlined-text-field-container-shape-end-start, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_icon-input-space: var(--md-outlined-text-field-icon-input-space, 16px);--_leading-space: var(--md-outlined-text-field-leading-space, 16px);--_trailing-space: var(--md-outlined-text-field-trailing-space, 16px);--_top-space: var(--md-outlined-text-field-top-space, 16px);--_bottom-space: var(--md-outlined-text-field-bottom-space, 16px);--_input-text-prefix-trailing-space: var(--md-outlined-text-field-input-text-prefix-trailing-space, 2px);--_input-text-suffix-leading-space: var(--md-outlined-text-field-input-text-suffix-leading-space, 2px);--_focus-caret-color: var(--md-outlined-text-field-focus-caret-color, var(--md-sys-color-primary, #6750a4));--_with-leading-icon-leading-space: var(--md-outlined-text-field-with-leading-icon-leading-space, 12px);--_with-trailing-icon-trailing-space: var(--md-outlined-text-field-with-trailing-icon-trailing-space, 12px);--md-outlined-field-bottom-space: var(--_bottom-space);--md-outlined-field-container-shape-end-end: var(--_container-shape-end-end);--md-outlined-field-container-shape-end-start: var(--_container-shape-end-start);--md-outlined-field-container-shape-start-end: var(--_container-shape-start-end);--md-outlined-field-container-shape-start-start: var(--_container-shape-start-start);--md-outlined-field-content-color: var(--_input-text-color);--md-outlined-field-content-font: var(--_input-text-font);--md-outlined-field-content-line-height: var(--_input-text-line-height);--md-outlined-field-content-size: var(--_input-text-size);--md-outlined-field-content-space: var(--_icon-input-space);--md-outlined-field-content-weight: var(--_input-text-weight);--md-outlined-field-disabled-content-color: var(--_disabled-input-text-color);--md-outlined-field-disabled-content-opacity: var(--_disabled-input-text-opacity);--md-outlined-field-disabled-label-text-color: var(--_disabled-label-text-color);--md-outlined-field-disabled-label-text-opacity: var(--_disabled-label-text-opacity);--md-outlined-field-disabled-leading-content-color: var(--_disabled-leading-icon-color);--md-outlined-field-disabled-leading-content-opacity: var(--_disabled-leading-icon-opacity);--md-outlined-field-disabled-outline-color: var(--_disabled-outline-color);--md-outlined-field-disabled-outline-opacity: var(--_disabled-outline-opacity);--md-outlined-field-disabled-outline-width: var(--_disabled-outline-width);--md-outlined-field-disabled-supporting-text-color: var(--_disabled-supporting-text-color);--md-outlined-field-disabled-supporting-text-opacity: var(--_disabled-supporting-text-opacity);--md-outlined-field-disabled-trailing-content-color: var(--_disabled-trailing-icon-color);--md-outlined-field-disabled-trailing-content-opacity: var(--_disabled-trailing-icon-opacity);--md-outlined-field-error-content-color: var(--_error-input-text-color);--md-outlined-field-error-focus-content-color: var(--_error-focus-input-text-color);--md-outlined-field-error-focus-label-text-color: var(--_error-focus-label-text-color);--md-outlined-field-error-focus-leading-content-color: var(--_error-focus-leading-icon-color);--md-outlined-field-error-focus-outline-color: var(--_error-focus-outline-color);--md-outlined-field-error-focus-supporting-text-color: var(--_error-focus-supporting-text-color);--md-outlined-field-error-focus-trailing-content-color: var(--_error-focus-trailing-icon-color);--md-outlined-field-error-hover-content-color: var(--_error-hover-input-text-color);--md-outlined-field-error-hover-label-text-color: var(--_error-hover-label-text-color);--md-outlined-field-error-hover-leading-content-color: var(--_error-hover-leading-icon-color);--md-outlined-field-error-hover-outline-color: var(--_error-hover-outline-color);--md-outlined-field-error-hover-supporting-text-color: var(--_error-hover-supporting-text-color);--md-outlined-field-error-hover-trailing-content-color: var(--_error-hover-trailing-icon-color);--md-outlined-field-error-label-text-color: var(--_error-label-text-color);--md-outlined-field-error-leading-content-color: var(--_error-leading-icon-color);--md-outlined-field-error-outline-color: var(--_error-outline-color);--md-outlined-field-error-supporting-text-color: var(--_error-supporting-text-color);--md-outlined-field-error-trailing-content-color: var(--_error-trailing-icon-color);--md-outlined-field-focus-content-color: var(--_focus-input-text-color);--md-outlined-field-focus-label-text-color: var(--_focus-label-text-color);--md-outlined-field-focus-leading-content-color: var(--_focus-leading-icon-color);--md-outlined-field-focus-outline-color: var(--_focus-outline-color);--md-outlined-field-focus-outline-width: var(--_focus-outline-width);--md-outlined-field-focus-supporting-text-color: var(--_focus-supporting-text-color);--md-outlined-field-focus-trailing-content-color: var(--_focus-trailing-icon-color);--md-outlined-field-hover-content-color: var(--_hover-input-text-color);--md-outlined-field-hover-label-text-color: var(--_hover-label-text-color);--md-outlined-field-hover-leading-content-color: var(--_hover-leading-icon-color);--md-outlined-field-hover-outline-color: var(--_hover-outline-color);--md-outlined-field-hover-outline-width: var(--_hover-outline-width);--md-outlined-field-hover-supporting-text-color: var(--_hover-supporting-text-color);--md-outlined-field-hover-trailing-content-color: var(--_hover-trailing-icon-color);--md-outlined-field-label-text-color: var(--_label-text-color);--md-outlined-field-label-text-font: var(--_label-text-font);--md-outlined-field-label-text-line-height: var(--_label-text-line-height);--md-outlined-field-label-text-populated-line-height: var(--_label-text-populated-line-height);--md-outlined-field-label-text-populated-size: var(--_label-text-populated-size);--md-outlined-field-label-text-size: var(--_label-text-size);--md-outlined-field-label-text-weight: var(--_label-text-weight);--md-outlined-field-leading-content-color: var(--_leading-icon-color);--md-outlined-field-leading-space: var(--_leading-space);--md-outlined-field-outline-color: var(--_outline-color);--md-outlined-field-outline-width: var(--_outline-width);--md-outlined-field-supporting-text-color: var(--_supporting-text-color);--md-outlined-field-supporting-text-font: var(--_supporting-text-font);--md-outlined-field-supporting-text-line-height: var(--_supporting-text-line-height);--md-outlined-field-supporting-text-size: var(--_supporting-text-size);--md-outlined-field-supporting-text-weight: var(--_supporting-text-weight);--md-outlined-field-top-space: var(--_top-space);--md-outlined-field-trailing-content-color: var(--_trailing-icon-color);--md-outlined-field-trailing-space: var(--_trailing-space);--md-outlined-field-with-leading-content-leading-space: var(--_with-leading-icon-leading-space);--md-outlined-field-with-trailing-content-trailing-space: var(--_with-trailing-icon-trailing-space)}
+// Generated stylesheet for ./divider/internal/divider-styles.css.
+const styles$2c = i$_ `:host{box-sizing:border-box;color:var(--md-divider-color, var(--md-sys-color-outline-variant, #cac4d0));display:flex;height:var(--md-divider-thickness, 1px);width:100%}:host([inset]),:host([inset-start]){padding-inline-start:16px}:host([inset]),:host([inset-end]){padding-inline-end:16px}:host::before{background:currentColor;content:"";height:100%;width:100%}@media(forced-colors: active){:host::before{background:CanvasText}}
 `;
+
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-divider
+ * @summary A divider is a thin line that groups content in lists and
+ * containers.
+ *
+ * list items or define tappable regions in an accordion.
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdDivider$3 = class OscdDivider extends Divider$3 {
+};
+OscdDivider$3.styles = [styles$2c];
+
+function hasLocalStorage() {
+    try {
+        return typeof window !== 'undefined' && !!window.localStorage;
+    }
+    catch {
+        return false;
+    }
+}
+function resolveKey(host, propKey, namespace) {
+    const hostId = host.id;
+    if (!hostId) {
+        return undefined;
+    }
+    return namespace
+        ? `${namespace}:${hostId}:${propKey}`
+        : `${hostId}:${propKey}`;
+}
+const localstorageEntries = Symbol('localstorage:entries');
+const localstorageLifecycleWrapped = Symbol('localstorage:lifecycleWrapped');
+function installLifecycleWrappers(target) {
+    if (target[localstorageLifecycleWrapped]) {
+        return;
+    }
+    target[localstorageLifecycleWrapped] = true;
+    const connected = target['connectedCallback'];
+    target['connectedCallback'] = function connectedCallback() {
+        connected?.call(this);
+        const entries = target[localstorageEntries];
+        entries?.forEach(entry => entry.hydrateIfNeeded(this));
+    };
+    const requestUpdate = target['requestUpdate'];
+    target['requestUpdate'] = function requestUpdateCallback(name, oldValue, options) {
+        const result = requestUpdate?.call(this, name, oldValue, options);
+        if (name === undefined) {
+            return result;
+        }
+        const entries = target[localstorageEntries];
+        entries
+            ?.filter(entry => entry.propName === name)
+            .forEach(entry => entry.persistIfPossible(this));
+        return result;
+    };
+}
+function localstorage(opts = {}) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (target, propName) => {
+        const propKey = String(propName);
+        const hydratedSymbol = Symbol(`${propKey}:hydrated`);
+        const disabledSymbol = Symbol(`${propKey}:disabled`);
+        const warnedMissingIdSymbol = Symbol(`${propKey}:warnedMissingId`);
+        const warnMissingId = (host) => {
+            if (host[warnedMissingIdSymbol]) {
+                return;
+            }
+            console.warn(`[localstorage] ${propKey} requires a static host id for persistence. Dynamic IDs are not supported.`);
+            host[warnedMissingIdSymbol] = true;
+        };
+        const hydrateIfNeeded = (host) => {
+            if (host[hydratedSymbol] || host[disabledSymbol]) {
+                return;
+            }
+            if (!hasLocalStorage()) {
+                if ('default' in opts) {
+                    host[propName] = opts.default;
+                }
+                host[hydratedSymbol] = true;
+                return;
+            }
+            const storageKey = resolveKey(host, propKey, opts.namespace);
+            if (!storageKey) {
+                if (!host.isConnected) {
+                    return;
+                }
+                warnMissingId(host);
+                host[disabledSymbol] = true;
+                return;
+            }
+            const raw = localStorage.getItem(storageKey);
+            if (raw != null) {
+                try {
+                    host[propName] = opts.deserializer
+                        ? opts.deserializer(raw)
+                        : JSON.parse(raw);
+                }
+                catch {
+                    if ('default' in opts) {
+                        host[propName] = opts.default;
+                    }
+                }
+            }
+            else if ('default' in opts) {
+                host[propName] = opts.default;
+            }
+            host[hydratedSymbol] = true;
+        };
+        const persistIfPossible = (host) => {
+            if (host[disabledSymbol]) {
+                return;
+            }
+            const storageKey = resolveKey(host, propKey, opts.namespace);
+            if (!storageKey || !hasLocalStorage()) {
+                if (!storageKey) {
+                    if (!host.isConnected) {
+                        return;
+                    }
+                    warnMissingId(host);
+                    host[disabledSymbol] = true;
+                }
+                return;
+            }
+            try {
+                const raw = opts.serializer
+                    ? opts.serializer(host[propName])
+                    : JSON.stringify(host[propName]);
+                localStorage.setItem(storageKey, raw);
+            }
+            catch {
+                // ignore quota/serialization errors
+            }
+        };
+        installLifecycleWrappers(target);
+        if (!target[localstorageEntries]) {
+            target[localstorageEntries] = [];
+        }
+        target[localstorageEntries].push({
+            propName,
+            propKey,
+            hydratedSymbol,
+            disabledSymbol,
+            warnedMissingIdSymbol,
+            hydrateIfNeeded,
+            persistIfPossible,
+        });
+    };
+}
 
 /**
  * @license
@@ -9875,9 +10174,107 @@ let OutlinedTextField$2 = class OutlinedTextField extends TextField$3 {
  * Copyright 2024 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
-// Generated stylesheet for ./textfield/internal/shared-styles.css.
-const styles$2b = i$_ `:host{display:inline-flex;outline:none;resize:both;text-align:start;-webkit-tap-highlight-color:rgba(0,0,0,0)}.text-field,.field{width:100%}.text-field{display:inline-flex}.field{cursor:text}.disabled .field{cursor:default}.text-field,.textarea .field{resize:inherit}slot[name=container]{border-radius:inherit}.icon{color:currentColor;display:flex;align-items:center;justify-content:center;fill:currentColor;position:relative}.icon ::slotted(*){display:flex;position:absolute}[has-start] .icon.leading{font-size:var(--_leading-icon-size);height:var(--_leading-icon-size);width:var(--_leading-icon-size)}[has-end] .icon.trailing{font-size:var(--_trailing-icon-size);height:var(--_trailing-icon-size);width:var(--_trailing-icon-size)}.input-wrapper{display:flex}.input-wrapper>*{all:inherit;padding:0}.input{caret-color:var(--_caret-color);overflow-x:hidden;text-align:inherit}.input::placeholder{color:currentColor;opacity:1}.input::-webkit-calendar-picker-indicator{display:none}.input::-webkit-search-decoration,.input::-webkit-search-cancel-button{display:none}@media(forced-colors: active){.input{background:none}}.no-spinner .input::-webkit-inner-spin-button,.no-spinner .input::-webkit-outer-spin-button{display:none}.no-spinner .input[type=number]{-moz-appearance:textfield}:focus-within .input{caret-color:var(--_focus-caret-color)}.error:focus-within .input{caret-color:var(--_error-focus-caret-color)}.text-field:not(.disabled) .prefix{color:var(--_input-text-prefix-color)}.text-field:not(.disabled) .suffix{color:var(--_input-text-suffix-color)}.text-field:not(.disabled) .input::placeholder{color:var(--_input-text-placeholder-color)}.prefix,.suffix{text-wrap:nowrap;width:min-content}.prefix{padding-inline-end:var(--_input-text-prefix-trailing-space)}.suffix{padding-inline-start:var(--_input-text-suffix-leading-space)}
+// Generated stylesheet for ./textfield/internal/outlined-styles.css.
+const styles$2b = i$_ `:host{--_caret-color: var(--md-outlined-text-field-caret-color, var(--md-sys-color-primary, #6750a4));--_disabled-input-text-color: var(--md-outlined-text-field-disabled-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-input-text-opacity: var(--md-outlined-text-field-disabled-input-text-opacity, 0.38);--_disabled-label-text-color: var(--md-outlined-text-field-disabled-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-label-text-opacity: var(--md-outlined-text-field-disabled-label-text-opacity, 0.38);--_disabled-leading-icon-color: var(--md-outlined-text-field-disabled-leading-icon-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-leading-icon-opacity: var(--md-outlined-text-field-disabled-leading-icon-opacity, 0.38);--_disabled-outline-color: var(--md-outlined-text-field-disabled-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-outline-opacity: var(--md-outlined-text-field-disabled-outline-opacity, 0.12);--_disabled-outline-width: var(--md-outlined-text-field-disabled-outline-width, 1px);--_disabled-supporting-text-color: var(--md-outlined-text-field-disabled-supporting-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-supporting-text-opacity: var(--md-outlined-text-field-disabled-supporting-text-opacity, 0.38);--_disabled-trailing-icon-color: var(--md-outlined-text-field-disabled-trailing-icon-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-trailing-icon-opacity: var(--md-outlined-text-field-disabled-trailing-icon-opacity, 0.38);--_error-focus-caret-color: var(--md-outlined-text-field-error-focus-caret-color, var(--md-sys-color-error, #b3261e));--_error-focus-input-text-color: var(--md-outlined-text-field-error-focus-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_error-focus-label-text-color: var(--md-outlined-text-field-error-focus-label-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-leading-icon-color: var(--md-outlined-text-field-error-focus-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-focus-outline-color: var(--md-outlined-text-field-error-focus-outline-color, var(--md-sys-color-error, #b3261e));--_error-focus-supporting-text-color: var(--md-outlined-text-field-error-focus-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-trailing-icon-color: var(--md-outlined-text-field-error-focus-trailing-icon-color, var(--md-sys-color-error, #b3261e));--_error-hover-input-text-color: var(--md-outlined-text-field-error-hover-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_error-hover-label-text-color: var(--md-outlined-text-field-error-hover-label-text-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-leading-icon-color: var(--md-outlined-text-field-error-hover-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-hover-outline-color: var(--md-outlined-text-field-error-hover-outline-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-supporting-text-color: var(--md-outlined-text-field-error-hover-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-hover-trailing-icon-color: var(--md-outlined-text-field-error-hover-trailing-icon-color, var(--md-sys-color-on-error-container, #410e0b));--_error-input-text-color: var(--md-outlined-text-field-error-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_error-label-text-color: var(--md-outlined-text-field-error-label-text-color, var(--md-sys-color-error, #b3261e));--_error-leading-icon-color: var(--md-outlined-text-field-error-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-outline-color: var(--md-outlined-text-field-error-outline-color, var(--md-sys-color-error, #b3261e));--_error-supporting-text-color: var(--md-outlined-text-field-error-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-trailing-icon-color: var(--md-outlined-text-field-error-trailing-icon-color, var(--md-sys-color-error, #b3261e));--_focus-input-text-color: var(--md-outlined-text-field-focus-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_focus-label-text-color: var(--md-outlined-text-field-focus-label-text-color, var(--md-sys-color-primary, #6750a4));--_focus-leading-icon-color: var(--md-outlined-text-field-focus-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-outline-color: var(--md-outlined-text-field-focus-outline-color, var(--md-sys-color-primary, #6750a4));--_focus-outline-width: var(--md-outlined-text-field-focus-outline-width, 3px);--_focus-supporting-text-color: var(--md-outlined-text-field-focus-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-trailing-icon-color: var(--md-outlined-text-field-focus-trailing-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-input-text-color: var(--md-outlined-text-field-hover-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-label-text-color: var(--md-outlined-text-field-hover-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-leading-icon-color: var(--md-outlined-text-field-hover-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-outline-color: var(--md-outlined-text-field-hover-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-outline-width: var(--md-outlined-text-field-hover-outline-width, 1px);--_hover-supporting-text-color: var(--md-outlined-text-field-hover-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-trailing-icon-color: var(--md-outlined-text-field-hover-trailing-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-color: var(--md-outlined-text-field-input-text-color, var(--md-sys-color-on-surface, #1d1b20));--_input-text-font: var(--md-outlined-text-field-input-text-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_input-text-line-height: var(--md-outlined-text-field-input-text-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_input-text-placeholder-color: var(--md-outlined-text-field-input-text-placeholder-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-prefix-color: var(--md-outlined-text-field-input-text-prefix-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-size: var(--md-outlined-text-field-input-text-size, var(--md-sys-typescale-body-large-size, 1rem));--_input-text-suffix-color: var(--md-outlined-text-field-input-text-suffix-color, var(--md-sys-color-on-surface-variant, #49454f));--_input-text-weight: var(--md-outlined-text-field-input-text-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_label-text-color: var(--md-outlined-text-field-label-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_label-text-font: var(--md-outlined-text-field-label-text-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_label-text-line-height: var(--md-outlined-text-field-label-text-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_label-text-populated-line-height: var(--md-outlined-text-field-label-text-populated-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_label-text-populated-size: var(--md-outlined-text-field-label-text-populated-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_label-text-size: var(--md-outlined-text-field-label-text-size, var(--md-sys-typescale-body-large-size, 1rem));--_label-text-weight: var(--md-outlined-text-field-label-text-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_leading-icon-color: var(--md-outlined-text-field-leading-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_leading-icon-size: var(--md-outlined-text-field-leading-icon-size, 24px);--_outline-color: var(--md-outlined-text-field-outline-color, var(--md-sys-color-outline, #79747e));--_outline-width: var(--md-outlined-text-field-outline-width, 1px);--_supporting-text-color: var(--md-outlined-text-field-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_supporting-text-font: var(--md-outlined-text-field-supporting-text-font, var(--md-sys-typescale-body-small-font, var(--md-ref-typeface-plain, Roboto)));--_supporting-text-line-height: var(--md-outlined-text-field-supporting-text-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_supporting-text-size: var(--md-outlined-text-field-supporting-text-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_supporting-text-weight: var(--md-outlined-text-field-supporting-text-weight, var(--md-sys-typescale-body-small-weight, var(--md-ref-typeface-weight-regular, 400)));--_trailing-icon-color: var(--md-outlined-text-field-trailing-icon-color, var(--md-sys-color-on-surface-variant, #49454f));--_trailing-icon-size: var(--md-outlined-text-field-trailing-icon-size, 24px);--_container-shape-start-start: var(--md-outlined-text-field-container-shape-start-start, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-start-end: var(--md-outlined-text-field-container-shape-start-end, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-end: var(--md-outlined-text-field-container-shape-end-end, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-start: var(--md-outlined-text-field-container-shape-end-start, var(--md-outlined-text-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_icon-input-space: var(--md-outlined-text-field-icon-input-space, 16px);--_leading-space: var(--md-outlined-text-field-leading-space, 16px);--_trailing-space: var(--md-outlined-text-field-trailing-space, 16px);--_top-space: var(--md-outlined-text-field-top-space, 16px);--_bottom-space: var(--md-outlined-text-field-bottom-space, 16px);--_input-text-prefix-trailing-space: var(--md-outlined-text-field-input-text-prefix-trailing-space, 2px);--_input-text-suffix-leading-space: var(--md-outlined-text-field-input-text-suffix-leading-space, 2px);--_focus-caret-color: var(--md-outlined-text-field-focus-caret-color, var(--md-sys-color-primary, #6750a4));--_with-leading-icon-leading-space: var(--md-outlined-text-field-with-leading-icon-leading-space, 12px);--_with-trailing-icon-trailing-space: var(--md-outlined-text-field-with-trailing-icon-trailing-space, 12px);--md-outlined-field-bottom-space: var(--_bottom-space);--md-outlined-field-container-shape-end-end: var(--_container-shape-end-end);--md-outlined-field-container-shape-end-start: var(--_container-shape-end-start);--md-outlined-field-container-shape-start-end: var(--_container-shape-start-end);--md-outlined-field-container-shape-start-start: var(--_container-shape-start-start);--md-outlined-field-content-color: var(--_input-text-color);--md-outlined-field-content-font: var(--_input-text-font);--md-outlined-field-content-line-height: var(--_input-text-line-height);--md-outlined-field-content-size: var(--_input-text-size);--md-outlined-field-content-space: var(--_icon-input-space);--md-outlined-field-content-weight: var(--_input-text-weight);--md-outlined-field-disabled-content-color: var(--_disabled-input-text-color);--md-outlined-field-disabled-content-opacity: var(--_disabled-input-text-opacity);--md-outlined-field-disabled-label-text-color: var(--_disabled-label-text-color);--md-outlined-field-disabled-label-text-opacity: var(--_disabled-label-text-opacity);--md-outlined-field-disabled-leading-content-color: var(--_disabled-leading-icon-color);--md-outlined-field-disabled-leading-content-opacity: var(--_disabled-leading-icon-opacity);--md-outlined-field-disabled-outline-color: var(--_disabled-outline-color);--md-outlined-field-disabled-outline-opacity: var(--_disabled-outline-opacity);--md-outlined-field-disabled-outline-width: var(--_disabled-outline-width);--md-outlined-field-disabled-supporting-text-color: var(--_disabled-supporting-text-color);--md-outlined-field-disabled-supporting-text-opacity: var(--_disabled-supporting-text-opacity);--md-outlined-field-disabled-trailing-content-color: var(--_disabled-trailing-icon-color);--md-outlined-field-disabled-trailing-content-opacity: var(--_disabled-trailing-icon-opacity);--md-outlined-field-error-content-color: var(--_error-input-text-color);--md-outlined-field-error-focus-content-color: var(--_error-focus-input-text-color);--md-outlined-field-error-focus-label-text-color: var(--_error-focus-label-text-color);--md-outlined-field-error-focus-leading-content-color: var(--_error-focus-leading-icon-color);--md-outlined-field-error-focus-outline-color: var(--_error-focus-outline-color);--md-outlined-field-error-focus-supporting-text-color: var(--_error-focus-supporting-text-color);--md-outlined-field-error-focus-trailing-content-color: var(--_error-focus-trailing-icon-color);--md-outlined-field-error-hover-content-color: var(--_error-hover-input-text-color);--md-outlined-field-error-hover-label-text-color: var(--_error-hover-label-text-color);--md-outlined-field-error-hover-leading-content-color: var(--_error-hover-leading-icon-color);--md-outlined-field-error-hover-outline-color: var(--_error-hover-outline-color);--md-outlined-field-error-hover-supporting-text-color: var(--_error-hover-supporting-text-color);--md-outlined-field-error-hover-trailing-content-color: var(--_error-hover-trailing-icon-color);--md-outlined-field-error-label-text-color: var(--_error-label-text-color);--md-outlined-field-error-leading-content-color: var(--_error-leading-icon-color);--md-outlined-field-error-outline-color: var(--_error-outline-color);--md-outlined-field-error-supporting-text-color: var(--_error-supporting-text-color);--md-outlined-field-error-trailing-content-color: var(--_error-trailing-icon-color);--md-outlined-field-focus-content-color: var(--_focus-input-text-color);--md-outlined-field-focus-label-text-color: var(--_focus-label-text-color);--md-outlined-field-focus-leading-content-color: var(--_focus-leading-icon-color);--md-outlined-field-focus-outline-color: var(--_focus-outline-color);--md-outlined-field-focus-outline-width: var(--_focus-outline-width);--md-outlined-field-focus-supporting-text-color: var(--_focus-supporting-text-color);--md-outlined-field-focus-trailing-content-color: var(--_focus-trailing-icon-color);--md-outlined-field-hover-content-color: var(--_hover-input-text-color);--md-outlined-field-hover-label-text-color: var(--_hover-label-text-color);--md-outlined-field-hover-leading-content-color: var(--_hover-leading-icon-color);--md-outlined-field-hover-outline-color: var(--_hover-outline-color);--md-outlined-field-hover-outline-width: var(--_hover-outline-width);--md-outlined-field-hover-supporting-text-color: var(--_hover-supporting-text-color);--md-outlined-field-hover-trailing-content-color: var(--_hover-trailing-icon-color);--md-outlined-field-label-text-color: var(--_label-text-color);--md-outlined-field-label-text-font: var(--_label-text-font);--md-outlined-field-label-text-line-height: var(--_label-text-line-height);--md-outlined-field-label-text-populated-line-height: var(--_label-text-populated-line-height);--md-outlined-field-label-text-populated-size: var(--_label-text-populated-size);--md-outlined-field-label-text-size: var(--_label-text-size);--md-outlined-field-label-text-weight: var(--_label-text-weight);--md-outlined-field-leading-content-color: var(--_leading-icon-color);--md-outlined-field-leading-space: var(--_leading-space);--md-outlined-field-outline-color: var(--_outline-color);--md-outlined-field-outline-width: var(--_outline-width);--md-outlined-field-supporting-text-color: var(--_supporting-text-color);--md-outlined-field-supporting-text-font: var(--_supporting-text-font);--md-outlined-field-supporting-text-line-height: var(--_supporting-text-line-height);--md-outlined-field-supporting-text-size: var(--_supporting-text-size);--md-outlined-field-supporting-text-weight: var(--_supporting-text-weight);--md-outlined-field-top-space: var(--_top-space);--md-outlined-field-trailing-content-color: var(--_trailing-icon-color);--md-outlined-field-trailing-space: var(--_trailing-space);--md-outlined-field-with-leading-content-leading-space: var(--_with-leading-icon-leading-space);--md-outlined-field-with-trailing-content-trailing-space: var(--_with-trailing-icon-trailing-space)}
 `;
+
+/**
+ * @license
+ * Copyright 2024 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+// Generated stylesheet for ./textfield/internal/shared-styles.css.
+const styles$2a = i$_ `:host{display:inline-flex;outline:none;resize:both;text-align:start;-webkit-tap-highlight-color:rgba(0,0,0,0)}.text-field,.field{width:100%}.text-field{display:inline-flex}.field{cursor:text}.disabled .field{cursor:default}.text-field,.textarea .field{resize:inherit}slot[name=container]{border-radius:inherit}.icon{color:currentColor;display:flex;align-items:center;justify-content:center;fill:currentColor;position:relative}.icon ::slotted(*){display:flex;position:absolute}[has-start] .icon.leading{font-size:var(--_leading-icon-size);height:var(--_leading-icon-size);width:var(--_leading-icon-size)}[has-end] .icon.trailing{font-size:var(--_trailing-icon-size);height:var(--_trailing-icon-size);width:var(--_trailing-icon-size)}.input-wrapper{display:flex}.input-wrapper>*{all:inherit;padding:0}.input{caret-color:var(--_caret-color);overflow-x:hidden;text-align:inherit}.input::placeholder{color:currentColor;opacity:1}.input::-webkit-calendar-picker-indicator{display:none}.input::-webkit-search-decoration,.input::-webkit-search-cancel-button{display:none}@media(forced-colors: active){.input{background:none}}.no-spinner .input::-webkit-inner-spin-button,.no-spinner .input::-webkit-outer-spin-button{display:none}.no-spinner .input[type=number]{-moz-appearance:textfield}:focus-within .input{caret-color:var(--_focus-caret-color)}.error:focus-within .input{caret-color:var(--_error-focus-caret-color)}.text-field:not(.disabled) .prefix{color:var(--_input-text-prefix-color)}.text-field:not(.disabled) .suffix{color:var(--_input-text-suffix-color)}.text-field:not(.disabled) .input::placeholder{color:var(--_input-text-placeholder-color)}.prefix,.suffix{text-wrap:nowrap;width:min-content}.prefix{padding-inline-end:var(--_input-text-prefix-trailing-space)}.suffix{padding-inline-start:var(--_input-text-suffix-leading-space)}
+`;
+
+function renderDefaultLeadingIcon() {
+    return b$2 `<oscd-icon slot="leading-icon">search</oscd-icon>`;
+}
+class OutlinedSearchField extends OutlinedTextField$2 {
+    constructor() {
+        super();
+        this.clearLabel = 'Clear search';
+        this.addEventListener('focus', this.handleFocus.bind(this));
+        this.addEventListener('blur', this.handleBlur.bind(this));
+    }
+    handleFocus() {
+        this.placeholder = '';
+    }
+    handleBlur() {
+        this.placeholder = 'Search';
+    }
+    willUpdate(changedProperties) {
+        super.willUpdate(changedProperties);
+        // The search icon is always present, either as consumer content or as the
+        // default rendered by renderLeadingIcon().
+        this.hasLeadingIcon = true;
+        this.hasTrailingIcon =
+            this.hasCustomSlot('trailing-icon') || Boolean(this.value);
+    }
+    clear() {
+        this.value = '';
+        this.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true }));
+        this.focus();
+    }
+    renderDefaultClearFieldIconButton() {
+        if (!this.value) {
+            return b$2 ``;
+        }
+        return b$2 `<oscd-icon-button
+      class="default-clear-button"
+      slot="trailing-icon"
+      aria-label=${this.clearLabel}
+      @click=${() => this.clear()}
+      ><oscd-icon>close</oscd-icon></oscd-icon-button
+    >`;
+    }
+    renderTrailingIcon() {
+        return b$2 `
+      <span class="icon trailing" slot="end">
+        <slot name="trailing-icon"></slot>
+        ${this.hasCustomSlot('trailing-icon')
+            ? A$c
+            : this.renderDefaultClearFieldIconButton()}
+      </span>
+    `;
+    }
+    renderLeadingIcon() {
+        return b$2 `
+      <span class="icon leading" slot="start">
+        <slot name="leading-icon"></slot>
+        ${this.hasCustomSlot('leading-icon')
+            ? A$c
+            : renderDefaultLeadingIcon()}
+      </span>
+    `;
+    }
+    hasCustomSlot(slotName) {
+        return this.querySelector(`[slot="${slotName}"]`) !== null;
+    }
+}
+OutlinedSearchField.styles = [
+    styles$2a,
+    styles$2b,
+    i$_ `
+      :host {
+        --md-outlined-text-field-input-text-placeholder-color: var(
+          --oscd-search-field-placeholder-color,
+          color-mix(
+            in srgb,
+            var(
+                --md-outlined-text-field-input-text-color,
+                var(--md-sys-color-on-surface, #1d1b20)
+              )
+              50%,
+            transparent
+          )
+        );
+      }
+    `,
+];
+__decorate$2([
+    n$1f({ type: String })
+], OutlinedSearchField.prototype, "clearLabel", void 0);
 
 /**
  * @license
@@ -10094,6 +10491,10 @@ let Field$3 = class Field extends i$X {
         if (wasFloating === shouldBeFloating) {
             return;
         }
+        const keyframes = this.getLabelKeyframes();
+        if (!keyframes.length) {
+            return;
+        }
         this.isAnimating = true;
         this.labelAnimation?.cancel();
         // Only one label is visible at a time for clearer text rendering.
@@ -10108,7 +10509,10 @@ let Field$3 = class Field extends i$X {
         // Re-calculating the animation each time will prevent any visual glitches
         // from appearing.
         // TODO(b/241113345): use animation tokens
-        this.labelAnimation = this.floatingLabelEl?.animate(this.getLabelKeyframes(), { duration: 150, easing: EASING$3.STANDARD });
+        this.labelAnimation = this.floatingLabelEl?.animate(keyframes, {
+            duration: 150,
+            easing: EASING$3.STANDARD,
+        });
         this.labelAnimation?.addEventListener('finish', () => {
             // At the end of the animation, update the visible label.
             this.isAnimating = false;
@@ -10123,6 +10527,10 @@ let Field$3 = class Field extends i$X {
         const { x: restingX, y: restingY, height: restingHeight, } = restingLabelEl.getBoundingClientRect();
         const floatingScrollWidth = floatingLabelEl.scrollWidth;
         const restingScrollWidth = restingLabelEl.scrollWidth;
+        // If either label has no dimensions (e.g., display: none), skip animation
+        if (floatingScrollWidth === 0 || restingScrollWidth === 0) {
+            return [];
+        }
         // Scale by width ratio instead of font size since letter-spacing will scale
         // incorrectly. Using the width we can better approximate the adjusted
         // scale and compensate for tracking and overflow.
@@ -10256,7 +10664,7 @@ let OutlinedField$3 = class OutlinedField extends Field$3 {
  * SPDX-License-Identifier: Apache-2.0
  */
 // Generated stylesheet for ./field/internal/outlined-styles.css.
-const styles$2a = i$_ `@layer styles{:host{--_bottom-space: var(--md-outlined-field-bottom-space, 16px);--_content-color: var(--md-outlined-field-content-color, var(--md-sys-color-on-surface, #1d1b20));--_content-font: var(--md-outlined-field-content-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_content-line-height: var(--md-outlined-field-content-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_content-size: var(--md-outlined-field-content-size, var(--md-sys-typescale-body-large-size, 1rem));--_content-space: var(--md-outlined-field-content-space, 16px);--_content-weight: var(--md-outlined-field-content-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_disabled-content-color: var(--md-outlined-field-disabled-content-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-content-opacity: var(--md-outlined-field-disabled-content-opacity, 0.38);--_disabled-label-text-color: var(--md-outlined-field-disabled-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-label-text-opacity: var(--md-outlined-field-disabled-label-text-opacity, 0.38);--_disabled-leading-content-color: var(--md-outlined-field-disabled-leading-content-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-leading-content-opacity: var(--md-outlined-field-disabled-leading-content-opacity, 0.38);--_disabled-outline-color: var(--md-outlined-field-disabled-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-outline-opacity: var(--md-outlined-field-disabled-outline-opacity, 0.12);--_disabled-outline-width: var(--md-outlined-field-disabled-outline-width, 1px);--_disabled-supporting-text-color: var(--md-outlined-field-disabled-supporting-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-supporting-text-opacity: var(--md-outlined-field-disabled-supporting-text-opacity, 0.38);--_disabled-trailing-content-color: var(--md-outlined-field-disabled-trailing-content-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-trailing-content-opacity: var(--md-outlined-field-disabled-trailing-content-opacity, 0.38);--_error-content-color: var(--md-outlined-field-error-content-color, var(--md-sys-color-on-surface, #1d1b20));--_error-focus-content-color: var(--md-outlined-field-error-focus-content-color, var(--md-sys-color-on-surface, #1d1b20));--_error-focus-label-text-color: var(--md-outlined-field-error-focus-label-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-leading-content-color: var(--md-outlined-field-error-focus-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-focus-outline-color: var(--md-outlined-field-error-focus-outline-color, var(--md-sys-color-error, #b3261e));--_error-focus-supporting-text-color: var(--md-outlined-field-error-focus-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-trailing-content-color: var(--md-outlined-field-error-focus-trailing-content-color, var(--md-sys-color-error, #b3261e));--_error-hover-content-color: var(--md-outlined-field-error-hover-content-color, var(--md-sys-color-on-surface, #1d1b20));--_error-hover-label-text-color: var(--md-outlined-field-error-hover-label-text-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-leading-content-color: var(--md-outlined-field-error-hover-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-hover-outline-color: var(--md-outlined-field-error-hover-outline-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-supporting-text-color: var(--md-outlined-field-error-hover-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-hover-trailing-content-color: var(--md-outlined-field-error-hover-trailing-content-color, var(--md-sys-color-on-error-container, #410e0b));--_error-label-text-color: var(--md-outlined-field-error-label-text-color, var(--md-sys-color-error, #b3261e));--_error-leading-content-color: var(--md-outlined-field-error-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-outline-color: var(--md-outlined-field-error-outline-color, var(--md-sys-color-error, #b3261e));--_error-supporting-text-color: var(--md-outlined-field-error-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-trailing-content-color: var(--md-outlined-field-error-trailing-content-color, var(--md-sys-color-error, #b3261e));--_focus-content-color: var(--md-outlined-field-focus-content-color, var(--md-sys-color-on-surface, #1d1b20));--_focus-label-text-color: var(--md-outlined-field-focus-label-text-color, var(--md-sys-color-primary, #6750a4));--_focus-leading-content-color: var(--md-outlined-field-focus-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-outline-color: var(--md-outlined-field-focus-outline-color, var(--md-sys-color-primary, #6750a4));--_focus-outline-width: var(--md-outlined-field-focus-outline-width, 3px);--_focus-supporting-text-color: var(--md-outlined-field-focus-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-trailing-content-color: var(--md-outlined-field-focus-trailing-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-content-color: var(--md-outlined-field-hover-content-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-label-text-color: var(--md-outlined-field-hover-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-leading-content-color: var(--md-outlined-field-hover-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-outline-color: var(--md-outlined-field-hover-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-outline-width: var(--md-outlined-field-hover-outline-width, 1px);--_hover-supporting-text-color: var(--md-outlined-field-hover-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-trailing-content-color: var(--md-outlined-field-hover-trailing-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_label-text-color: var(--md-outlined-field-label-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_label-text-font: var(--md-outlined-field-label-text-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_label-text-line-height: var(--md-outlined-field-label-text-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_label-text-padding-bottom: var(--md-outlined-field-label-text-padding-bottom, 8px);--_label-text-populated-line-height: var(--md-outlined-field-label-text-populated-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_label-text-populated-size: var(--md-outlined-field-label-text-populated-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_label-text-size: var(--md-outlined-field-label-text-size, var(--md-sys-typescale-body-large-size, 1rem));--_label-text-weight: var(--md-outlined-field-label-text-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_leading-content-color: var(--md-outlined-field-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_leading-space: var(--md-outlined-field-leading-space, 16px);--_outline-color: var(--md-outlined-field-outline-color, var(--md-sys-color-outline, #79747e));--_outline-label-padding: var(--md-outlined-field-outline-label-padding, 4px);--_outline-width: var(--md-outlined-field-outline-width, 1px);--_supporting-text-color: var(--md-outlined-field-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_supporting-text-font: var(--md-outlined-field-supporting-text-font, var(--md-sys-typescale-body-small-font, var(--md-ref-typeface-plain, Roboto)));--_supporting-text-leading-space: var(--md-outlined-field-supporting-text-leading-space, 16px);--_supporting-text-line-height: var(--md-outlined-field-supporting-text-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_supporting-text-size: var(--md-outlined-field-supporting-text-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_supporting-text-top-space: var(--md-outlined-field-supporting-text-top-space, 4px);--_supporting-text-trailing-space: var(--md-outlined-field-supporting-text-trailing-space, 16px);--_supporting-text-weight: var(--md-outlined-field-supporting-text-weight, var(--md-sys-typescale-body-small-weight, var(--md-ref-typeface-weight-regular, 400)));--_top-space: var(--md-outlined-field-top-space, 16px);--_trailing-content-color: var(--md-outlined-field-trailing-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_trailing-space: var(--md-outlined-field-trailing-space, 16px);--_with-leading-content-leading-space: var(--md-outlined-field-with-leading-content-leading-space, 12px);--_with-trailing-content-trailing-space: var(--md-outlined-field-with-trailing-content-trailing-space, 12px);--_container-shape-start-start: var(--md-outlined-field-container-shape-start-start, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-start-end: var(--md-outlined-field-container-shape-start-end, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-end: var(--md-outlined-field-container-shape-end-end, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-start: var(--md-outlined-field-container-shape-end-start, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)))}.outline{border-color:var(--_outline-color);border-radius:inherit;display:flex;pointer-events:none;height:100%;position:absolute;width:100%;z-index:1}.outline-start::before,.outline-start::after,.outline-panel-inactive::before,.outline-panel-inactive::after,.outline-panel-active::before,.outline-panel-active::after,.outline-end::before,.outline-end::after{border:inherit;content:"";inset:0;position:absolute}.outline-start,.outline-end{border:inherit;border-radius:inherit;box-sizing:border-box;position:relative}.outline-start::before,.outline-start::after,.outline-end::before,.outline-end::after{border-bottom-style:solid;border-top-style:solid}.outline-start::after,.outline-end::after{opacity:0;transition:opacity 150ms cubic-bezier(0.2, 0, 0, 1)}.focused .outline-start::after,.focused .outline-end::after{opacity:1}.outline-start::before,.outline-start::after{border-inline-start-style:solid;border-inline-end-style:none;border-start-start-radius:inherit;border-start-end-radius:0;border-end-start-radius:inherit;border-end-end-radius:0;margin-inline-end:var(--_outline-label-padding)}.outline-end{flex-grow:1;margin-inline-start:calc(-1*var(--_outline-label-padding))}.outline-end::before,.outline-end::after{border-inline-start-style:none;border-inline-end-style:solid;border-start-start-radius:0;border-start-end-radius:inherit;border-end-start-radius:0;border-end-end-radius:inherit}.outline-notch{align-items:flex-start;border:inherit;display:flex;margin-inline-start:calc(-1*var(--_outline-label-padding));margin-inline-end:var(--_outline-label-padding);max-width:calc(100% - var(--_leading-space) - var(--_trailing-space));padding:0 var(--_outline-label-padding);position:relative}.no-label .outline-notch{display:none}.outline-panel-inactive,.outline-panel-active{border:inherit;border-bottom-style:solid;inset:0;position:absolute}.outline-panel-inactive::before,.outline-panel-inactive::after,.outline-panel-active::before,.outline-panel-active::after{border-top-style:solid;border-bottom:none;bottom:auto;transform:scaleX(1);transition:transform 150ms cubic-bezier(0.2, 0, 0, 1)}.outline-panel-inactive::before,.outline-panel-active::before{right:50%;transform-origin:top left}.outline-panel-inactive::after,.outline-panel-active::after{left:50%;transform-origin:top right}.populated .outline-panel-inactive::before,.populated .outline-panel-inactive::after,.populated .outline-panel-active::before,.populated .outline-panel-active::after,.focused .outline-panel-inactive::before,.focused .outline-panel-inactive::after,.focused .outline-panel-active::before,.focused .outline-panel-active::after{transform:scaleX(0)}.outline-panel-active{opacity:0;transition:opacity 150ms cubic-bezier(0.2, 0, 0, 1)}.focused .outline-panel-active{opacity:1}.outline-label{display:flex;max-width:100%;transform:translateY(calc(-100% + var(--_label-text-padding-bottom)))}.outline-start,.field:not(.with-start) .content ::slotted(*){padding-inline-start:max(var(--_leading-space),max(var(--_container-shape-start-start),var(--_container-shape-end-start)) + var(--_outline-label-padding))}.field:not(.with-start) .label-wrapper{margin-inline-start:max(var(--_leading-space),max(var(--_container-shape-start-start),var(--_container-shape-end-start)) + var(--_outline-label-padding))}.field:not(.with-end) .content ::slotted(*){padding-inline-end:max(var(--_trailing-space),max(var(--_container-shape-start-end),var(--_container-shape-end-end)))}.field:not(.with-end) .label-wrapper{margin-inline-end:max(var(--_trailing-space),max(var(--_container-shape-start-end),var(--_container-shape-end-end)))}.outline-start::before,.outline-end::before,.outline-panel-inactive,.outline-panel-inactive::before,.outline-panel-inactive::after{border-width:var(--_outline-width)}:hover .outline{border-color:var(--_hover-outline-color);color:var(--_hover-outline-color)}:hover .outline-start::before,:hover .outline-end::before,:hover .outline-panel-inactive,:hover .outline-panel-inactive::before,:hover .outline-panel-inactive::after{border-width:var(--_hover-outline-width)}.focused .outline{border-color:var(--_focus-outline-color);color:var(--_focus-outline-color)}.outline-start::after,.outline-end::after,.outline-panel-active,.outline-panel-active::before,.outline-panel-active::after{border-width:var(--_focus-outline-width)}.disabled .outline{border-color:var(--_disabled-outline-color);color:var(--_disabled-outline-color)}.disabled .outline-start,.disabled .outline-end,.disabled .outline-panel-inactive{opacity:var(--_disabled-outline-opacity)}.disabled .outline-start::before,.disabled .outline-end::before,.disabled .outline-panel-inactive,.disabled .outline-panel-inactive::before,.disabled .outline-panel-inactive::after{border-width:var(--_disabled-outline-width)}.error .outline{border-color:var(--_error-outline-color);color:var(--_error-outline-color)}.error:hover .outline{border-color:var(--_error-hover-outline-color);color:var(--_error-hover-outline-color)}.error.focused .outline{border-color:var(--_error-focus-outline-color);color:var(--_error-focus-outline-color)}.resizable .container{bottom:var(--_focus-outline-width);inset-inline-end:var(--_focus-outline-width);clip-path:inset(var(--_focus-outline-width) 0 0 var(--_focus-outline-width))}.resizable .container>*{top:var(--_focus-outline-width);inset-inline-start:var(--_focus-outline-width)}.resizable .container:dir(rtl){clip-path:inset(var(--_focus-outline-width) var(--_focus-outline-width) 0 0)}}@layer hcm{@media(forced-colors: active){.disabled .outline{border-color:GrayText;color:GrayText}.disabled :is(.outline-start,.outline-end,.outline-panel-inactive){opacity:1}}}
+const styles$29 = i$_ `@layer styles{:host{--_bottom-space: var(--md-outlined-field-bottom-space, 16px);--_content-color: var(--md-outlined-field-content-color, var(--md-sys-color-on-surface, #1d1b20));--_content-font: var(--md-outlined-field-content-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_content-line-height: var(--md-outlined-field-content-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_content-size: var(--md-outlined-field-content-size, var(--md-sys-typescale-body-large-size, 1rem));--_content-space: var(--md-outlined-field-content-space, 16px);--_content-weight: var(--md-outlined-field-content-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_disabled-content-color: var(--md-outlined-field-disabled-content-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-content-opacity: var(--md-outlined-field-disabled-content-opacity, 0.38);--_disabled-label-text-color: var(--md-outlined-field-disabled-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-label-text-opacity: var(--md-outlined-field-disabled-label-text-opacity, 0.38);--_disabled-leading-content-color: var(--md-outlined-field-disabled-leading-content-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-leading-content-opacity: var(--md-outlined-field-disabled-leading-content-opacity, 0.38);--_disabled-outline-color: var(--md-outlined-field-disabled-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-outline-opacity: var(--md-outlined-field-disabled-outline-opacity, 0.12);--_disabled-outline-width: var(--md-outlined-field-disabled-outline-width, 1px);--_disabled-supporting-text-color: var(--md-outlined-field-disabled-supporting-text-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-supporting-text-opacity: var(--md-outlined-field-disabled-supporting-text-opacity, 0.38);--_disabled-trailing-content-color: var(--md-outlined-field-disabled-trailing-content-color, var(--md-sys-color-on-surface, #1d1b20));--_disabled-trailing-content-opacity: var(--md-outlined-field-disabled-trailing-content-opacity, 0.38);--_error-content-color: var(--md-outlined-field-error-content-color, var(--md-sys-color-on-surface, #1d1b20));--_error-focus-content-color: var(--md-outlined-field-error-focus-content-color, var(--md-sys-color-on-surface, #1d1b20));--_error-focus-label-text-color: var(--md-outlined-field-error-focus-label-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-leading-content-color: var(--md-outlined-field-error-focus-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-focus-outline-color: var(--md-outlined-field-error-focus-outline-color, var(--md-sys-color-error, #b3261e));--_error-focus-supporting-text-color: var(--md-outlined-field-error-focus-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-focus-trailing-content-color: var(--md-outlined-field-error-focus-trailing-content-color, var(--md-sys-color-error, #b3261e));--_error-hover-content-color: var(--md-outlined-field-error-hover-content-color, var(--md-sys-color-on-surface, #1d1b20));--_error-hover-label-text-color: var(--md-outlined-field-error-hover-label-text-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-leading-content-color: var(--md-outlined-field-error-hover-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-hover-outline-color: var(--md-outlined-field-error-hover-outline-color, var(--md-sys-color-on-error-container, #410e0b));--_error-hover-supporting-text-color: var(--md-outlined-field-error-hover-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-hover-trailing-content-color: var(--md-outlined-field-error-hover-trailing-content-color, var(--md-sys-color-on-error-container, #410e0b));--_error-label-text-color: var(--md-outlined-field-error-label-text-color, var(--md-sys-color-error, #b3261e));--_error-leading-content-color: var(--md-outlined-field-error-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_error-outline-color: var(--md-outlined-field-error-outline-color, var(--md-sys-color-error, #b3261e));--_error-supporting-text-color: var(--md-outlined-field-error-supporting-text-color, var(--md-sys-color-error, #b3261e));--_error-trailing-content-color: var(--md-outlined-field-error-trailing-content-color, var(--md-sys-color-error, #b3261e));--_focus-content-color: var(--md-outlined-field-focus-content-color, var(--md-sys-color-on-surface, #1d1b20));--_focus-label-text-color: var(--md-outlined-field-focus-label-text-color, var(--md-sys-color-primary, #6750a4));--_focus-leading-content-color: var(--md-outlined-field-focus-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-outline-color: var(--md-outlined-field-focus-outline-color, var(--md-sys-color-primary, #6750a4));--_focus-outline-width: var(--md-outlined-field-focus-outline-width, 3px);--_focus-supporting-text-color: var(--md-outlined-field-focus-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_focus-trailing-content-color: var(--md-outlined-field-focus-trailing-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-content-color: var(--md-outlined-field-hover-content-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-label-text-color: var(--md-outlined-field-hover-label-text-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-leading-content-color: var(--md-outlined-field-hover-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-outline-color: var(--md-outlined-field-hover-outline-color, var(--md-sys-color-on-surface, #1d1b20));--_hover-outline-width: var(--md-outlined-field-hover-outline-width, 1px);--_hover-supporting-text-color: var(--md-outlined-field-hover-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_hover-trailing-content-color: var(--md-outlined-field-hover-trailing-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_label-text-color: var(--md-outlined-field-label-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_label-text-font: var(--md-outlined-field-label-text-font, var(--md-sys-typescale-body-large-font, var(--md-ref-typeface-plain, Roboto)));--_label-text-line-height: var(--md-outlined-field-label-text-line-height, var(--md-sys-typescale-body-large-line-height, 1.5rem));--_label-text-padding-bottom: var(--md-outlined-field-label-text-padding-bottom, 8px);--_label-text-populated-line-height: var(--md-outlined-field-label-text-populated-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_label-text-populated-size: var(--md-outlined-field-label-text-populated-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_label-text-size: var(--md-outlined-field-label-text-size, var(--md-sys-typescale-body-large-size, 1rem));--_label-text-weight: var(--md-outlined-field-label-text-weight, var(--md-sys-typescale-body-large-weight, var(--md-ref-typeface-weight-regular, 400)));--_leading-content-color: var(--md-outlined-field-leading-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_leading-space: var(--md-outlined-field-leading-space, 16px);--_outline-color: var(--md-outlined-field-outline-color, var(--md-sys-color-outline, #79747e));--_outline-label-padding: var(--md-outlined-field-outline-label-padding, 4px);--_outline-width: var(--md-outlined-field-outline-width, 1px);--_supporting-text-color: var(--md-outlined-field-supporting-text-color, var(--md-sys-color-on-surface-variant, #49454f));--_supporting-text-font: var(--md-outlined-field-supporting-text-font, var(--md-sys-typescale-body-small-font, var(--md-ref-typeface-plain, Roboto)));--_supporting-text-leading-space: var(--md-outlined-field-supporting-text-leading-space, 16px);--_supporting-text-line-height: var(--md-outlined-field-supporting-text-line-height, var(--md-sys-typescale-body-small-line-height, 1rem));--_supporting-text-size: var(--md-outlined-field-supporting-text-size, var(--md-sys-typescale-body-small-size, 0.75rem));--_supporting-text-top-space: var(--md-outlined-field-supporting-text-top-space, 4px);--_supporting-text-trailing-space: var(--md-outlined-field-supporting-text-trailing-space, 16px);--_supporting-text-weight: var(--md-outlined-field-supporting-text-weight, var(--md-sys-typescale-body-small-weight, var(--md-ref-typeface-weight-regular, 400)));--_top-space: var(--md-outlined-field-top-space, 16px);--_trailing-content-color: var(--md-outlined-field-trailing-content-color, var(--md-sys-color-on-surface-variant, #49454f));--_trailing-space: var(--md-outlined-field-trailing-space, 16px);--_with-leading-content-leading-space: var(--md-outlined-field-with-leading-content-leading-space, 12px);--_with-trailing-content-trailing-space: var(--md-outlined-field-with-trailing-content-trailing-space, 12px);--_container-shape-start-start: var(--md-outlined-field-container-shape-start-start, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-start-end: var(--md-outlined-field-container-shape-start-end, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-end: var(--md-outlined-field-container-shape-end-end, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)));--_container-shape-end-start: var(--md-outlined-field-container-shape-end-start, var(--md-outlined-field-container-shape, var(--md-sys-shape-corner-extra-small, 4px)))}.outline{border-color:var(--_outline-color);border-radius:inherit;display:flex;pointer-events:none;height:100%;position:absolute;width:100%;z-index:1}.outline-start::before,.outline-start::after,.outline-panel-inactive::before,.outline-panel-inactive::after,.outline-panel-active::before,.outline-panel-active::after,.outline-end::before,.outline-end::after{border:inherit;content:"";inset:0;position:absolute}.outline-start,.outline-end{border:inherit;border-radius:inherit;box-sizing:border-box;position:relative}.outline-start::before,.outline-start::after,.outline-end::before,.outline-end::after{border-bottom-style:solid;border-top-style:solid}.outline-start::after,.outline-end::after{opacity:0;transition:opacity 150ms cubic-bezier(0.2, 0, 0, 1)}.focused .outline-start::after,.focused .outline-end::after{opacity:1}.outline-start::before,.outline-start::after{border-inline-start-style:solid;border-inline-end-style:none;border-start-start-radius:inherit;border-start-end-radius:0;border-end-start-radius:inherit;border-end-end-radius:0;margin-inline-end:var(--_outline-label-padding)}.outline-end{flex-grow:1;margin-inline-start:calc(-1*var(--_outline-label-padding))}.outline-end::before,.outline-end::after{border-inline-start-style:none;border-inline-end-style:solid;border-start-start-radius:0;border-start-end-radius:inherit;border-end-start-radius:0;border-end-end-radius:inherit}.outline-notch{align-items:flex-start;border:inherit;display:flex;margin-inline-start:calc(-1*var(--_outline-label-padding));margin-inline-end:var(--_outline-label-padding);max-width:calc(100% - var(--_leading-space) - var(--_trailing-space));padding:0 var(--_outline-label-padding);position:relative}.no-label .outline-notch{display:none}.outline-panel-inactive,.outline-panel-active{border:inherit;border-bottom-style:solid;inset:0;position:absolute}.outline-panel-inactive::before,.outline-panel-inactive::after,.outline-panel-active::before,.outline-panel-active::after{border-top-style:solid;border-bottom:none;bottom:auto;transform:scaleX(1);transition:transform 150ms cubic-bezier(0.2, 0, 0, 1)}.outline-panel-inactive::before,.outline-panel-active::before{right:50%;transform-origin:top left}.outline-panel-inactive::after,.outline-panel-active::after{left:50%;transform-origin:top right}.populated .outline-panel-inactive::before,.populated .outline-panel-inactive::after,.populated .outline-panel-active::before,.populated .outline-panel-active::after,.focused .outline-panel-inactive::before,.focused .outline-panel-inactive::after,.focused .outline-panel-active::before,.focused .outline-panel-active::after{transform:scaleX(0)}.outline-panel-active{opacity:0;transition:opacity 150ms cubic-bezier(0.2, 0, 0, 1)}.focused .outline-panel-active{opacity:1}.outline-label{display:flex;max-width:100%;transform:translateY(calc(-100% + var(--_label-text-padding-bottom)))}.outline-start,.field:not(.with-start) .content ::slotted(*){padding-inline-start:max(var(--_leading-space),max(var(--_container-shape-start-start),var(--_container-shape-end-start)) + var(--_outline-label-padding))}.field:not(.with-start) .label-wrapper{margin-inline-start:max(var(--_leading-space),max(var(--_container-shape-start-start),var(--_container-shape-end-start)) + var(--_outline-label-padding))}.field:not(.with-end) .content ::slotted(*){padding-inline-end:max(var(--_trailing-space),max(var(--_container-shape-start-end),var(--_container-shape-end-end)))}.field:not(.with-end) .label-wrapper{margin-inline-end:max(var(--_trailing-space),max(var(--_container-shape-start-end),var(--_container-shape-end-end)))}.outline-start::before,.outline-end::before,.outline-panel-inactive,.outline-panel-inactive::before,.outline-panel-inactive::after{border-width:var(--_outline-width)}:hover .outline{border-color:var(--_hover-outline-color);color:var(--_hover-outline-color)}:hover .outline-start::before,:hover .outline-end::before,:hover .outline-panel-inactive,:hover .outline-panel-inactive::before,:hover .outline-panel-inactive::after{border-width:var(--_hover-outline-width)}.focused .outline{border-color:var(--_focus-outline-color);color:var(--_focus-outline-color)}.outline-start::after,.outline-end::after,.outline-panel-active,.outline-panel-active::before,.outline-panel-active::after{border-width:var(--_focus-outline-width)}.disabled .outline{border-color:var(--_disabled-outline-color);color:var(--_disabled-outline-color)}.disabled .outline-start,.disabled .outline-end,.disabled .outline-panel-inactive{opacity:var(--_disabled-outline-opacity)}.disabled .outline-start::before,.disabled .outline-end::before,.disabled .outline-panel-inactive,.disabled .outline-panel-inactive::before,.disabled .outline-panel-inactive::after{border-width:var(--_disabled-outline-width)}.error .outline{border-color:var(--_error-outline-color);color:var(--_error-outline-color)}.error:hover .outline{border-color:var(--_error-hover-outline-color);color:var(--_error-hover-outline-color)}.error.focused .outline{border-color:var(--_error-focus-outline-color);color:var(--_error-focus-outline-color)}.resizable .container{bottom:var(--_focus-outline-width);inset-inline-end:var(--_focus-outline-width);clip-path:inset(var(--_focus-outline-width) 0 0 var(--_focus-outline-width))}.resizable .container>*{top:var(--_focus-outline-width);inset-inline-start:var(--_focus-outline-width)}.resizable .container:dir(rtl){clip-path:inset(var(--_focus-outline-width) var(--_focus-outline-width) 0 0)}}@layer hcm{@media(forced-colors: active){.disabled .outline{border-color:GrayText;color:GrayText}.disabled :is(.outline-start,.outline-end,.outline-panel-inactive){opacity:1}}}
 `;
 
 /**
@@ -10265,7 +10673,7 @@ const styles$2a = i$_ `@layer styles{:host{--_bottom-space: var(--md-outlined-fi
  * SPDX-License-Identifier: Apache-2.0
  */
 // Generated stylesheet for ./field/internal/shared-styles.css.
-const styles$29 = i$_ `:host{display:inline-flex;resize:both}.field{display:flex;flex:1;flex-direction:column;writing-mode:horizontal-tb;max-width:100%}.container-overflow{border-start-start-radius:var(--_container-shape-start-start);border-start-end-radius:var(--_container-shape-start-end);border-end-end-radius:var(--_container-shape-end-end);border-end-start-radius:var(--_container-shape-end-start);display:flex;height:100%;position:relative}.container{align-items:center;border-radius:inherit;display:flex;flex:1;max-height:100%;min-height:100%;min-width:min-content;position:relative}.field,.container-overflow{resize:inherit}.resizable:not(.disabled) .container{resize:inherit;overflow:hidden}.disabled{pointer-events:none}slot[name=container]{border-radius:inherit}slot[name=container]::slotted(*){border-radius:inherit;inset:0;pointer-events:none;position:absolute}@layer styles{.start,.middle,.end{display:flex;box-sizing:border-box;height:100%;position:relative}.start{color:var(--_leading-content-color)}.end{color:var(--_trailing-content-color)}.start,.end{align-items:center;justify-content:center}.with-start .start{margin-inline:var(--_with-leading-content-leading-space) var(--_content-space)}.with-end .end{margin-inline:var(--_content-space) var(--_with-trailing-content-trailing-space)}.middle{align-items:stretch;align-self:baseline;flex:1}.content{color:var(--_content-color);display:flex;flex:1;opacity:0;transition:opacity 83ms cubic-bezier(0.2, 0, 0, 1)}.no-label .content,.focused .content,.populated .content{opacity:1;transition-delay:67ms}:is(.disabled,.disable-transitions) .content{transition:none}.content ::slotted(*){all:unset;color:currentColor;font-family:var(--_content-font);font-size:var(--_content-size);line-height:var(--_content-line-height);font-weight:var(--_content-weight);width:100%;overflow-wrap:revert;white-space:revert}.content ::slotted(:not(textarea)){padding-top:var(--_top-space);padding-bottom:var(--_bottom-space)}.content ::slotted(textarea){margin-top:var(--_top-space);margin-bottom:var(--_bottom-space)}:hover .content{color:var(--_hover-content-color)}:hover .start{color:var(--_hover-leading-content-color)}:hover .end{color:var(--_hover-trailing-content-color)}.focused .content{color:var(--_focus-content-color)}.focused .start{color:var(--_focus-leading-content-color)}.focused .end{color:var(--_focus-trailing-content-color)}.disabled .content{color:var(--_disabled-content-color)}.disabled.no-label .content,.disabled.focused .content,.disabled.populated .content{opacity:var(--_disabled-content-opacity)}.disabled .start{color:var(--_disabled-leading-content-color);opacity:var(--_disabled-leading-content-opacity)}.disabled .end{color:var(--_disabled-trailing-content-color);opacity:var(--_disabled-trailing-content-opacity)}.error .content{color:var(--_error-content-color)}.error .start{color:var(--_error-leading-content-color)}.error .end{color:var(--_error-trailing-content-color)}.error:hover .content{color:var(--_error-hover-content-color)}.error:hover .start{color:var(--_error-hover-leading-content-color)}.error:hover .end{color:var(--_error-hover-trailing-content-color)}.error.focused .content{color:var(--_error-focus-content-color)}.error.focused .start{color:var(--_error-focus-leading-content-color)}.error.focused .end{color:var(--_error-focus-trailing-content-color)}}@layer hcm{@media(forced-colors: active){.disabled :is(.start,.content,.end){color:GrayText;opacity:1}}}@layer styles{.label{box-sizing:border-box;color:var(--_label-text-color);overflow:hidden;max-width:100%;text-overflow:ellipsis;white-space:nowrap;z-index:1;font-family:var(--_label-text-font);font-size:var(--_label-text-size);line-height:var(--_label-text-line-height);font-weight:var(--_label-text-weight);width:min-content}.label-wrapper{inset:0;pointer-events:none;position:absolute}.label.resting{position:absolute;top:var(--_top-space)}.label.floating{font-size:var(--_label-text-populated-size);line-height:var(--_label-text-populated-line-height);transform-origin:top left}.label.hidden{opacity:0}.no-label .label{display:none}.label-wrapper{inset:0;position:absolute;text-align:initial}:hover .label{color:var(--_hover-label-text-color)}.focused .label{color:var(--_focus-label-text-color)}.disabled .label{color:var(--_disabled-label-text-color)}.disabled .label:not(.hidden){opacity:var(--_disabled-label-text-opacity)}.error .label{color:var(--_error-label-text-color)}.error:hover .label{color:var(--_error-hover-label-text-color)}.error.focused .label{color:var(--_error-focus-label-text-color)}}@layer hcm{@media(forced-colors: active){.disabled .label:not(.hidden){color:GrayText;opacity:1}}}@layer styles{.supporting-text{color:var(--_supporting-text-color);display:flex;font-family:var(--_supporting-text-font);font-size:var(--_supporting-text-size);line-height:var(--_supporting-text-line-height);font-weight:var(--_supporting-text-weight);gap:16px;justify-content:space-between;padding-inline-start:var(--_supporting-text-leading-space);padding-inline-end:var(--_supporting-text-trailing-space);padding-top:var(--_supporting-text-top-space)}.supporting-text :nth-child(2){flex-shrink:0}:hover .supporting-text{color:var(--_hover-supporting-text-color)}.focus .supporting-text{color:var(--_focus-supporting-text-color)}.disabled .supporting-text{color:var(--_disabled-supporting-text-color);opacity:var(--_disabled-supporting-text-opacity)}.error .supporting-text{color:var(--_error-supporting-text-color)}.error:hover .supporting-text{color:var(--_error-hover-supporting-text-color)}.error.focus .supporting-text{color:var(--_error-focus-supporting-text-color)}}@layer hcm{@media(forced-colors: active){.disabled .supporting-text{color:GrayText;opacity:1}}}
+const styles$28 = i$_ `:host{display:inline-flex;resize:both}.field{display:flex;flex:1;flex-direction:column;writing-mode:horizontal-tb;max-width:100%}.container-overflow{border-start-start-radius:var(--_container-shape-start-start);border-start-end-radius:var(--_container-shape-start-end);border-end-end-radius:var(--_container-shape-end-end);border-end-start-radius:var(--_container-shape-end-start);display:flex;height:100%;position:relative}.container{align-items:center;border-radius:inherit;display:flex;flex:1;max-height:100%;min-height:100%;min-width:min-content;position:relative}.field,.container-overflow{resize:inherit}.resizable:not(.disabled) .container{resize:inherit;overflow:hidden}.disabled{pointer-events:none}slot[name=container]{border-radius:inherit}slot[name=container]::slotted(*){border-radius:inherit;inset:0;pointer-events:none;position:absolute}@layer styles{.start,.middle,.end{display:flex;box-sizing:border-box;height:100%;position:relative}.start{color:var(--_leading-content-color)}.end{color:var(--_trailing-content-color)}.start,.end{align-items:center;justify-content:center}.with-start .start{margin-inline:var(--_with-leading-content-leading-space) var(--_content-space)}.with-end .end{margin-inline:var(--_content-space) var(--_with-trailing-content-trailing-space)}.middle{align-items:stretch;align-self:baseline;flex:1}.content{color:var(--_content-color);display:flex;flex:1;opacity:0;transition:opacity 83ms cubic-bezier(0.2, 0, 0, 1)}.no-label .content,.focused .content,.populated .content{opacity:1;transition-delay:67ms}:is(.disabled,.disable-transitions) .content{transition:none}.content ::slotted(*){all:unset;color:currentColor;font-family:var(--_content-font);font-size:var(--_content-size);line-height:var(--_content-line-height);font-weight:var(--_content-weight);width:100%;overflow-wrap:revert;white-space:revert}.content ::slotted(:not(textarea)){padding-top:var(--_top-space);padding-bottom:var(--_bottom-space)}.content ::slotted(textarea){margin-top:var(--_top-space);margin-bottom:var(--_bottom-space)}:hover .content{color:var(--_hover-content-color)}:hover .start{color:var(--_hover-leading-content-color)}:hover .end{color:var(--_hover-trailing-content-color)}.focused .content{color:var(--_focus-content-color)}.focused .start{color:var(--_focus-leading-content-color)}.focused .end{color:var(--_focus-trailing-content-color)}.disabled .content{color:var(--_disabled-content-color)}.disabled.no-label .content,.disabled.focused .content,.disabled.populated .content{opacity:var(--_disabled-content-opacity)}.disabled .start{color:var(--_disabled-leading-content-color);opacity:var(--_disabled-leading-content-opacity)}.disabled .end{color:var(--_disabled-trailing-content-color);opacity:var(--_disabled-trailing-content-opacity)}.error .content{color:var(--_error-content-color)}.error .start{color:var(--_error-leading-content-color)}.error .end{color:var(--_error-trailing-content-color)}.error:hover .content{color:var(--_error-hover-content-color)}.error:hover .start{color:var(--_error-hover-leading-content-color)}.error:hover .end{color:var(--_error-hover-trailing-content-color)}.error.focused .content{color:var(--_error-focus-content-color)}.error.focused .start{color:var(--_error-focus-leading-content-color)}.error.focused .end{color:var(--_error-focus-trailing-content-color)}}@layer hcm{@media(forced-colors: active){.disabled :is(.start,.content,.end){color:GrayText;opacity:1}}}@layer styles{.label{box-sizing:border-box;color:var(--_label-text-color);overflow:hidden;max-width:100%;text-overflow:ellipsis;white-space:nowrap;z-index:1;font-family:var(--_label-text-font);font-size:var(--_label-text-size);line-height:var(--_label-text-line-height);font-weight:var(--_label-text-weight);width:min-content}.label-wrapper{inset:0;pointer-events:none;position:absolute}.label.resting{position:absolute;top:var(--_top-space)}.label.floating{font-size:var(--_label-text-populated-size);line-height:var(--_label-text-populated-line-height);transform-origin:top left}.label.hidden{opacity:0}.no-label .label{display:none}.label-wrapper{inset:0;position:absolute;text-align:initial}:hover .label{color:var(--_hover-label-text-color)}.focused .label{color:var(--_focus-label-text-color)}.disabled .label{color:var(--_disabled-label-text-color)}.disabled .label:not(.hidden){opacity:var(--_disabled-label-text-opacity)}.error .label{color:var(--_error-label-text-color)}.error:hover .label{color:var(--_error-hover-label-text-color)}.error.focused .label{color:var(--_error-focus-label-text-color)}}@layer hcm{@media(forced-colors: active){.disabled .label:not(.hidden){color:GrayText;opacity:1}}}@layer styles{.supporting-text{color:var(--_supporting-text-color);display:flex;font-family:var(--_supporting-text-font);font-size:var(--_supporting-text-size);line-height:var(--_supporting-text-line-height);font-weight:var(--_supporting-text-weight);gap:16px;justify-content:space-between;padding-inline-start:var(--_supporting-text-leading-space);padding-inline-end:var(--_supporting-text-trailing-space);padding-top:var(--_supporting-text-top-space)}.supporting-text :nth-child(2){flex-shrink:0}:hover .supporting-text{color:var(--_hover-supporting-text-color)}.focus .supporting-text{color:var(--_focus-supporting-text-color)}.disabled .supporting-text{color:var(--_disabled-supporting-text-color);opacity:var(--_disabled-supporting-text-opacity)}.error .supporting-text{color:var(--_error-supporting-text-color)}.error:hover .supporting-text{color:var(--_error-hover-supporting-text-color)}.error.focus .supporting-text{color:var(--_error-focus-supporting-text-color)}}@layer hcm{@media(forced-colors: active){.disabled .supporting-text{color:GrayText;opacity:1}}}
 `;
 
 /*
@@ -10281,235 +10689,36 @@ const styles$29 = i$_ `:host{display:inline-flex;resize:both}.field{display:flex
  */
 let OscdOutlinedField$4 = class OscdOutlinedField extends OutlinedField$3 {
 };
-OscdOutlinedField$4.styles = [styles$29, styles$2a];
+OscdOutlinedField$4.styles = [styles$28, styles$29];
 
 /**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
- * @license
- * Copyright 2025 Omicron Energy GmbH
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
- * @tag oscd-outlined-text-field
- * @summary A Material Design outlined text field component.
- * This component is a wrapper around the `OutlinedTextField` from Material Web Components,
- * providing a scoped element that uses the `OscdOutlinedField` as its field.
- * @final
- * @suppress {visibility}
- */
-let OscdOutlinedTextField$4 = class OscdOutlinedTextField extends ScopedElementsMixin$2(OutlinedTextField$2) {
+ * @tag oscd-outlined-search-field
+ * @summary An `oscd-outlined-text-field` specialized for search input.
+ *
+ * Behaves like a standard outlined text field, but comes by default with a
+ * leading search icon and a trailing "clear" button (shown once
+ * [[`value`]] is non-empty), a placeholder rendered at 50% opacity (relative
+ * to the input text color) that is hidden while the field has focus.
+ *
+ * The default leading/trailing icons can be overridden by slotting content
+ * into the `leading-icon`/`trailing-icon` slots, exactly as with
+ * `oscd-outlined-text-field`. The placeholder color can be overridden via
+ * `--oscd-search-field-placeholder-color`.
+ *
+ * Like the outlined text field it wraps, the container has no background by
+ * default; consumers can set one via `--oscd-search-field-container-color`.
+ * */
+class OscdOutlinedSearchField extends ScopedElementsMixin$2(OutlinedSearchField) {
     constructor() {
         super(...arguments);
         this.fieldTag = i$W `oscd-outlined-field`;
     }
-};
-OscdOutlinedTextField$4.styles = [styles$2b, styles$2c];
-OscdOutlinedTextField$4.scopedElements = {
+}
+OscdOutlinedSearchField.scopedElements = {
     'oscd-outlined-field': OscdOutlinedField$4,
+    'oscd-icon': OscdIcon$4,
+    'oscd-icon-button': OscdIconButton$4,
 };
-
-/**
- * @license
- * Copyright 2023 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
- * A divider component.
- */
-let Divider$3 = class Divider extends i$X {
-    constructor() {
-        super(...arguments);
-        /**
-         * Indents the divider with equal padding on both sides.
-         */
-        this.inset = false;
-        /**
-         * Indents the divider with padding on the leading side.
-         */
-        this.insetStart = false;
-        /**
-         * Indents the divider with padding on the trailing side.
-         */
-        this.insetEnd = false;
-    }
-};
-__decorate$2([
-    n$1f({ type: Boolean, reflect: true })
-], Divider$3.prototype, "inset", void 0);
-__decorate$2([
-    n$1f({ type: Boolean, reflect: true, attribute: 'inset-start' })
-], Divider$3.prototype, "insetStart", void 0);
-__decorate$2([
-    n$1f({ type: Boolean, reflect: true, attribute: 'inset-end' })
-], Divider$3.prototype, "insetEnd", void 0);
-
-/**
- * @license
- * Copyright 2024 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-// Generated stylesheet for ./divider/internal/divider-styles.css.
-const styles$28 = i$_ `:host{box-sizing:border-box;color:var(--md-divider-color, var(--md-sys-color-outline-variant, #cac4d0));display:flex;height:var(--md-divider-thickness, 1px);width:100%}:host([inset]),:host([inset-start]){padding-inline-start:16px}:host([inset]),:host([inset-end]){padding-inline-end:16px}:host::before{background:currentColor;content:"";height:100%;width:100%}@media(forced-colors: active){:host::before{background:CanvasText}}
-`;
-
-/*
- * GENERATED SOURCE FILE. DO NOT MODIFY.
- * Modifications will be overwritten.
- * To prevent this file from being overwritten, remove this comment entirely.
- */
-/**
- * @tagname oscd-divider
- * @summary A divider is a thin line that groups content in lists and
- * containers.
- *
- * list items or define tappable regions in an accordion.
- *
- * @final
- * @suppress {visibility}
- */
-let OscdDivider$3 = class OscdDivider extends Divider$3 {
-};
-OscdDivider$3.styles = [styles$28];
-
-function hasLocalStorage() {
-    try {
-        return typeof window !== 'undefined' && !!window.localStorage;
-    }
-    catch {
-        return false;
-    }
-}
-function resolveKey(host, propKey, namespace) {
-    const hostId = host.id;
-    if (!hostId) {
-        return undefined;
-    }
-    return namespace
-        ? `${namespace}:${hostId}:${propKey}`
-        : `${hostId}:${propKey}`;
-}
-const localstorageEntries = Symbol('localstorage:entries');
-const localstorageLifecycleWrapped = Symbol('localstorage:lifecycleWrapped');
-function installLifecycleWrappers(target) {
-    if (target[localstorageLifecycleWrapped]) {
-        return;
-    }
-    target[localstorageLifecycleWrapped] = true;
-    const connected = target['connectedCallback'];
-    target['connectedCallback'] = function connectedCallback() {
-        connected?.call(this);
-        const entries = target[localstorageEntries];
-        entries?.forEach(entry => entry.hydrateIfNeeded(this));
-    };
-    const requestUpdate = target['requestUpdate'];
-    target['requestUpdate'] = function requestUpdateCallback(name, oldValue, options) {
-        const result = requestUpdate?.call(this, name, oldValue, options);
-        if (name === undefined) {
-            return result;
-        }
-        const entries = target[localstorageEntries];
-        entries
-            ?.filter(entry => entry.propName === name)
-            .forEach(entry => entry.persistIfPossible(this));
-        return result;
-    };
-}
-function localstorage(opts = {}) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (target, propName) => {
-        const propKey = String(propName);
-        const hydratedSymbol = Symbol(`${propKey}:hydrated`);
-        const disabledSymbol = Symbol(`${propKey}:disabled`);
-        const warnedMissingIdSymbol = Symbol(`${propKey}:warnedMissingId`);
-        const warnMissingId = (host) => {
-            if (host[warnedMissingIdSymbol]) {
-                return;
-            }
-            console.warn(`[localstorage] ${propKey} requires a static host id for persistence. Dynamic IDs are not supported.`);
-            host[warnedMissingIdSymbol] = true;
-        };
-        const hydrateIfNeeded = (host) => {
-            if (host[hydratedSymbol] || host[disabledSymbol]) {
-                return;
-            }
-            if (!hasLocalStorage()) {
-                if ('default' in opts) {
-                    host[propName] = opts.default;
-                }
-                host[hydratedSymbol] = true;
-                return;
-            }
-            const storageKey = resolveKey(host, propKey, opts.namespace);
-            if (!storageKey) {
-                if (!host.isConnected) {
-                    return;
-                }
-                warnMissingId(host);
-                host[disabledSymbol] = true;
-                return;
-            }
-            const raw = localStorage.getItem(storageKey);
-            if (raw != null) {
-                try {
-                    host[propName] = opts.deserializer
-                        ? opts.deserializer(raw)
-                        : JSON.parse(raw);
-                }
-                catch {
-                    if ('default' in opts) {
-                        host[propName] = opts.default;
-                    }
-                }
-            }
-            else if ('default' in opts) {
-                host[propName] = opts.default;
-            }
-            host[hydratedSymbol] = true;
-        };
-        const persistIfPossible = (host) => {
-            if (host[disabledSymbol]) {
-                return;
-            }
-            const storageKey = resolveKey(host, propKey, opts.namespace);
-            if (!storageKey || !hasLocalStorage()) {
-                if (!storageKey) {
-                    if (!host.isConnected) {
-                        return;
-                    }
-                    warnMissingId(host);
-                    host[disabledSymbol] = true;
-                }
-                return;
-            }
-            try {
-                const raw = opts.serializer
-                    ? opts.serializer(host[propName])
-                    : JSON.stringify(host[propName]);
-                localStorage.setItem(storageKey, raw);
-            }
-            catch {
-                // ignore quota/serialization errors
-            }
-        };
-        installLifecycleWrappers(target);
-        if (!target[localstorageEntries]) {
-            target[localstorageEntries] = [];
-        }
-        target[localstorageEntries].push({
-            propName,
-            propKey,
-            hydratedSymbol,
-            disabledSymbol,
-            warnedMissingIdSymbol,
-            hydrateIfNeeded,
-            persistIfPossible,
-        });
-    };
-}
 
 const unpinnedIcon = b$2 `<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -10587,10 +10796,10 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
         this.focusedTree = null;
         this.handleKeydown = (event) => {
             const fromSearchField = event.currentTarget?.localName ===
-                'oscd-outlined-text-field' ||
+                'oscd-outlined-search-field' ||
                 event
                     .composedPath()
-                    .some(target => target.localName === 'oscd-outlined-text-field');
+                    .some(target => target.localName === 'oscd-outlined-search-field');
             if (event.key === 'Escape' && this.searchMode) {
                 event.stopPropagation();
                 this.exitSearchMode();
@@ -10696,7 +10905,7 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
     /** Focuses the search field, optionally selecting its current query. */
     focusSearch(selectQuery = false) {
         const focusField = () => {
-            const searchField = this.shadowRoot?.querySelector('oscd-outlined-text-field');
+            const searchField = this.shadowRoot?.querySelector('oscd-outlined-search-field');
             searchField?.focus();
             if (selectQuery) {
                 searchField?.select();
@@ -10771,7 +10980,7 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
     activateKeyboardTarget() {
         if (!this.focusedTree) {
             if (this.shadowRoot?.activeElement?.localName ===
-                'oscd-outlined-text-field' &&
+                'oscd-outlined-search-field' &&
                 flattenPluginEntries(filterBySearchTerm(this.editors, this.searchValue, this.locale)).length === 1) {
                 this.dispatchEditorSelect(flattenPluginEntries(filterBySearchTerm(this.editors, this.searchValue, this.locale))[0]);
             }
@@ -10824,70 +11033,69 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
     renderExpanded() {
         return b$2 `
       <div class="tree-container">
-        <oscd-outlined-text-field
-          label=${msg$1('Search')}
+        <oscd-outlined-search-field
+          placeholder=${msg$1('Search')}
+          clearLabel=${msg$1('Clear search')}
           .value=${this.searchValue}
-          @keydown=${this.handleKeydown}
           @input=${(event) => {
-            const input = event.target;
-            this.searchValue = input.value;
+            this.searchValue = event.target.value;
         }}
-          ><oscd-icon slot="leading-icon"
-            >search</oscd-icon
-          ></oscd-outlined-text-field
-        >
-        ${this.searchValue.trim().length === 0
+        ></oscd-outlined-search-field>
+        <div class="tree-scroll">
+          ${this.searchValue.trim().length === 0
             ? b$2 `<oscd-tree
-                .data=${this.pinnedTreeNodes}
-                .expandedIds=${this.pinnedExpanded}
-                .selectionMode=${'single'}
-                .selectedIds=${this.selectedEditor
+                  .data=${this.pinnedTreeNodes}
+                  .expandedIds=${this.pinnedExpanded}
+                  .selectionMode=${'single'}
+                  .selectedIds=${this.selectedEditor
                 ? [this.selectedEditor.tagName]
                 : []}
-                .isDisabled=${(node) => 'kind' in node && node.kind === 'placeholder'}
-                .isSelectable=${(node) => !('kind' in node && node.kind === 'placeholder')}
-                class="pinned-tree"
-                ?keyboard-active=${this.focusedTree === 'pinned'}
-                @focusin=${() => this.handleTreeFocus('pinned')}
-                .renderItem=${(context) => this.renderPluginItem(context)}
-                toggle-position="trailing"
-                collapse-icon="arrow_drop_up"
-                expand-icon="arrow_drop_down"
-                @selected-ids-changed=${(event) => this.handleTreeSelection('pinned', event.detail.selectedIds)}
-                @expanded-ids-changed=${(event) => {
+                  .isDisabled=${(node) => 'kind' in node && node.kind === 'placeholder'}
+                  .isSelectable=${(node) => !('kind' in node && node.kind === 'placeholder')}
+                  class="pinned-tree"
+                  ?keyboard-active=${this.focusedTree === 'pinned'}
+                  @focusin=${() => this.handleTreeFocus('pinned')}
+                  .renderItem=${(context) => this.renderPluginItem(context)}
+                  .renderLeafAccessory=${(context) => this.renderLeafAccessory(context)}
+                  toggle-position="trailing"
+                  collapse-icon="arrow_drop_up"
+                  expand-icon="arrow_drop_down"
+                  @selected-ids-changed=${(event) => this.handleTreeSelection('pinned', event.detail.selectedIds)}
+                  @expanded-ids-changed=${(event) => {
                 this.pinnedExpanded = event.detail.expandedIds;
             }}
-                @active-changed=${() => this.handleTreeActiveChanged('pinned')}
-                @navigation-boundary=${(event) => this.handleTreeBoundary('pinned', event.detail.direction)}
-              ></oscd-tree>
-              <oscd-divider></oscd-divider>`
+                  @active-changed=${() => this.handleTreeActiveChanged('pinned')}
+                  @navigation-boundary=${(event) => this.handleTreeBoundary('pinned', event.detail.direction)}
+                ></oscd-tree>
+                <oscd-divider></oscd-divider>`
             : A$c}
-        <oscd-tree
-          class="editors-tree"
-          ?keyboard-active=${this.focusedTree === 'editors'}
-          @focusin=${() => this.handleTreeFocus('editors')}
-          .data=${this.editorTreeNodes}
-          .expandedIds=${this.searchValue.length === 0
+          <oscd-tree
+            class="editors-tree"
+            ?keyboard-active=${this.focusedTree === 'editors'}
+            @focusin=${() => this.handleTreeFocus('editors')}
+            .data=${this.editorTreeNodes}
+            .expandedIds=${this.searchValue.length === 0
             ? this.expandedIds
             : this.editorTreeNodes.map(node => node.id)}
-          .selectionMode=${'single'}
-          .selectedIds=${this.selectedEditor
+            .selectionMode=${'single'}
+            .selectedIds=${this.selectedEditor
             ? [this.selectedEditor.tagName]
             : []}
-          .isDisabled=${(node) => 'kind' in node && node.kind === 'placeholder'}
-          .isSelectable=${(node) => !('kind' in node && node.kind === 'placeholder')}
-          .renderItem=${(context) => this.renderPluginItem(context)}
-          .renderLeafAccessory=${(context) => this.renderLeafAccessory(context)}
-          toggle-position="trailing"
-          collapse-icon="arrow_drop_down"
-          expand-icon="arrow_drop_up"
-          @selected-ids-changed=${(event) => this.handleTreeSelection('editors', event.detail.selectedIds)}
-          @expanded-ids-changed=${(event) => {
+            .isDisabled=${(node) => 'kind' in node && node.kind === 'placeholder'}
+            .isSelectable=${(node) => !('kind' in node && node.kind === 'placeholder')}
+            .renderItem=${(context) => this.renderPluginItem(context)}
+            .renderLeafAccessory=${(context) => this.renderLeafAccessory(context)}
+            toggle-position="trailing"
+            collapse-icon="arrow_drop_down"
+            expand-icon="arrow_drop_up"
+            @selected-ids-changed=${(event) => this.handleTreeSelection('editors', event.detail.selectedIds)}
+            @expanded-ids-changed=${(event) => {
             this.expandedIds = event.detail.expandedIds;
         }}
-          @active-changed=${() => this.handleTreeActiveChanged('editors')}
-          @navigation-boundary=${(event) => this.handleTreeBoundary('editors', event.detail.direction)}
-        ></oscd-tree>
+            @active-changed=${() => this.handleTreeActiveChanged('editors')}
+            @navigation-boundary=${(event) => this.handleTreeBoundary('editors', event.detail.direction)}
+          ></oscd-tree>
+        </div>
       </div>
     `;
     }
@@ -10997,6 +11205,7 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
     render() {
         return b$2 `
       ${this.isOpen ? this.renderExpanded() : this.renderRail()}
+      <oscd-divider class="footer-divider"></oscd-divider>
       ${this.renderFooter()}
     `;
     }
@@ -11007,7 +11216,7 @@ EditorPluginsPanel.scopedElements = {
     'oscd-list-item': OscdListItem$3,
     'oscd-tree': OscdTree,
     'oscd-tree-item': OscdTreeItem,
-    'oscd-outlined-text-field': OscdOutlinedTextField$4,
+    'oscd-outlined-search-field': OscdOutlinedSearchField,
     'oscd-divider': OscdDivider$3,
     'oscd-menu': OscdMenu$3,
     'oscd-menu-item': OscdMenuItem$3,
@@ -11020,11 +11229,13 @@ EditorPluginsPanel.styles = i$_ `
       width: var(--editor-plugins-panel-collapsed-width);
       height: calc(100% - var(--editor-plugins-panel-padding-top));
       display: grid;
-      grid-template-rows: 1fr auto;
+      /* Row 1 (tree-container/rail) is the only scrollable region; the divider
+         and footer rows are sized to content so they stay pinned and always
+         visible below it, however tall the tree content grows. */
+      grid-template-rows: 1fr auto auto;
       min-height: 0;
       padding-top: var(--editor-plugins-panel-padding-top);
       transition: width 0.1s ease-in-out;
-      overflow-y: auto;
       /* Clip transient horizontal overflow while the width animates on
          expand/collapse: the content swaps to its full width before the host
          finishes resizing, and this stops that from forcing horizontal reflow /
@@ -11067,6 +11278,148 @@ EditorPluginsPanel.styles = i$_ `
       width: var(--editor-plugins-panel-width);
     }
 
+    /* Base divider styling, overridden by the more specific rail/flyout/footer
+       dividers below where the Figma spec calls for different sizing. */
+    oscd-divider {
+      --md-divider-color: var(--editor-plugins-panel-divider-color);
+      /* No margin: .tree-container's 12px gap owns the spacing on both sides. */
+      margin-block: 0;
+    }
+
+    /* --- Expanded panel: search field + scrollable tree --- */
+
+    .tree-container {
+      margin-inline: 16px;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    oscd-outlined-search-field * {
+      --md-icon-button-state-layer-width: 32px;
+      --md-icon-button-state-layer-height: 32px;
+      --md-icon-button-state-layer-shape: 50%;
+    }
+
+    oscd-outlined-search-field {
+      background-color: color-mix(
+        in srgb,
+        var(
+            --md-outlined-text-field-input-text-color,
+            var(--md-sys-color-on-surface, #1d1b20)
+          )
+          20%,
+        transparent
+      );
+      border-radius: 5px;
+      --md-outlined-text-field-top-space: 6px;
+      --md-outlined-text-field-bottom-space: 6px;
+      --md-outlined-text-field-leading-space: 8px;
+      --md-outlined-text-field-trailing-space: 8px;
+      --md-outlined-text-field-with-leading-icon-leading-space: 10px;
+      --md-outlined-field-with-trailing-content-trailing-space: 8px;
+      --md-outlined-text-field-icon-input-space: 10px;
+      --md-icon-button-state-layer-width: 32px;
+      --md-icon-button-state-layer-height: 32px;
+      --md-icon-button-state-layer-shape: 50%;
+
+      --md-outlined-text-field-trailing-icon-size: 32px;
+
+      --md-icon-button-icon-size: 24px;
+
+      /* keep the outline light in every state */
+      --md-outlined-text-field-focus-outline-color: var(
+        --editor-plugins-panel-item-text-color
+      );
+      --md-outlined-text-field-hover-outline-color: var(
+        --editor-plugins-panel-item-text-color
+      );
+      --md-outlined-text-field-outline-color: var(
+        --editor-plugins-panel-item-text-color
+      );
+      /* hide the outline border entirely, in every state */
+      --md-outlined-text-field-outline-width: 0px;
+      --md-outlined-text-field-hover-outline-width: 0px;
+      --md-outlined-text-field-focus-outline-width: 0px;
+
+      /* caret follows the light text instead of the primary accent */
+      --md-outlined-text-field-caret-color: var(
+        --editor-plugins-panel-item-text-color
+      );
+      --md-outlined-text-field-focus-caret-color: var(
+        --editor-plugins-panel-item-text-color
+      );
+    }
+
+    .tree-scroll {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 0;
+      overflow-y: auto;
+
+      /* Recolour the scrollbar to sit on the panel's dark-blue surface instead
+         of the browser's default light-themed bar. Firefox reads
+         scrollbar-color; Chromium/Safari (and Firefox with the layout flag
+         off) read the ::-webkit-scrollbar-* pseudo-elements below. */
+      scrollbar-color: var(--editor-plugins-panel-divider-color) transparent;
+      scrollbar-width: thin;
+    }
+
+    .tree-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .tree-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .tree-scroll::-webkit-scrollbar-thumb {
+      background-color: var(--editor-plugins-panel-divider-color);
+      border-radius: 4px;
+    }
+
+    oscd-tree {
+      margin-inline: 0;
+      min-height: 0;
+      --oscd-tree-row-height: 36px;
+      --oscd-tree-item-min-height: 36px;
+      --oscd-tree-row-gap: 4px;
+      --oscd-tree-row-padding-start: 8px;
+      --oscd-tree-row-padding-end: 8px;
+      --oscd-tree-indent-step: 36px;
+      --oscd-tree-row-shape: 5px;
+      --oscd-tree-toggle-icon-size: 28px;
+      --oscd-tree-trailing-toggle-gap: 8px;
+      /* Pin accessory hidden at rest, revealed on row hover / keyboard focus
+         (see Figma side-panel spec); its icon size inherits the 28px toggle. */
+      --oscd-tree-accessory-rest-opacity: 0;
+      --md-icon-size: var(--editor-plugins-panel-item-icon-size);
+      --oscd-tree-row-selected-color: var(
+        --editor-plugins-panel-item-active-bg
+      );
+      --oscd-tree-row-selected-text-color: var(
+        --editor-plugins-panel-item-text-color
+      );
+      --oscd-tree-row-active-border-width: 0px;
+      --oscd-tree-row-active-border-color: var(--oscd-base3, #fff);
+      --oscd-tree-row-active-text-color: var(--oscd-base3, #fff);
+      --oscd-tree-row-focus-ring-color: var(--oscd-base3, #fff);
+    }
+
+    oscd-tree.keyboard-active {
+      --oscd-tree-row-active-border-width: 1px;
+    }
+
+    oscd-tree.pinned-tree {
+      --oscd-tree-leaf-toggle-size: 0px;
+      --oscd-tree-leaf-toggle-gap: 0px;
+    }
+
+    /* --- Collapsed icon rail --- */
+
     /* Collapsed icon rail: a flat column of 44px icon buttons (28px glyph + 8px
        padding), inset 16px so the glyphs land at the same x (24px) as both the
        search icon and the tree-item icons in the expanded panel. */
@@ -11076,6 +11429,8 @@ EditorPluginsPanel.styles = i$_ `
       align-items: flex-start;
       padding-inline: 16px;
       min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
     }
 
     .rail-item {
@@ -11144,132 +11499,11 @@ EditorPluginsPanel.styles = i$_ `
       );
     }
 
-    .tree-container {
-      margin-inline: 16px;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      /* Owns spacing between the panel sections (search, pinned tree, divider,
-         editors tree): 12px per the Figma spec. The divider therefore carries
-         no margin of its own, avoiding compounding gap + margin. */
-      gap: 12px;
-    }
+    /* --- Footer: collapse/expand toggle --- */
 
-    oscd-tree {
-      --oscd-tree-row-active-border-width: 0px;
-      --oscd-tree-row-active-border-color: var(--oscd-base3, #fff);
-      --oscd-tree-row-active-text-color: var(--oscd-base3, #fff);
-      --oscd-tree-row-focus-ring-color: var(--oscd-base3, #fff);
-    }
-
-    oscd-tree.keyboard-active {
-      --oscd-tree-row-active-border-width: 1px;
-    }
-
-    oscd-outlined-text-field {
-      border-radius: 5px;
-      background: #6dadee66;
-      --md-outlined-field-top-space: 6px;
-      --md-outlined-field-bottom-space: 6px;
-      /* Match the tree rows: 8px inner padding so the 28px search icon lands at
-         the same x (24px) as the tree-item icons, and the placeholder aligns
-         with the row labels. See .tree-container / oscd-tree geometry. */
-      --md-outlined-field-leading-space: 8px;
-      --md-outlined-field-trailing-space: 8px;
-      --md-outlined-field-with-leading-content-leading-space: 10px;
-      --md-outlined-field-content-space: 10px;
-
-      /* keep the outline light in every state */
-      --md-outlined-text-field-focus-outline-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      --md-outlined-text-field-hover-outline-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      --md-outlined-text-field-outline-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      --md-outlined-text-field-focus-outline-width: 1px;
-
-      /* keep the floating label light in every state */
-      --md-outlined-text-field-label-text-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      --md-outlined-text-field-hover-label-text-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      --md-outlined-text-field-focus-label-text-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      /* caret follows the light text instead of the primary accent */
-      --md-outlined-text-field-caret-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-      --md-outlined-text-field-focus-caret-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-    }
-
-    oscd-outlined-text-field oscd-icon[slot='leading-icon'] {
-      /* Every icon in the side panel is 28px (matches the tree icons). */
-      --md-icon-size: 28px;
-    }
-
-    oscd-tree {
-      /*
-       * Side-panel geometry, driven entirely through oscd-tree's public custom
-       * properties so spacing lives in one place (see the Figma side-panel spec):
-       *   - margin-inline (0): the .tree-container already insets content by
-       *     16px (aligning the search box and the selection band with the
-       *     panel edge), so the tree adds no further inline margin.
-       *   - --oscd-tree-row-padding-start/end (8px): padding inside the band
-       *     before the content, matching the 8px inner padding in the design.
-       *   - --oscd-tree-indent-step (36px): one indent step = leading icon
-       *     (28px) + 8px gap; because a leading icon occupies exactly one step,
-       *     icon-less leaves align their text under their group's label.
-       *   - --oscd-tree-row-gap (4px): vertical gap between rows.
-       *   - --oscd-tree-row-height / --oscd-tree-item-min-height (36px): band
-       *     height; with the 4px row gap this yields a 40px row pitch.
-       *     --oscd-tree-item-min-height overrides the tree-item's Material
-       *     default (--md-list-item-one-line-container-height, 56px); without
-       *     it rows would be 56px tall.
-       *   - --oscd-tree-row-shape (5px): selection-band corner radius.
-       *   - --oscd-tree-toggle-icon-size (28px) / --oscd-tree-trailing-toggle-gap
-       *     (8px): chevron glyph size and its gap from the label. Every icon in
-       *     the design is 28px; the pin accessory inherits this size.
-       */
-      margin-inline: 0;
-      min-height: 0;
-      --oscd-tree-row-height: 36px;
-      --oscd-tree-item-min-height: 36px;
-      --oscd-tree-row-gap: 4px;
-      --oscd-tree-row-padding-start: 8px;
-      --oscd-tree-row-padding-end: 8px;
-      --oscd-tree-indent-step: 36px;
-      --oscd-tree-row-shape: 5px;
-      --oscd-tree-toggle-icon-size: 28px;
-      --oscd-tree-trailing-toggle-gap: 8px;
-      /* Pin accessory hidden at rest, revealed on row hover / keyboard focus
-         (see Figma side-panel spec); its icon size inherits the 28px toggle. */
-      --oscd-tree-accessory-rest-opacity: 0;
-      --md-icon-size: var(--editor-plugins-panel-item-icon-size);
-      --oscd-tree-row-selected-color: var(
-        --editor-plugins-panel-item-active-bg
-      );
-      --oscd-tree-row-selected-text-color: var(
-        --editor-plugins-panel-item-text-color
-      );
-    }
-
-    oscd-tree.pinned-tree {
-      --oscd-tree-leaf-toggle-size: 0px;
-      --oscd-tree-leaf-toggle-gap: 0px;
-    }
-
-    oscd-divider {
-      --md-divider-color: var(--editor-plugins-panel-divider-color);
-      /* No margin: .tree-container's 12px gap owns the spacing on both sides. */
-      margin-block: 0;
+    .footer-divider {
+      padding-inline: 16px;
+      margin-block: 12px 0;
     }
 
     .footer {
@@ -11359,7 +11593,11 @@ EditorPluginsPanel = __decorate$2([
  * @fires deactivate-items {Event} Requests the parent menu to deselect other
  * items when a submenu opens. --bubbles --composed
  * @fires request-activation {Event} Requests the parent to make the slotted item
- * focusable and focus the item. --bubbles --composed
+ * focusable and focus the item. Used internally for menu keyboard navigation;
+ * most applications do not need to listen for this event. It is exposed for
+ * authors building their own menu-item replacements, or for advanced cases
+ * where you want to call `preventDefault`/`stopPropagation` on it to override
+ * default focus handling. --bubbles --composed
  * @fires deactivate-typeahead {Event} Requests the parent menu to deactivate
  * the typeahead functionality when a submenu opens. --bubbles --composed
  * @fires activate-typeahead {Event} Requests the parent menu to activate the
@@ -11953,29 +12191,13 @@ const styles$26 = i$_ `:host{border-start-start-radius:var(--_container-shape-st
  * SPDX-License-Identifier: Apache-2.0
  */
 // Separate variable needed for closure.
-const buttonBaseClass$3 = mixinDelegatesAria$3(mixinElementInternals$3(i$X));
+const buttonBaseClass$3 = mixinDelegatesAria$3(mixinFormSubmitter(mixinFormAssociated$3(mixinElementInternals$3(i$X))));
 /**
  * A button component.
  */
 let Button$4 = class Button extends buttonBaseClass$3 {
-    get name() {
-        return this.getAttribute('name') ?? '';
-    }
-    set name(name) {
-        this.setAttribute('name', name);
-    }
-    /**
-     * The associated form element with which this element's value will submit.
-     */
-    get form() {
-        return this[internals$3].form;
-    }
     constructor() {
         super();
-        /**
-         * Whether or not the button is disabled.
-         */
-        this.disabled = false;
         /**
          * Whether or not the button is "soft-disabled" (disabled but still
          * focusable).
@@ -12011,16 +12233,6 @@ let Button$4 = class Button extends buttonBaseClass$3 {
          * Whether to display the icon or not.
          */
         this.hasIcon = false;
-        /**
-         * The default behavior of the button. May be "button", "reset", or "submit"
-         * (default).
-         */
-        this.type = 'submit';
-        /**
-         * The value added to a form with the button's name when the button submits a
-         * form.
-         */
-        this.value = '';
         {
             this.addEventListener('click', this.handleClick.bind(this));
         }
@@ -12109,19 +12321,11 @@ let Button$4 = class Button extends buttonBaseClass$3 {
         this.hasIcon = this.assignedIcons.length > 0;
     }
 };
-(() => {
-    setupFormSubmitter$3(Button$4);
-})();
-/** @nocollapse */
-Button$4.formAssociated = true;
 /** @nocollapse */
 Button$4.shadowRootOptions = {
     mode: 'open',
     delegatesFocus: true,
 };
-__decorate$2([
-    n$1f({ type: Boolean, reflect: true })
-], Button$4.prototype, "disabled", void 0);
 __decorate$2([
     n$1f({ type: Boolean, attribute: 'soft-disabled', reflect: true })
 ], Button$4.prototype, "softDisabled", void 0);
@@ -12140,12 +12344,6 @@ __decorate$2([
 __decorate$2([
     n$1f({ type: Boolean, attribute: 'has-icon', reflect: true })
 ], Button$4.prototype, "hasIcon", void 0);
-__decorate$2([
-    n$1f()
-], Button$4.prototype, "type", void 0);
-__decorate$2([
-    n$1f({ reflect: true })
-], Button$4.prototype, "value", void 0);
 __decorate$2([
     e$1l('.button')
 ], Button$4.prototype, "buttonElement", void 0);
