@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.3](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.2...oscd-academy-v0.0.3) (2026-09-13)
+
+
+### Features
+
+* update to oscd-shell v0.0.14 ([ddeaa99](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/ddeaa99e4fa8b4d0b7bfc7a8677d6a0b2d224a0f))
+
+
+### Bug Fixes
+
+* add academy styles missing in latest shell version ([bb47f3c](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/bb47f3c8aee4db3fdeacad3280b5866c7e90e59c))
+
 ## [0.0.2](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.1...oscd-academy-v0.0.2) (2026-09-12)
 
 
