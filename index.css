@@ -10,6 +10,20 @@ html {
   width: 100%;
 }
 
+oscd-shell {
+
+  --landing-background-color: unset;
+  --shell-background-color: unset;
+  --oscd-shell-editor-plugins-panel-background-color: transparent;
+  --oscd-shell-editor-plugins-panel-item-text-color: white;
+  --oscd-shell-editor-plugins-panel-item-icon-color: white;
+
+  --oscd-shell-landing-card-background: var(--oscd-theme-primary);
+  --oscd-shell-landing-heading-color: white;
+  --oscd-shell-landing-subheading-color: white;
+  --landing-card-corner-accent: var(--omicron-yellow);
+}
+
 oscd-shell * img[alt="logo"] {
   height: 28px;
 }
