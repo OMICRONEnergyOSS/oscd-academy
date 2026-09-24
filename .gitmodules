@@ -1,7 +1,3 @@
-[submodule "plugins/oscd-publisher"]
-	path = plugins/oscd-publisher
-	url = https://github.com/openenergytools/oscd-publisher
-	branch = deploy
 [submodule "plugins/scl-import-ied"]
 	path = plugins/scl-import-ied
 	url = https://github.com/openenergytools/scl-import-ied
@@ -17,10 +13,6 @@
 [submodule "plugins/openscd.github.io"]
 	path = plugins/openscd.github.io
 	url = https://github.com/openscd/openscd.github.io.git
-[submodule "plugins/scl-bay-template"]
-	path = plugins/scl-bay-template
-	url = https://github.com/com-pas/scl-bay-template.git
-	branch = deploy
 [submodule "plugins/oscd-remove-ieds"]
 	path = plugins/oscd-remove-ieds
 	url = https://github.com/danyill/oscd-remove-ieds.git
