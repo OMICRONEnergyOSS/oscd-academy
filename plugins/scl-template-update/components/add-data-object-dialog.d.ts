@@ -1,0 +1,42 @@
+import { LitElement } from 'lit';
+import { TreeNode } from '@openenergytools/tree-grid';
+import { OscdDialog } from '@omicronenergy/oscd-ui/dialog/OscdDialog.js';
+import { OscdOutlinedTextField } from '@omicronenergy/oscd-ui/textfield/OscdOutlinedTextField.js';
+import { OscdFilledSelect } from '@omicronenergy/oscd-ui/select/OscdFilledSelect.js';
+import { OscdSelectOption } from '@omicronenergy/oscd-ui/select/OscdSelectOption.js';
+import { OscdTextButton } from '@omicronenergy/oscd-ui/button/OscdTextButton.js';
+declare const AddDataObjectDialog_base: typeof LitElement & import("@open-wc/scoped-elements/lit-element.js").ScopedElementsHostConstructor;
+export declare class AddDataObjectDialog extends AddDataObjectDialog_base {
+    static scopedElements: {
+        'oscd-dialog': typeof OscdDialog;
+        'oscd-outlined-text-field': typeof OscdOutlinedTextField;
+        'oscd-text-button': typeof OscdTextButton;
+        'oscd-select-option': typeof OscdSelectOption;
+        'oscd-filled-select': typeof OscdFilledSelect;
+    };
+    static styles: import("lit").CSSResult;
+    tree: Partial<Record<string, TreeNode>>;
+    cdClasses: string[];
+    onConfirm?: (cdcType: string, doName: string, namespace: string | null) => void;
+    open: boolean;
+    errorText: string;
+    createDOdialog: OscdDialog;
+    cdcType: OscdFilledSelect;
+    doName: OscdOutlinedTextField;
+    namespace: OscdOutlinedTextField;
+    private namespaceDefaultValue;
+    private validationDebounceDelay;
+    private isCustomNamespaceDisabled;
+    show(): void;
+    close(): void;
+    private getMultiTree;
+    private findMatchingTreeNode;
+    private getDONameStatus;
+    private onValueChange;
+    private setDONameStatusError;
+    private validateForm;
+    private onAddDataObjectSubmit;
+    private resetErrorText;
+    render(): import("lit").TemplateResult<1>;
+}
+export default AddDataObjectDialog;

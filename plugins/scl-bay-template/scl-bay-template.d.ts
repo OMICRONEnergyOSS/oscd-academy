@@ -7,28 +7,21 @@ import '@material/mwc-select';
 import '@material/mwc-textfield';
 import type { Dialog } from '@material/mwc-dialog';
 import type { TextField } from '@material/mwc-textfield';
-import AddFunctionDialog from './components/add-function-dialog.js';
+import '@openenergytools/function-editor-90-30';
 import './sld-viewer.js';
-import './function-editor.js';
 export declare const xmlnsNs = "http://www.w3.org/2000/xmlns/";
 export declare const ns6100 = "http://www.iec.ch/61850/2019/SCL/6-100";
 export declare const pref6100 = "eTr_6-100";
 export default class SclBayTemplate extends LitElement {
     doc?: XMLDocument;
     docs: Record<string, XMLDocument>;
-    editCount: number;
-    get substation(): Element | null;
-    compasApi?: {
-        lNodeLibrary: {
-            loadLNodeLibrary: () => Promise<Document | null>;
-            lNodeLibrary: () => Document | null;
-        };
-    };
     lNodeTypeSrc: {
         name: string;
         src: XMLDocument;
     }[];
+    get substation(): Element | null;
     gridSize: number;
+    editCount: number;
     get bay(): Element | null;
     parent?: Element;
     selectedFunc?: Element;
@@ -42,9 +35,6 @@ export default class SclBayTemplate extends LitElement {
     proResMax: TextField;
     proResService: TextField;
     sldWidthDiag?: Dialog;
-    lnodeLibDialog?: Dialog;
-    addFunctionDialog?: AddFunctionDialog;
-    connectedCallback(): void;
     private openCreateWizard;
     addFunction(): void;
     addSubFunction(parent: Element): void;
@@ -52,10 +42,6 @@ export default class SclBayTemplate extends LitElement {
     importFunction(event: Event): Promise<void>;
     private renderFuncContainers;
     private renderWidthDialog;
-    private renderAddFunctionDialog;
-    private openLibDocInfoDialog;
-    private closeLibDocInfoDialog;
-    private renderLibDocInfoDialog;
     render(): TemplateResult<1>;
     static styles: import("lit").CSSResult;
 }

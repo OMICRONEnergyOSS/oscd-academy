@@ -1,0 +1,177 @@
+import { __decorate } from "tslib";
+import { css, html } from 'lit';
+import { query } from 'lit/decorators.js';
+import { OscdActionList, } from '@omicronenergy/oscd-ui/action-list/OscdActionList.js';
+import { OscdDialog } from '@omicronenergy/oscd-ui/dialog/OscdDialog.js';
+import { OscdIcon } from '@omicronenergy/oscd-ui/icon/OscdIcon.js';
+import { OscdIconButton } from '@omicronenergy/oscd-ui/iconbutton/OscdIconButton.js';
+import { OscdOutlinedButton } from '@omicronenergy/oscd-ui/button/OscdOutlinedButton.js';
+import { newEditEventV2 } from '@openscd/oscd-api/utils.js';
+import { createSampledValueControl, identity, removeControlBlock, } from '@openscd/scl-lib';
+import { styles } from '../../foundation.js';
+import { BaseElementEditor } from '../base-element-editor.js';
+import { DataSetElementEditor } from '../dataset/data-set-element-editor.js';
+import { SampledValueControlElementEditor } from './sampled-value-control-element-editor.js';
+function smvControlPath(smvControl) {
+    const id = identity(smvControl);
+    if (Number.isNaN(id)) {
+        return 'UNDEFINED';
+    }
+    const paths = id.split('>');
+    paths.pop();
+    return paths.join('>');
+}
+export class SampledValueControlEditor extends BaseElementEditor {
+    renderElementEditorContainer() {
+        if (this.selectedControlBlock !== undefined) {
+            return html `<div class="elementeditorcontainer">
+        ${this.renderDataSetElementContainer()}
+        <sampled-value-control-element-editor
+          .doc=${this.doc}
+          .element=${this.selectedControlBlock}
+          .docVersion=${this.docVersion}
+        ></sampled-value-control-element-editor>
+      </div>`;
+        }
+        return html ``;
+    }
+    renderSelectionList() {
+        const items = Array.from(this.doc.querySelectorAll(':root > IED')).flatMap((ied) => {
+            const smvControls = Array.from(ied.querySelectorAll(':scope > AccessPoint > Server > LDevice > LN0 > SampledValueControl'));
+            const item = {
+                headline: `${ied.getAttribute('name')}`,
+                startingIcon: 'developer_board',
+                divider: true,
+                filtergroup: smvControls.map(smvControl => `${identity(smvControl)}`),
+                actions: [
+                    {
+                        icon: 'playlist_add',
+                        callback: () => {
+                            const sampledValueControlActions = createSampledValueControl(ied);
+                            if (sampledValueControlActions.length) {
+                                this.dispatchEvent(newEditEventV2(sampledValueControlActions, {
+                                    title: 'Create New SampledValueControl',
+                                }));
+                            }
+                        },
+                    },
+                ],
+            };
+            const sampledValues = smvControls.map(smvControl => ({
+                headline: `${smvControl.getAttribute('name')}`,
+                supportingText: `${smvControlPath(smvControl)}`,
+                primaryAction: () => {
+                    if (this.selectedControlBlock === smvControl) {
+                        return;
+                    }
+                    if (this.elementContainer) {
+                        this.elementContainer.resetInputs();
+                    }
+                    if (this.dataSetElementEditor) {
+                        this.dataSetElementEditor.resetInputs();
+                    }
+                    this.selectControlBlock(smvControl);
+                    this.selectionList.classList.add('hidden');
+                    this.selectSampledValueControlButton.classList.remove('hidden');
+                },
+                actions: [
+                    {
+                        icon: 'delete',
+                        callback: () => {
+                            this.dispatchEvent(newEditEventV2(removeControlBlock({ node: smvControl }), {
+                                title: `Remove SampledValueControl`,
+                            }));
+                            this.clearSelectedControlBlock();
+                        },
+                    },
+                ],
+            }));
+            return [item, ...sampledValues];
+        });
+        return html `<oscd-action-list
+      class="selectionlist"
+      filterable
+      searchhelper="Filter SampledValueControl's"
+      .items=${items}
+    ></oscd-action-list>`;
+    }
+    renderToggleButton() {
+        return html `<oscd-outlined-button
+      class="change scl element"
+      @click=${() => {
+            this.selectionList.classList.remove('hidden');
+            this.selectSampledValueControlButton.classList.add('hidden');
+        }}
+      >Select Sampled Value Control</oscd-outlined-button
+    >`;
+    }
+    render() {
+        if (!this.doc) {
+            return html `No SCL loaded`;
+        }
+        return html `${this.renderToggleButton()}
+      <div class="section">
+        ${this.renderSelectionList()}${this.renderElementEditorContainer()}
+      </div>`;
+    }
+}
+SampledValueControlEditor.scopedElements = {
+    'oscd-action-list': OscdActionList,
+    'data-set-element-editor': DataSetElementEditor,
+    'oscd-outlined-button': OscdOutlinedButton,
+    'sampled-value-control-element-editor': SampledValueControlElementEditor,
+    'oscd-icon-button': OscdIconButton,
+    'oscd-icon': OscdIcon,
+    'oscd-dialog': OscdDialog,
+};
+SampledValueControlEditor.styles = css `
+    ${styles}
+
+    .elementeditorcontainer {
+      flex: 65%;
+      margin: 4px 8px 4px 4px;
+      background-color: var(--md-sys-color-surface);
+      overflow-y: scroll;
+      display: grid;
+      grid-gap: 12px;
+      padding: 8px 12px 16px;
+      grid-template-columns: repeat(3, 1fr);
+      z-index: 0;
+    }
+
+    .content.dataSet {
+      display: flex;
+      flex-direction: column;
+    }
+
+    oscd-list-item {
+      --md-list-item-trailing-space: 48px;
+    }
+
+    data-set-element-editor {
+      grid-column: 1 / 2;
+    }
+
+    sampled-value-control-element-editor {
+      grid-column: 2 / 4;
+    }
+
+    @media (max-width: 950px) {
+      .elementeditorcontainer {
+        display: block;
+      }
+    }
+  `;
+__decorate([
+    query('.selectionlist')
+], SampledValueControlEditor.prototype, "selectionList", void 0);
+__decorate([
+    query('.change.scl.element')
+], SampledValueControlEditor.prototype, "selectSampledValueControlButton", void 0);
+__decorate([
+    query('sampled-value-control-element-editor')
+], SampledValueControlEditor.prototype, "elementContainer", void 0);
+__decorate([
+    query('data-set-element-editor')
+], SampledValueControlEditor.prototype, "dataSetElementEditor", void 0);
+//# sourceMappingURL=sampled-value-control-editor.js.map
