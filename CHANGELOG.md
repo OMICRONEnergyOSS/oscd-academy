@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.3](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.2...oscd-academy-v0.0.3) (2026-09-25)
+
+
+### Features
+
+* switched over to bundled (gitsubmodule) plugins instead of dynamically loaded ([fbfa42d](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/fbfa42d55c96a627573d194f87976bc0045bd8cf))
+* switched to oscd-editor-template module and template update/generator git submodules ([d35daa5](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/d35daa54ef7e94bed56db6c4b094e9e569d086d0))
+* update to oscd-shell v0.0.14 ([ddeaa99](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/ddeaa99e4fa8b4d0b7bfc7a8677d6a0b2d224a0f))
+* updated oscd-shell to v0.0.16 ([2caef09](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/2caef09854d138bea1e1d3f691201bd6cb81e913))
+
+
+### Bug Fixes
+
+* add academy styles missing in latest shell version ([bb47f3c](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/bb47f3c8aee4db3fdeacad3280b5866c7e90e59c))
+
 ## [0.0.2](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.1...oscd-academy-v0.0.2) (2026-09-12)
 
 
