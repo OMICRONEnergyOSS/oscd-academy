@@ -11,12 +11,47 @@ import OscdEditorSource from "@omicronenergy/oscd-editor-source";
 import OscdEditorCommunication from "@omicronenergy/oscd-editor-communication/oscd-editor-communication.js";
 import OscdEditorSubscriberMsgBinding from "@omicronenergy/oscd-editor-subscriber-msgbinding";
 import OscdEditorSubscriberDataBinding from "@omicronenergy/oscd-editor-subscriber-databinding";
+import OscdEditorTemplate from "@omicronenergy/oscd-editor-template/oscd-editor-template.js";
 import { OscdEditorIED } from "@omicronenergy/oscd-editor-ied";
 
 import OscdBackgroundEditV1 from "@omicronenergy/oscd-background-editv1";
 import OscdBackgroundWizardEvents from "@omicronenergy/oscd-background-wizard-events/oscd-background-wizard-events.js";
 
+import SclTemplateUpdate from "./plugins/scl-template-update/scl-template-update.js";
+
+const importOscdTemplateGenerator = async () => {
+  const originalDefine = CustomElementRegistry.prototype.define;
+
+  // Temporary compatibility shim for duplicate registrations in the plugin.
+  CustomElementRegistry.prototype.define = function (
+    name,
+    constructor,
+    options,
+  ) {
+    try {
+      return originalDefine.call(this, name, constructor, options);
+    } catch (error) {
+      const duplicateName =
+        error instanceof DOMException &&
+        error.name === "NotSupportedError" &&
+        error.message.includes(`the name "${name}" has already been used`);
+
+      if (!duplicateName) throw error;
+    }
+  };
+
+  try {
+    const { default: OscdTemplateGenerator } =
+      await import("./plugins/oscd-template-generator/oscd-template-generator.js");
+
+    return OscdTemplateGenerator;
+  } finally {
+    CustomElementRegistry.prototype.define = originalDefine;
+  }
+};
+
 export const loadPlugins = async (oscdShell) => {
+  const OscdTemplateGenerator = await importOscdTemplateGenerator();
   const registry = oscdShell.registry;
   registry.define("oscd-menu-open", OscdMenuOpen);
   registry.define("oscd-menu-save", OscdMenuSave);
@@ -39,6 +74,9 @@ export const loadPlugins = async (oscdShell) => {
     "oscd-editor-subscriber-databinding",
     OscdEditorSubscriberDataBinding,
   );
+  registry.define("oscd-template-generator", OscdTemplateGenerator);
+  registry.define("scl-template-update", SclTemplateUpdate);
+  registry.define("oscd-editor-template", OscdEditorTemplate);
 
   oscdShell.plugins = {
     menu: [
@@ -196,7 +234,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "copy_all",
             requireDoc: true,
-            src: "./plugins/oscd-template-generator/oscd-template-generator.js",
+            tagName: "oscd-template-generator",
           },
           {
             name: "Template Update",
@@ -205,9 +243,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "copy_all",
             requireDoc: true,
-            // src: "./plugins/scl-template-update/scl-template-update.js",
-            src: "https://openenergytools.github.io/scl-editor/plugins/template-update/scl-template-update.js",
-            // tagName: "scl-template-update",
+            tagName: "scl-template-update",
           },
           {
             name: "Template Editor",
@@ -216,7 +252,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "copy_all",
             requireDoc: true,
-            src: "https://omicronenergyoss.github.io/oscd-editor-template/oscd-editor-template.js",
+            tagName: "oscd-editor-template",
           },
           {
             name: "Bay Template Editor",

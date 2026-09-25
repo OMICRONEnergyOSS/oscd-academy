@@ -21,3 +21,7 @@
 	path = plugins/oscd-subscriber-later-binding
 	url = https://github.com/danyill/oscd-subscriber-later-binding.git
 	branch = gh-pages
+[submodule "plugins/scl-template-update"]
+	path = plugins/scl-template-update
+	url = https://github.com/com-pas/scl-template-update.git
+	branch = deploy

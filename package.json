@@ -103,6 +103,7 @@
     "@omicronenergy/oscd-editor-source": "^0.0.5",
     "@omicronenergy/oscd-editor-subscriber-databinding": "^0.0.5",
     "@omicronenergy/oscd-editor-subscriber-msgbinding": "^0.0.3",
+    "@omicronenergy/oscd-editor-template": "^0.0.1",
     "@omicronenergy/oscd-menu-commons": "^0.0.1",
     "@omicronenergy/oscd-menu-open": "^0.0.6",
     "@omicronenergy/oscd-menu-save": "^0.0.2",
