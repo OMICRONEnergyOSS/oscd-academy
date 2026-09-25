@@ -116,7 +116,6 @@ export const loadPlugins = async (oscdShell) => {
         icon: "rule_folder",
         requireDoc: true,
         tagName: "oscd-menu-validate",
-        // src: "https://omicronenergyoss.github.io/oscd-menu-validate/oscd-menu-validate.js",
       },
       {
         name: "IED Management",
@@ -135,7 +134,7 @@ export const loadPlugins = async (oscdShell) => {
             translations: { de: "Rename IEDs" },
             icon: "edit",
             requireDoc: true,
-            src: "https://danyill.github.io/oscd-rename-ieds/oscd-rename-ieds.js",
+            src: "./plugins/oscd-rename-ieds/oscd-rename-ieds.js",
           },
           {
             name: "Virtual Template IED",
@@ -144,7 +143,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "edit",
             requireDoc: true,
-            src: "https://openenergytools.github.io/virtual-template-ied/virtual-template-ied.js",
+            src: "./plugins/virtual-template-ied/virtual-template-ied.js",
           },
           {
             name: "Remove IEDs",
@@ -155,14 +154,13 @@ export const loadPlugins = async (oscdShell) => {
           },
         ],
       },
-      {
-        name: "Merge Project",
-        translations: { de: "Merge Project" },
-        icon: "merge_type",
-        requireDoc: true,
-        src: "https://openscd.github.io/plugins/src/menu/Merge.js",
-      },
-
+      // {
+      //   name: "Merge Project",
+      //   translations: { de: "Merge Project" },
+      //   icon: "merge_type",
+      //   requireDoc: true,
+      //   src: "https://openscd.github.io/plugins/src/menu/Merge.js",
+      // },
       {
         name: "Edit",
         translations: { de: "Bearbeiten" },
@@ -193,7 +191,7 @@ export const loadPlugins = async (oscdShell) => {
         },
         icon: "add_box",
         requireDoc: true,
-        src: "https://stee-re.github.io/oscd-editor-sld-temp/oscd-editor-sld.js",
+        src: "./plugins/oscd-editor-sld-temp/oscd-editor-sld.js",
       },
       // {
       //   name: "SLD Designer (new)",
@@ -211,7 +209,7 @@ export const loadPlugins = async (oscdShell) => {
         },
         icon: "margin",
         requireDoc: true,
-        src: "https://omicronenergyoss.github.io/oscd-editor-substation/oscd-editor-substation.js",
+        src: "./plugins/oscd-editor-substation/oscd-editor-substation.js",
       },
       {
         name: "IED Editor",
@@ -261,7 +259,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "edit",
             requireDoc: true,
-            src: "https://openenergytools.github.io/scl-bay-template/scl-bay-template.js",
+            src: "./plugins/scl-bay-template/scl-bay-template.js",
           },
           {
             name: "LNode Mapping",
@@ -295,7 +293,6 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "settings_ethernet",
             requireDoc: true,
-            // src: "https://omicronenergyoss.github.io/oscd-editor-communication/oscd-editor-communication.js",
             tagName: "oscd-editor-communication",
           },
           {
@@ -303,7 +300,7 @@ export const loadPlugins = async (oscdShell) => {
             translations: {
               de: "Publisher",
             },
-            src: "https://omicronenergyoss.github.io/oscd-editor-publisher/oscd-editor-publisher.js",
+            src: "./plugins/oscd-editor-publisher/oscd-editor-publisher.js",
             icon: "publish",
             requireDoc: true,
           },
@@ -314,7 +311,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "auto_fix_normal",
             requireDoc: true,
-            src: "https://danyill.github.io/oscd-tp-multicast-naming/oscd-tp-multicast-naming.js",
+            src: "./plugins/oscd-tp-multicast-naming/oscd-tp-multicast-naming.js",
           },
           {
             //Low priority plugin
@@ -351,7 +348,7 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "link",
             requireDoc: true,
-            src: "https://openenergytools.github.io/scl-communication-editor/scl-communication-editor.js",
+            src: "./plugins/scl-communication-editor/scl-communication-editor.js",
           },
           {
             name: "Explore Communication",
@@ -360,14 +357,14 @@ export const loadPlugins = async (oscdShell) => {
             },
             icon: "lan",
             requireDoc: true,
-            src: "https://sprinteins.github.io/oscd-plugins/communication-explorer/index.js",
+            src: "./plugins/sprinteins-oscd-plugins/communication-explorer/index.js",
           },
           {
             name: "104",
             translations: {
               de: "104",
             },
-            src: "https://openscd.github.io/plugins/src/editors/Protocol104.js",
+            src: "./plugins/compas-official-plugins/plugins/dist/editors/Protocol104.js",
             icon: "settings_ethernet",
             requireDoc: true,
           },
@@ -380,7 +377,7 @@ export const loadPlugins = async (oscdShell) => {
         plugins: [
           {
             name: "Cleanup",
-            src: "./plugins/openscd.github.io/plugins/dist/editors/Cleanup.js",
+            src: "./plugins/compas-official-plugins/plugins/dist/editors/Cleanup.js",
             icon: "cleaning_services",
             activeByDefault: false,
             kind: "editor",

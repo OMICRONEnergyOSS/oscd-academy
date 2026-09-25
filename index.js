@@ -2,12 +2,6 @@ import "@webcomponents/scoped-custom-element-registry";
 import "@omicronenergy/oscd-shell/oscd-shell.js";
 import { loadPlugins } from "./plugins.js";
 
-import {
-  registerTranslateConfig,
-  use,
-} from "./plugins/openscd.github.io/_snowpack/pkg/lit-translate.js";
-import { loader as openscdTranslationLoader } from "./plugins/openscd.github.io/openscd/dist/translations/loader.js";
-
 const _customElementsDefine = window.customElements.define;
 window.customElements.define = (name, cl, conf) => {
   if (!customElements.get(name)) {
@@ -25,16 +19,6 @@ try {
 } catch (err) {
   console.error("Error loading plugins:", err);
 }
-
-/*
- * The plugins currently located in the SprintEins monorepo are using the lit-translate library.
- * This requires us to register their loader with their copy of the lit-translate, so that translations work properly.
- */
-registerTranslateConfig({
-  loader: openscdTranslationLoader,
-  empty: (key) => key,
-});
-use("en");
 
 const params = new URL(document.location).searchParams;
 for (const [name, value] of params) {

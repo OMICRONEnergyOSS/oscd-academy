@@ -10,9 +10,6 @@
 	path = plugins/process-icd-creator
 	url = https://github.com/JakobVogelsang/process-icd-creator.git
 	branch = gh-pages
-[submodule "plugins/openscd.github.io"]
-	path = plugins/openscd.github.io
-	url = https://github.com/openscd/openscd.github.io.git
 [submodule "plugins/oscd-remove-ieds"]
 	path = plugins/oscd-remove-ieds
 	url = https://github.com/danyill/oscd-remove-ieds.git
@@ -25,3 +22,43 @@
 	path = plugins/scl-template-update
 	url = https://github.com/com-pas/scl-template-update.git
 	branch = deploy
+[submodule "plugins/oscd-rename-ieds"]
+	path = plugins/oscd-rename-ieds
+	url = https://github.com/danyill/oscd-rename-ieds.git
+	branch = gh-pages
+[submodule "plugins/virtual-template-ied"]
+	path = plugins/virtual-template-ied
+	url = https://github.com/openenergytools/virtual-template-ied.git
+	branch = gh-pages
+[submodule "plugins/oscd-editor-sld-temp"]
+	path = plugins/oscd-editor-sld-temp
+	url = https://github.com/stee-re/oscd-editor-sld-temp.git
+	branch = gh-pages
+[submodule "plugins/oscd-editor-substation"]
+	path = plugins/oscd-editor-substation
+	url = https://github.com/OMICRONEnergyOSS/oscd-editor-substation.git
+	branch = deploy
+[submodule "plugins/scl-bay-template"]
+	path = plugins/scl-bay-template
+	url = https://github.com/openenergytools/scl-bay-template.git
+	branch = gh-pages
+[submodule "plugins/oscd-editor-publisher"]
+	path = plugins/oscd-editor-publisher
+	url = https://github.com/OMICRONEnergyOSS/oscd-editor-publisher.git
+	branch = deploy
+[submodule "plugins/oscd-tp-multicast-naming"]
+	path = plugins/oscd-tp-multicast-naming
+	url = https://github.com/danyill/oscd-tp-multicast-naming.git
+	branch = gh-pages
+[submodule "plugins/scl-communication-editor"]
+	path = plugins/scl-communication-editor
+	url = https://github.com/openenergytools/scl-communication-editor.git
+	branch = gh-pages
+[submodule "plugins/sprinteins-oscd-plugins"]
+	path = plugins/sprinteins-oscd-plugins
+	url = https://github.com/SprintEins/oscd-plugins.git
+	branch = gh-pages
+[submodule "plugins/compas-official-plugins"]
+	path = plugins/compas-official-plugins
+	url = https://github.com/com-pas/oscd-official-plugins.git
+	branch = gh-pages

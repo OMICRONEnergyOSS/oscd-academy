@@ -10,10 +10,6 @@ const outputDir = "bundle";
 export default [
   {
     input: "index.html",
-    external: [
-      "./plugins/openscd.github.io/_snowpack/pkg/lit-translate.js",
-      "./plugins/openscd.github.io/openscd/dist/translations/loader.js",
-    ],
     plugins: [
       html({
         minify: true,
