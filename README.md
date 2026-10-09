@@ -16,6 +16,10 @@ Plugin configuration lives in `plugins.js`. For an imported plugin, add its impo
 
 ## Releases
 
-The release workflow uses [Release Please](https://github.com/googleapis/release-please). Conventional Commits are used to prepare release pull requests; when one is merged, the workflow publishes the browser build to GitHub Pages and attempts to build desktop installers.
+The release workflow uses [Release Please](https://github.com/googleapis/release-please). Conventional Commits are used to prepare release pull requests; when one is merged, the workflow publishes the browser build to GitHub Pages and builds desktop installers on native Linux and Windows runners.
 
-Configured desktop targets are Linux AppImage, `.deb`, and `.rpm` packages, plus Windows NSIS, portable `.exe`, and `.msi` installers. The installer build is allowed to fail without stopping the workflow, so the available files may vary by release. Check the [release assets](https://github.com/OMICRONEnergyOSS/oscd-academy/releases) for what was actually published.
+Desktop targets are Linux AppImage, `.deb`, and `.rpm` packages, plus Windows NSIS and `.msi` installers and a portable `.exe`. Both packaged apps must pass startup and local-file-opening smoke tests before any installers are uploaded to the [release assets](https://github.com/OMICRONEnergyOSS/oscd-academy/releases). Code signing is not provided.
+
+Manually running the Release Please workflow also builds and tests the installers, even when no release is created. In that case, they are available as workflow artifacts rather than published to a release.
+
+The **Electron Build Test** workflow runs the same build and smoke tests on every push and can also be run manually. It uses the checked-in version, uploads installers as workflow artifacts, and never publishes a release.

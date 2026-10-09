@@ -22,12 +22,6 @@ const zoomFactor = 0.1; // 10% zoom in/out
 
 let mainWindow;
 
-// development vs. production has different process.argv
-// https://github.com/electron/electron/issues/4690
-if (app.isPackaged) {
-  process.argv.unshift(null);
-}
-
 function createWindow() {
   mainWindow = new BrowserWindow({
     show: false,
@@ -132,7 +126,7 @@ function createAppMenu() {
                 packageInfo.author ?? "Unknown"
               }`,
               buttons: ["OK"],
-              icon: "./build/icons/png/512x512.png",
+              icon: path.join(__dirname, "build", "icons", "png", "icon.png"),
             });
           },
         },
@@ -190,12 +184,13 @@ ipcMain.handle("zoom", (_event, direction) => {
 });
 
 app.whenReady().then(() => {
-  createWindow();
-  createAppMenu();
-
-  const inputFilePath = process.argv[2];
-  mainWindow.once("ready-to-show", () => {
-    mainWindow.maximize();
+  const inputFilePath = process.argv
+    .slice(app.isPackaged ? 1 : 2)
+    .find(argument => !argument.startsWith("-"));
+  ipcMain.once("renderer-ready", event => {
+    if (event.sender !== mainWindow.webContents) {
+      throw new Error("Unexpected renderer-ready sender");
+    }
     if (inputFilePath) {
       mainWindow.webContents.send(
         "file-opened",
@@ -203,6 +198,13 @@ app.whenReady().then(() => {
         inputFilePath,
       );
     }
+  });
+  createWindow();
+  createAppMenu();
+
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.maximize();
+    mainWindow.show();
   });
 
   app.on("activate", () => {

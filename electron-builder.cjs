@@ -9,22 +9,16 @@ const path = require("path");
 const afterPack = async (context) => {
   const { appOutDir, packager } = context;
 
-  try {
-    const sourcePackageJsonPath = path.join(
-      packager.projectDir,
-      "package.json",
-    );
+  const sourcePackageJsonPath = path.join(
+    packager.projectDir,
+    "package.json",
+  );
 
-    const resourcesPath = path.join(appOutDir, "resources");
-    if (!fs.existsSync(resourcesPath)) {
-      fs.mkdirSync(resourcesPath);
-    }
+  const resourcesPath = path.join(appOutDir, "resources");
+  fs.mkdirSync(resourcesPath, { recursive: true });
 
-    const destPackageJsonPath = path.join(resourcesPath, "package.json");
-    fs.copyFileSync(sourcePackageJsonPath, destPackageJsonPath);
-  } catch (error) {
-    console.error("Error copying package.json:", error);
-  }
+  const destPackageJsonPath = path.join(resourcesPath, "package.json");
+  fs.copyFileSync(sourcePackageJsonPath, destPackageJsonPath);
 };
 
 module.exports = {

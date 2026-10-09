@@ -71,6 +71,7 @@ export default [
           devDependencies: [
             "**/*.test.ts",
             "**/*.spec.ts",
+            "**/*.spec.js",
             "eslint.config.js",
             "rollup.config.js",
             "web-test-runner.config.js",

@@ -14,11 +14,6 @@ window.customElements.define = (name, cl, conf) => {
 };
 
 const oscdShell = document.querySelector("oscd-shell");
-try {
-  loadPlugins(oscdShell);
-} catch (err) {
-  console.error("Error loading plugins:", err);
-}
 
 const params = new URL(document.location).searchParams;
 for (const [name, value] of params) {
@@ -66,4 +61,13 @@ if (isElectron) {
     },
     { passive: false },
   );
+}
+
+try {
+  await loadPlugins(oscdShell);
+  if (isElectron) {
+    window.electronAPI.ready();
+  }
+} catch (err) {
+  console.error("Error loading plugins:", err);
 }

@@ -4,6 +4,7 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  ready: () => ipcRenderer.send("renderer-ready"),
   onFileOpen: (callback) => {
     ipcRenderer.on("file-opened", (_event, fileName, path) =>
       callback(fileName, path),
