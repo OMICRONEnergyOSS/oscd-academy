@@ -99,7 +99,7 @@
     "@omicronenergy/oscd-background-wizard-events": "^0.0.4",
     "@omicronenergy/oscd-editor-communication": "^0.0.2",
     "@omicronenergy/oscd-editor-diff": "^0.0.2",
-    "@omicronenergy/oscd-editor-ied": "^0.0.1",
+    "@omicronenergy/oscd-editor-ied": "^0.0.2",
     "@omicronenergy/oscd-editor-source": "^0.0.5",
     "@omicronenergy/oscd-editor-subscriber-databinding": "^0.0.6",
     "@omicronenergy/oscd-editor-subscriber-msgbinding": "^0.0.4",
