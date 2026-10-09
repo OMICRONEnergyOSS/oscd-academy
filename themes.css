@@ -2,6 +2,7 @@
   /* color variables names taken from Omicron Pallet (for reference) */
   --french-blue-15: #0b335b;
   --french-blue-55: #2485e5;
+  --french-blue-95: #b6d6f6;
 
   --omicron-yellow: #f5e214;
 
@@ -11,6 +12,7 @@
   --slate-30: #46505d; /* L* ≈ 30% */
   --slate-65: #8b97a7; /* L* ≈ 58% */
   --slate-70: #96a1b0; /* L* ≈ 62% */
+  --slate-95: #d0d5dc; /* L* ≈ 82% */
   --slate-110: #f3f5f6; /* L* ≈ 94% */
   --error: #dc322f;
 }

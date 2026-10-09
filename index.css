@@ -11,12 +11,15 @@ html {
 }
 
 oscd-shell {
-
   --landing-background-color: unset;
   --shell-background-color: unset;
   --oscd-shell-editor-plugins-panel-background-color: transparent;
   --oscd-shell-editor-plugins-panel-item-text-color: white;
   --oscd-shell-editor-plugins-panel-item-icon-color: white;
+  --oscd-shell-app-bar-title-font-size: 16px;
+  --oscd-shell-plugins-menu-item-selected-container-color: var(--french-blue-95);
+  --oscd-shell-plugins-menu-item-selected-label-color: var(--slate-25);
+  --oscd-shell-plugins-menu-divider-color: color-mix(in srgb, var(--slate-95) 80%, transparent);
 
   --oscd-shell-landing-card-background: var(--oscd-theme-primary);
   --oscd-shell-landing-heading-color: white;
