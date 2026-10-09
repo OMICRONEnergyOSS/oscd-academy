@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.0.3](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.2...oscd-academy-v0.0.3) (2026-10-09)
+
+
+### Features
+
+* switch to new commons for save and open plugins ([d7c8742](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/d7c8742d2b60e792d50d16e45352e76afaa65eb7))
+* switched over to bundled (gitsubmodule) plugins instead of dynamically loaded ([fbfa42d](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/fbfa42d55c96a627573d194f87976bc0045bd8cf))
+* switched to oscd-editor-template module and template update/generator git submodules ([d35daa5](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/d35daa54ef7e94bed56db6c4b094e9e569d086d0))
+* update to oscd-shell v0.0.14 ([ddeaa99](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/ddeaa99e4fa8b4d0b7bfc7a8677d6a0b2d224a0f))
+* updated oscd-shell to v0.0.16 ([2caef09](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/2caef09854d138bea1e1d3f691201bd6cb81e913))
+
+
+### Bug Fixes
+
+* add academy styles missing in latest shell version ([bb47f3c](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/bb47f3c8aee4db3fdeacad3280b5866c7e90e59c))
+* update oscd-editor-ied with minior alignment fix ([2636c32](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/2636c321cad2526b51ce86ddd2a7e4f83b29983a))
+* update subscriber plugins & shell to address documented issues ([2173297](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/21732971a0cff30f44b8279a505d5d59812fbd27))
+
 ## [0.0.2](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.1...oscd-academy-v0.0.2) (2026-09-12)
 
 
