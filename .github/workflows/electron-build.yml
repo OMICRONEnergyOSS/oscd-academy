@@ -1,0 +1,73 @@
+name: Electron Build Test
+
+on:
+  push:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build-installers:
+    name: Build and smoke-test Electron (${{ matrix.platform }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            runner: ubuntu-24.04
+            build: electron:build:linux
+            executable: dist/linux-unpacked/oscd-academy
+          - platform: windows
+            runner: windows-2022
+            build: electron:build:windows
+            executable: dist/win-unpacked/OpenSCD-ce-alpha.exe
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-node-env
+
+      - name: Install Linux packaging and display dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm xvfb libnss3 libatk-bridge2.0-0 libgtk-3-0 libasound2t64
+
+      - name: Create App Bundle
+        run: npm run bundle
+
+      - name: Build Electron Apps
+        run: npm run ${{ matrix.build }}
+
+      - name: Smoke-test packaged Linux app
+        if: runner.os == 'Linux'
+        run: xvfb-run -a npm run electron:smoke
+        env:
+          ELECTRON_APP_PATH: ${{ matrix.executable }}
+
+      - name: Smoke-test packaged Windows app
+        if: runner.os == 'Windows'
+        run: npm run electron:smoke
+        env:
+          ELECTRON_APP_PATH: ${{ matrix.executable }}
+
+      - name: Collect installers
+        uses: actions/upload-artifact@v4
+        with:
+          name: installers-${{ matrix.platform }}
+          if-no-files-found: error
+          compression-level: 0
+          path: |
+            dist/*.exe
+            dist/*.msi
+            dist/*.deb
+            dist/*.rpm
+            dist/*.AppImage
