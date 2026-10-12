@@ -38,7 +38,7 @@
     "electron": "electron ."
   },
   "build": {
-    "productName": "Academy OpenSCD",
+    "productName": "OpenSCD Academy Edition",
     "appId": "openscd-academy",
     "artifactName": "${name}_${os}_${arch}_${version}.${ext}",
     "extends": "electron-builder.cjs",
@@ -90,7 +90,7 @@
     "msi": {
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "menuCategory": "OpenSCD Academy",
+      "menuCategory": "OpenSCD Academy Edition",
       "oneClick": false,
       "perMachine": true
     },
@@ -105,7 +105,7 @@
       "oneClick": false,
       "perMachine": true,
       "selectPerMachineByDefault": true,
-      "menuCategory": "OpenSCD Academy"
+      "menuCategory": "OpenSCD Academy Edition"
     }
   },
   "dependencies": {

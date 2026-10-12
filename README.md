@@ -1,6 +1,6 @@
-# OpenSCD Academy
+# OpenSCD Academy Edition
 
-OpenSCD Academy is a browser-based and desktop distribution of the OpenSCD editor for IEC 61850 training, with a focus on Omicron trainers. It is an independent project, not an official OMICRON product, and is not officially supported by OMICRON.
+OpenSCD Academy Edition is a browser-based and desktop distribution of the OpenSCD editor for IEC 61850 training, with a focus on Omicron trainers. It is an independent project, not an official OMICRON product, and is not officially supported by OMICRON.
 
 Try the [browser app](https://omicronenergyoss.github.io/oscd-academy/) or download desktop installers from the [GitHub releases page](https://github.com/OMICRONEnergyOSS/oscd-academy/releases).
 
@@ -26,11 +26,15 @@ The **Electron Build Test** workflow runs the same build and smoke tests on ever
 
 ### Desktop icons
 
-Desktop and installer icons are transparent derivatives of `openscd-icon.svg`, centered on a square canvas without changing the artwork. The generated PNG and multi-resolution ICO are checked in, so builds do not require image-conversion tools. To regenerate them with Inkscape and ImageMagick:
+Desktop and installer icons use the artwork from `openscd-icon.svg`, with French Blue 55 (`#2485e5` from `themes.css`) filling the interior of the white rounded border. The square canvas outside the border remains transparent, and the browser SVG is unchanged. The generated PNG and multi-resolution ICO are checked in, so builds do not require image-conversion tools. To regenerate them with Inkscape and ImageMagick:
 
 ```sh
-inkscape "$PWD/openscd-icon.svg" --export-type=png --export-background-opacity=0 --export-width=512 --export-filename="$PWD/build/icons/png/icon.png"
-convert build/icons/png/icon.png -background none -gravity center -extent 512x512 build/icons/png/icon.png
+mkdir -p temp
+# Place the blue fill behind the artwork, overlapping only the inside of the border.
+sed '1a\    <rect x="1" y="1" width="28.1816" height="26" rx="1.72725" fill="#2485e5"/>' openscd-icon.svg > temp/electron-icon.svg
+inkscape "$PWD/temp/electron-icon.svg" --export-type=png --export-background-opacity=0 --export-width=512 --export-filename="$PWD/temp/electron-icon.png"
+convert temp/electron-icon.png -background none -gravity center -extent 512x512 build/icons/png/icon.png
 cp build/icons/png/icon.png build/icons/linux/icon.png
 convert build/icons/png/icon.png -define icon:auto-resize=256,128,64,48,32,24,16 build/icons/win/icon.ico
+rm temp/electron-icon.svg temp/electron-icon.png
 ```
