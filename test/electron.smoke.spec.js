@@ -29,6 +29,9 @@ try {
     }
   });
   assert.equal(await application.evaluate(({ app }) => app.isPackaged), true);
+  assert.deepEqual(await application.evaluate(({ app, nativeImage }) =>
+    nativeImage.createFromPath(`${app.getAppPath()}/build/icons/png/icon.png`).getSize()),
+  { width: 512, height: 512 });
 
   const page = await application.firstWindow();
   page.on("pageerror", error => errors.push(error.message));

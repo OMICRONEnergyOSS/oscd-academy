@@ -96,6 +96,8 @@
     },
     "nsis": {
       "artifactName": "${name}_${os}_${arch}_${version}_nsis.${ext}",
+      "installerIcon": "build/icons/win/icon.ico",
+      "uninstallerIcon": "build/icons/win/icon.ico",
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,

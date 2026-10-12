@@ -23,3 +23,14 @@ Desktop targets are Linux AppImage, `.deb`, and `.rpm` packages, plus Windows NS
 Manually running the Release Please workflow also builds and tests the installers, even when no release is created. In that case, they are available as workflow artifacts rather than published to a release.
 
 The **Electron Build Test** workflow runs the same build and smoke tests on every push and can also be run manually. It uses the checked-in version, uploads installers as workflow artifacts, and never publishes a release.
+
+### Desktop icons
+
+Desktop and installer icons are transparent derivatives of `openscd-icon.svg`, centered on a square canvas without changing the artwork. The generated PNG and multi-resolution ICO are checked in, so builds do not require image-conversion tools. To regenerate them with Inkscape and ImageMagick:
+
+```sh
+inkscape "$PWD/openscd-icon.svg" --export-type=png --export-background-opacity=0 --export-width=512 --export-filename="$PWD/build/icons/png/icon.png"
+convert build/icons/png/icon.png -background none -gravity center -extent 512x512 build/icons/png/icon.png
+cp build/icons/png/icon.png build/icons/linux/icon.png
+convert build/icons/png/icon.png -define icon:auto-resize=256,128,64,48,32,24,16 build/icons/win/icon.ico
+```
