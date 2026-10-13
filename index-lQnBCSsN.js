@@ -265,6 +265,7 @@ function dedupeMixin$1(mixin) {
 /**
  * @typedef {import('./types.js').ScopedElementsHost} ScopedElementsHost
  * @typedef {import('./types.js').ScopedElementsMap} ScopedElementsMap
+ * @typedef {import('./types.js').ScopedElementsHostConstructor} ScopedElementsHostConstructor
  */
 
 const version$2 = '3.0.0';
@@ -276,7 +277,7 @@ if (!versions$1.includes(version$2)) {
 /**
  * @template {import('./types.js').Constructor<HTMLElement>} T
  * @param {T} superclass
- * @return {T & import('./types.js').Constructor<ScopedElementsHost>}
+ * @return {T & import('./types.js').Constructor<ScopedElementsHost> & ScopedElementsHostConstructor}
  */
 const ScopedElementsMixinImplementation$3 = superclass =>
   /** @type {ScopedElementsHost} */
@@ -355,17 +356,17 @@ const ScopedElementsMixin$3 = dedupeMixin$1(ScopedElementsMixinImplementation$3)
 /**
  * @typedef {import('./types.js').ScopedElementsHost} ScopedElementsHost
  * @typedef {import('./types.js').ScopedElementsMap} ScopedElementsMap
+ * @typedef {import('./types.js').ScopedElementsHostConstructor} ScopedElementsHostConstructor
  * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
  * @typedef {import('lit').LitElement} LitElement
  * @typedef {typeof import('lit').LitElement} TypeofLitElement
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor
- * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
  */
 
 /**
  * @template {LitElementConstructor} T
  * @param {T} superclass
- * @return {T & ScopedElementsHostConstructor}
+ * @return {T & import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost> & ScopedElementsHostConstructor}
  */
 const ScopedElementsMixinImplementation$2 = superclass =>
   /** @type {ScopedElementsHost} */
@@ -871,7 +872,7 @@ const setLocale$1 = (newLocale) => {
  */
 const a$r=Symbol.for(""),o$1h=t=>{if(t?.r===a$r)return t?._$litStatic$},s$R=t=>({_$litStatic$:t,r:a$r}),i$Y=(t,...r)=>({_$litStatic$:r.reduce((r,e,a)=>r+(t=>{if(void 0!==t._$litStatic$)return t._$litStatic$;throw Error(`Value passed to 'literal' function must be a 'literal' result: ${t}. Use 'unsafeStatic' to pass non-literal values, but\n            take care to ensure page security.`)})(e)+t[a+1],t[0]),r:a$r}),l$M=new Map,n$1i=t=>(r,...e)=>{const a=e.length;let s,i;const n=[],u=[];let c,$=0,f=false;for(;$<a;){for(c=r[$];$<a&&void 0!==(i=e[$],s=o$1h(i));)c+=s+r[++$],f=true;$!==a&&u.push(i),n.push(c),$++;}if($===a&&n.push(r[a]),f){const t=n.join("$$lit$$");void 0===(r=l$M.get(t))&&(n.raw=n,l$M.set(t,r=n)),e=u;}return t(r,...e)},u$t=n$1i(b$4);
 
-const oscdMd3Mappings = i$10 `
+const oscdMd3Mappings$1 = i$10 `
   :host {
     --md-sys-color-error: var(--oscd-theme-error, #dc322f);
     --md-sys-color-error-container: var(--oscd-theme-base2, #eee8d5);
@@ -1562,9 +1563,9 @@ const styles$2O = i$10 `:host{display:flex;margin:auto;pointer-events:none}:host
  * @final
  * @suppress {visibility}
  */
-let OscdRipple$6 = class OscdRipple extends Ripple$5 {
+let OscdRipple$7 = class OscdRipple extends Ripple$5 {
 };
-OscdRipple$6.styles = [styles$2O];
+OscdRipple$7.styles = [styles$2O];
 
 /**
  * @license
@@ -1681,9 +1682,9 @@ const styles$2N = i$10 `:host{animation-delay:0s,calc(var(--md-focus-ring-durati
  * @final
  * @suppress {visibility}
  */
-let OscdFocusRing$6 = class OscdFocusRing extends FocusRing$4 {
+let OscdFocusRing$7 = class OscdFocusRing extends FocusRing$4 {
 };
-OscdFocusRing$6.styles = [styles$2N];
+OscdFocusRing$7.styles = [styles$2N];
 
 /**
  * @license
@@ -2655,8 +2656,8 @@ let OscdFilledIconButton$1 = class OscdFilledIconButton extends ScopedElementsMi
     }
 };
 OscdFilledIconButton$1.scopedElements = {
-    'md-ripple': OscdRipple$6,
-    'md-focus-ring': OscdFocusRing$6,
+    'md-ripple': OscdRipple$7,
+    'md-focus-ring': OscdFocusRing$7,
 };
 OscdFilledIconButton$1.styles = [styles$2L, styles$2M];
 
@@ -2703,9 +2704,9 @@ const styles$2K = i$10 `:host,.shadow,.shadow::before,.shadow::after{border-radi
  * @final
  * @suppress {visibility}
  */
-let OscdElevation$6 = class OscdElevation extends Elevation$3 {
+let OscdElevation$7 = class OscdElevation extends Elevation$3 {
 };
-OscdElevation$6.styles = [styles$2K];
+OscdElevation$7.styles = [styles$2K];
 
 /**
  * @license
@@ -2753,7 +2754,7 @@ class OscdAppBar extends ScopedElementsMixin$2(i$Z) {
     }
     static get scopedElements() {
         return {
-            'oscd-elevation': OscdElevation$6,
+            'oscd-elevation': OscdElevation$7,
         };
     }
     // eslint-disable-next-line class-methods-use-this
@@ -2947,9 +2948,9 @@ const styles$2J = i$10 `:host{box-sizing:border-box;color:var(--md-divider-color
  * @final
  * @suppress {visibility}
  */
-let OscdDivider$6 = class OscdDivider extends Divider$3 {
+let OscdDivider$7 = class OscdDivider extends Divider$3 {
 };
-OscdDivider$6.styles = [styles$2J];
+OscdDivider$7.styles = [styles$2J];
 
 /**
  * @license
@@ -2959,7 +2960,7 @@ OscdDivider$6.styles = [styles$2J];
 /**
  * An icon element.
  */
-let Icon$a = class Icon extends i$Z {
+let Icon$b = class Icon extends i$Z {
     render() {
         return b$4 `<slot></slot>`;
     }
@@ -3022,7 +3023,7 @@ const pathsSVG$5 = {
 const gooseIcon$5 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$5['gooseIcon']}</svg>`;
 const reportIcon$5 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$5['reportIcon']}</svg>`;
 const smvIcon$5 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$5['smvIcon']}</svg>`;
-const dataSetIcon$2 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$5['dataSetIcon']}</svg>`;
+const dataSetIcon$3 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$5['dataSetIcon']}</svg>`;
 const logIcon$5 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$5['logIcon']}</svg>`;
 const inputIcon$5 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 <path fill="currentColor" d="M14,12L10,8V11H2V13H10V16M20,18V6C20,4.89 19.1,4 18,4H6A2,2 0 0,0 4,6V9H6V6H18V18H6V15H4V18A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18Z" />
@@ -3618,7 +3619,7 @@ const SCL_ICONS$5 = {
     gooseIcon: gooseIcon$5,
     reportIcon: reportIcon$5,
     smvIcon: smvIcon$5,
-    dataSetIcon: dataSetIcon$2,
+    dataSetIcon: dataSetIcon$3,
     logIcon: logIcon$5,
     inputIcon: inputIcon$5,
     clientIcon: clientIcon$5,
@@ -3688,7 +3689,7 @@ const SCL_ICONS$5 = {
  * standard `<slot></slot>` rendering from the Material base class so that
  * Material Symbols font ligatures continue to work as before.
  */
-let Icon$9 = class Icon extends Icon$a {
+let Icon$a = class Icon extends Icon$b {
     constructor() {
         super(...arguments);
         this._sclName = '';
@@ -3762,10 +3763,10 @@ const styles$2I = i$10 `:host{font-size:var(--md-icon-size, 24px);width:var(--md
  * @final
  * @suppress {visibility}
  */
-let OscdIcon$6 = class OscdIcon extends Icon$9 {
+let OscdIcon$7 = class OscdIcon extends Icon$a {
 };
 /** @nocollapse */
-OscdIcon$6.styles = [styles$2I];
+OscdIcon$7.styles = [styles$2I];
 
 function isAttributesV2$1(attributes) {
     if (typeof attributes !== 'object' || attributes === null) {
@@ -4350,8 +4351,8 @@ let OscdIconButton$6 = class OscdIconButton extends ScopedElementsMixin$2(IconBu
     }
 };
 OscdIconButton$6.scopedElements = {
-    'md-ripple': OscdRipple$6,
-    'md-focus-ring': OscdFocusRing$6,
+    'md-ripple': OscdRipple$7,
+    'md-focus-ring': OscdFocusRing$7,
 };
 OscdIconButton$6.styles = [styles$2L, styles$2H];
 
@@ -4988,9 +4989,9 @@ const styles$2F = i$10 `:host{display:flex;-webkit-tap-highlight-color:rgba(0,0,
 let OscdListItem$5 = class OscdListItem extends ScopedElementsMixin$2(ListItemEl$4) {
 };
 OscdListItem$5.scopedElements = {
-    'md-ripple': OscdRipple$6,
+    'md-ripple': OscdRipple$7,
     'md-item': OscdItem$5,
-    'md-focus-ring': OscdFocusRing$6,
+    'md-focus-ring': OscdFocusRing$7,
 };
 OscdListItem$5.styles = [styles$2F];
 
@@ -6930,8 +6931,8 @@ InternalMenu$5.styles = [styles$2E];
 let OscdMenu$5 = class OscdMenu extends ScopedElementsMixin$2(InternalMenu$5) {
 };
 OscdMenu$5.scopedElements = {
-    'md-focus-ring': OscdFocusRing$6,
-    'md-elevation': OscdElevation$6,
+    'md-focus-ring': OscdFocusRing$7,
+    'md-elevation': OscdElevation$7,
 };
 OscdMenu$5.styles = [styles$2E];
 
@@ -7310,9 +7311,9 @@ const styles$2D = i$10 `:host{display:flex;--md-ripple-hover-color: var(--md-men
 let OscdMenuItem$4 = class OscdMenuItem extends ScopedElementsMixin$2(MenuItemEl$2) {
 };
 OscdMenuItem$4.scopedElements = {
-    'md-ripple': OscdRipple$6,
+    'md-ripple': OscdRipple$7,
     'md-item': OscdItem$5,
-    'md-focus-ring': OscdFocusRing$6,
+    'md-focus-ring': OscdFocusRing$7,
 };
 OscdMenuItem$4.styles = [styles$2D];
 
@@ -7896,8 +7897,8 @@ const styles$2C = i$10 `:host{border-start-start-radius:var(--md-checkbox-contai
 let OscdCheckbox$2 = class OscdCheckbox extends ScopedElementsMixin$2(Checkbox$2) {
 };
 OscdCheckbox$2.scopedElements = {
-    'md-ripple': OscdRipple$6,
-    'md-focus-ring': OscdFocusRing$6,
+    'md-ripple': OscdRipple$7,
+    'md-focus-ring': OscdFocusRing$7,
 };
 OscdCheckbox$2.styles = [styles$2C];
 
@@ -8710,9 +8711,9 @@ class Tree extends ScopedElementsMixin$2(i$Z) {
 }
 Tree.scopedElements = {
     'oscd-checkbox': OscdCheckbox$2,
-    'oscd-focus-ring': OscdFocusRing$6,
-    'oscd-icon': OscdIcon$6,
-    'oscd-ripple': OscdRipple$6,
+    'oscd-focus-ring': OscdFocusRing$7,
+    'oscd-icon': OscdIcon$7,
+    'oscd-ripple': OscdRipple$7,
     'oscd-tree-item': OscdTreeItem,
 };
 Tree.styles = i$10 `
@@ -10966,7 +10967,7 @@ class OscdOutlinedSearchField extends ScopedElementsMixin$2(OutlinedSearchField)
 }
 OscdOutlinedSearchField.scopedElements = {
     'oscd-outlined-field': OscdOutlinedField$6,
-    'oscd-icon': OscdIcon$6,
+    'oscd-icon': OscdIcon$7,
     'oscd-icon-button': OscdIconButton$6,
 };
 
@@ -11572,12 +11573,12 @@ let EditorPluginsPanel = class EditorPluginsPanel extends ScopedElementsMixin$2(
 };
 EditorPluginsPanel.scopedElements = {
     'oscd-icon-button': OscdIconButton$6,
-    'oscd-icon': OscdIcon$6,
+    'oscd-icon': OscdIcon$7,
     'oscd-list-item': OscdListItem$5,
     'oscd-tree': OscdTree,
     'oscd-tree-item': OscdTreeItem,
     'oscd-outlined-search-field': OscdOutlinedSearchField,
-    'oscd-divider': OscdDivider$6,
+    'oscd-divider': OscdDivider$7,
     'oscd-menu': OscdMenu$5,
     'oscd-menu-item': OscdMenuItem$4,
 };
@@ -12444,7 +12445,7 @@ let PluginsMenu = class PluginsMenu extends ScopedElementsMixin$2(i$Z) {
 };
 PluginsMenu.scopedElements = {
     'oscd-filled-icon-button': OscdFilledIconButton$1,
-    'oscd-icon': OscdIcon$6,
+    'oscd-icon': OscdIcon$7,
     'oscd-menu': OscdMenu$5,
     'oscd-sub-menu': OscdSubMenu,
     'oscd-menu-item': OscdMenuItem$4,
@@ -12741,8 +12742,8 @@ const styles$2v = i$10 `:host{--_container-height: var(--md-text-button-containe
 let OscdTextButton$3 = class OscdTextButton extends ScopedElementsMixin$2(TextButton$2) {
 };
 OscdTextButton$3.scopedElements = {
-    'md-ripple': OscdRipple$6,
-    'md-focus-ring': OscdFocusRing$6,
+    'md-ripple': OscdRipple$7,
+    'md-focus-ring': OscdFocusRing$7,
 };
 OscdTextButton$3.styles = [styles$2w, styles$2v];
 
@@ -12781,9 +12782,9 @@ let LandingPage = class LandingPage extends ScopedElementsMixin$2(i$Z) {
     }
 };
 LandingPage.scopedElements = {
-    'oscd-icon': OscdIcon$6,
+    'oscd-icon': OscdIcon$7,
     'oscd-text-button': OscdTextButton$3,
-    'oscd-elevation': OscdElevation$6,
+    'oscd-elevation': OscdElevation$7,
 };
 LandingPage.styles = i$10 `
     :host {
@@ -12944,7 +12945,7 @@ let FilesMenu = class FilesMenu extends ScopedElementsMixin$2(i$Z) {
 };
 FilesMenu.scopedElements = {
     'oscd-text-button': OscdTextButton$3,
-    'oscd-icon': OscdIcon$6,
+    'oscd-icon': OscdIcon$7,
     'oscd-menu': OscdMenu$5,
     'oscd-menu-item': OscdMenuItem$4,
 };
@@ -13784,15 +13785,15 @@ let OscdShell = class OscdShell extends ScopedElementsMixin$2(i$Z) {
 OscdShell.scopedElements = {
     'oscd-app-bar': OscdAppBar,
     'oscd-filled-icon-button': OscdFilledIconButton$1,
-    'oscd-divider': OscdDivider$6,
-    'oscd-icon': OscdIcon$6,
+    'oscd-divider': OscdDivider$7,
+    'oscd-icon': OscdIcon$7,
     'files-menu': FilesMenu,
     'plugins-menu': PluginsMenu,
     'editor-plugins-panel': EditorPluginsPanel,
     'landing-page': LandingPage,
 };
 OscdShell.styles = [
-    oscdMd3Mappings,
+    oscdMd3Mappings$1,
     oscdShellDesignTokens,
     i$10 `
       :host {
@@ -14003,9 +14004,9 @@ function newOpenEvent(doc, docName) {
  * @final
  * @suppress {visibility}
  */
-let OscdDivider$5 = class OscdDivider extends Divider$3 {
+let OscdDivider$6 = class OscdDivider extends Divider$3 {
 };
-OscdDivider$5.styles = [styles$2J];
+OscdDivider$6.styles = [styles$2J];
 
 /**
  * @license
@@ -14717,12 +14718,12 @@ const styles$2u = i$10 `:host{border-start-start-radius:var(--md-dialog-containe
  * @final
  * @suppress {visibility}
  */
-let OscdDialog$3 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
+let OscdDialog$4 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
 };
-OscdDialog$3.scopedElements = {
-    'md-divider': OscdDivider$5,
+OscdDialog$4.scopedElements = {
+    'md-divider': OscdDivider$6,
 };
-OscdDialog$3.styles = [styles$2u];
+OscdDialog$4.styles = [styles$2u];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -14742,9 +14743,9 @@ OscdDialog$3.styles = [styles$2u];
  * @final
  * @suppress {visibility}
  */
-let OscdRipple$5 = class OscdRipple extends Ripple$5 {
+let OscdRipple$6 = class OscdRipple extends Ripple$5 {
 };
-OscdRipple$5.styles = [styles$2O];
+OscdRipple$6.styles = [styles$2O];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -14758,9 +14759,9 @@ OscdRipple$5.styles = [styles$2O];
  * @final
  * @suppress {visibility}
  */
-let OscdFocusRing$5 = class OscdFocusRing extends FocusRing$4 {
+let OscdFocusRing$6 = class OscdFocusRing extends FocusRing$4 {
 };
-OscdFocusRing$5.styles = [styles$2N];
+OscdFocusRing$6.styles = [styles$2N];
 
 /**
  * @license
@@ -15313,8 +15314,8 @@ const styles$2t = i$10 `@layer{:host{display:inline-flex;height:var(--md-radio-i
 let OscdRadio$3 = class OscdRadio extends ScopedElementsMixin$2(Radio$2) {
 };
 OscdRadio$3.scopedElements = {
-    'md-ripple': OscdRipple$5,
-    'md-focus-ring': OscdFocusRing$5,
+    'md-ripple': OscdRipple$6,
+    'md-focus-ring': OscdFocusRing$6,
 };
 OscdRadio$3.styles = [styles$2t];
 
@@ -15362,7 +15363,7 @@ const pathsSVG$4 = {
 const gooseIcon$4 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$4['gooseIcon']}</svg>`;
 const reportIcon$4 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$4['reportIcon']}</svg>`;
 const smvIcon$4 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$4['smvIcon']}</svg>`;
-const dataSetIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$4['dataSetIcon']}</svg>`;
+const dataSetIcon$2 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$4['dataSetIcon']}</svg>`;
 const logIcon$4 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$4['logIcon']}</svg>`;
 const inputIcon$4 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 <path fill="currentColor" d="M14,12L10,8V11H2V13H10V16M20,18V6C20,4.89 19.1,4 18,4H6A2,2 0 0,0 4,6V9H6V6H18V18H6V15H4V18A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18Z" />
@@ -15958,7 +15959,7 @@ const SCL_ICONS$4 = {
     gooseIcon: gooseIcon$4,
     reportIcon: reportIcon$4,
     smvIcon: smvIcon$4,
-    dataSetIcon: dataSetIcon$1,
+    dataSetIcon: dataSetIcon$2,
     logIcon: logIcon$4,
     inputIcon: inputIcon$4,
     clientIcon: clientIcon$4,
@@ -16028,7 +16029,7 @@ const SCL_ICONS$4 = {
  * standard `<slot></slot>` rendering from the Material base class so that
  * Material Symbols font ligatures continue to work as before.
  */
-let Icon$8 = class Icon extends Icon$a {
+let Icon$9 = class Icon extends Icon$b {
     constructor() {
         super(...arguments);
         this._sclName = '';
@@ -16093,10 +16094,10 @@ let Icon$8 = class Icon extends Icon$a {
  * @final
  * @suppress {visibility}
  */
-let OscdIcon$5 = class OscdIcon extends Icon$8 {
+let OscdIcon$6 = class OscdIcon extends Icon$9 {
 };
 /** @nocollapse */
-OscdIcon$5.styles = [styles$2I];
+OscdIcon$6.styles = [styles$2I];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -16112,9 +16113,9 @@ OscdIcon$5.styles = [styles$2I];
  * @final
  * @suppress {visibility}
  */
-let OscdElevation$5 = class OscdElevation extends Elevation$3 {
+let OscdElevation$6 = class OscdElevation extends Elevation$3 {
 };
-OscdElevation$5.styles = [styles$2K];
+OscdElevation$6.styles = [styles$2K];
 
 /**
  * @license
@@ -16178,14 +16179,14 @@ const styles$2r = i$10 `md-elevation{transition-duration:280ms}:host(:is([disabl
  * @final
  * @suppress {visibility}
  */
-let OscdFilledButton$3 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
+let OscdFilledButton$4 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
 };
-OscdFilledButton$3.scopedElements = {
-    'md-ripple': OscdRipple$5,
-    'md-focus-ring': OscdFocusRing$5,
-    'md-elevation': OscdElevation$5,
+OscdFilledButton$4.scopedElements = {
+    'md-ripple': OscdRipple$6,
+    'md-focus-ring': OscdFocusRing$6,
+    'md-elevation': OscdElevation$6,
 };
-OscdFilledButton$3.styles = [
+OscdFilledButton$4.styles = [
     styles$2w,
     styles$2r,
     styles$2s,
@@ -16224,8 +16225,8 @@ OscdFilledButton$3.styles = [
 let OscdTextButton$2 = class OscdTextButton extends ScopedElementsMixin$2(TextButton$2) {
 };
 OscdTextButton$2.scopedElements = {
-    'md-ripple': OscdRipple$5,
-    'md-focus-ring': OscdFocusRing$5,
+    'md-ripple': OscdRipple$6,
+    'md-focus-ring': OscdFocusRing$6,
 };
 OscdTextButton$2.styles = [styles$2w, styles$2v];
 
@@ -16386,10 +16387,10 @@ let OscdMenuNewFile$2 = class OscdMenuNewFile extends ScopedElementsMixin$2(i$Z)
     }
 };
 OscdMenuNewFile$2.scopedElements = {
-    'oscd-dialog': OscdDialog$3,
-    'oscd-icon': OscdIcon$5,
+    'oscd-dialog': OscdDialog$4,
+    'oscd-icon': OscdIcon$6,
     'oscd-radio': OscdRadio$3,
-    'oscd-filled-button': OscdFilledButton$3,
+    'oscd-filled-button': OscdFilledButton$4,
     'oscd-text-button': OscdTextButton$2,
     'oscd-outlined-textfield': OscdOutlinedTextField$5,
 };
@@ -16570,8 +16571,8 @@ let OscdIconButton$5 = class OscdIconButton extends ScopedElementsMixin$2(IconBu
     }
 };
 OscdIconButton$5.scopedElements = {
-    'md-ripple': OscdRipple$5,
-    'md-focus-ring': OscdFocusRing$5,
+    'md-ripple': OscdRipple$6,
+    'md-focus-ring': OscdFocusRing$6,
 };
 OscdIconButton$5.styles = [styles$2L, styles$2H];
 
@@ -16593,7 +16594,7 @@ let OscdMenuNewFile$1 = class OscdMenuNewFile extends ScopedElementsMixin$2(i$Z)
     }
 };
 OscdMenuNewFile$1.scopedElements = {
-    'oscd-icon': OscdIcon$5,
+    'oscd-icon': OscdIcon$6,
     'oscd-icon-button': OscdIconButton$5,
 };
 __decorate$2([
@@ -16624,7 +16625,7 @@ class OscdMenuNewFile extends ScopedElementsMixin$2(i$Z) {
     }
 }
 OscdMenuNewFile.scopedElements = {
-    'oscd-icon': OscdIcon$5,
+    'oscd-icon': OscdIcon$6,
     'oscd-icon-button': OscdIconButton$5,
 };
 __decorate$2([
@@ -16738,16 +16739,16 @@ const styles$2q = i$S `:host{font-family:var(--mdc-icon-font, "Material Icons");
  * SPDX-License-Identifier: Apache-2.0
  */
 /** @soyCompatible */
-let Icon$7 = class Icon extends s$M {
+let Icon$8 = class Icon extends s$M {
     /** @soyTemplate */
     render() {
         return x$b `<span><slot></slot></span>`;
     }
 };
-Icon$7.styles = [styles$2q];
-Icon$7 = __decorate$2([
+Icon$8.styles = [styles$2q];
+Icon$8 = __decorate$2([
     e$1d('mwc-icon')
-], Icon$7);
+], Icon$8);
 
 /**
  * @license
@@ -36188,7 +36189,6 @@ function unsubscribe(extRefs, options = { ignoreSupervision: false }) {
 }
 
 const elementsToRemove = ["Association", "ClientLN", "ConnectedAP", "KDC"];
-const elementsToReplaceWithNone = ["LNode"];
 function removeIEDNameTextContent(ied, iedName) {
     return Array.from(ied.ownerDocument.getElementsByTagName("IEDName"))
         .filter(isPublic)
@@ -36216,15 +36216,64 @@ function removeIedSubscriptionsAndSupervisions(ied, iedName) {
     const extRefRemovals = unsubscribe(extRefs, { ignoreSupervision: true });
     return [...extRefRemovals, ...supervisionRemovals];
 }
-function updateIedNameToNone(ied, iedName) {
-    const selector = elementsToReplaceWithNone
-        .map((iedNameElement) => `${iedNameElement}[iedName="${iedName}"]`)
-        .join(",");
-    return Array.from(ied.ownerDocument.querySelectorAll(selector))
-        .filter(isPublic)
-        .map((element) => {
-        return { element, attributes: { iedName: "None" } };
+const lNodeKey = (ln) => ["lnClass", "lnInst", "ldInst", "prefix"]
+    .map((a) => ln.getAttribute(a) ?? "")
+    .join("|");
+const getLNodeScopeElement = (ln) => {
+    return ln.closest("Bay, VoltageLevel, Substation");
+};
+const createRemoveEdit = (ln) => {
+    return { node: ln };
+};
+const setLNodeToNone = (ln) => {
+    return { element: ln, attributes: { iedName: "None" } };
+};
+const getLNodesByIedName = (doc, name) => {
+    return Array.from(doc.querySelectorAll(`Substation LNode[iedName=${name}]`)).filter(isPublic);
+};
+/**
+ * Default handling for LNodes - find any (public) matching LNodes and create a Remove edit for them.
+ */
+function removeBoundLNodes(ied, name) {
+    return getLNodesByIedName(ied.ownerDocument, name).map(createRemoveEdit);
+}
+/**
+ * Build the edits required to detach all public LNode bindings to `iedName`
+ * from the substation model, preserving each as a specification entry with
+ * (iedName="None"). A cache of all LNodes (with iedName="None") is first built
+ * up (grouped by their scope/container). This is used to check if changing the
+ * iedName of a bound LNode to "None" would create a duplicate binding within its
+ * scope. If this would result in a duplicate, the LNode is simply removed instead.
+ */
+function detachLNodeBindings(ied, name) {
+    const doc = ied.ownerDocument;
+    const boundNodes = getLNodesByIedName(doc, name);
+    if (boundNodes.length === 0) {
+        return [];
+    }
+    const unboundLNodesByScope = new Map();
+    getLNodesByIedName(doc, "None").forEach((ln) => {
+        const scope = getLNodeScopeElement(ln);
+        let keys = unboundLNodesByScope.get(scope);
+        if (!keys) {
+            keys = new Set();
+            unboundLNodesByScope.set(scope, keys);
+        }
+        keys.add(lNodeKey(ln));
     });
+    return boundNodes
+        .map((ln) => {
+        const scope = getLNodeScopeElement(ln);
+        const keys = unboundLNodesByScope.get(scope);
+        const key = lNodeKey(ln);
+        if (keys && keys.has(key)) {
+            return createRemoveEdit(ln);
+        }
+        else {
+            return setLNodeToNone(ln);
+        }
+    })
+        .filter((edit) => edit !== undefined);
 }
 /**
  * Function to remove an IED.
@@ -36233,12 +36282,16 @@ function updateIedNameToNone(ied, iedName) {
  * 1. Remove all elements which should no longer exist including ClientLN,
  *    KDC, Association, ConnectedAP and IEDName
  * 2. Remove subscriptions and supervisions
- * 2. Update LNodes to an iedName of None
+ * 3. By default removes all LNodes bound to this IED.
+ * 4. By setting the optional "preserveLNodes" option to true,
+ *    bound LNodes are set to iedName="None" and only removed if
+ *    it would result in two matching LNodes.
  * ```
  * @param remove - IED element as a Remove edit
+ * @param options - Optional settings to control removal behavior
  * @returns - Set of additional edits to relevant SCL elements
  */
-function removeIED(remove) {
+function removeIED(remove, options = { preserveLNodes: false }) {
     if (remove.node.nodeType !== Node.ELEMENT_NODE ||
         remove.node.nodeName !== "IED" ||
         !remove.node.hasAttribute("name"))
@@ -36250,7 +36303,9 @@ function removeIED(remove) {
         ...removeIEDNameTextContent(ied, name),
         ...removeWithIedName(ied, name),
         ...removeIedSubscriptionsAndSupervisions(ied, name),
-        ...updateIedNameToNone(ied, name),
+        ...(options.preserveLNodes
+            ? detachLNodeBindings(ied, name)
+            : removeBoundLNodes(ied, name)),
     ];
 }
 
@@ -37039,7 +37094,7 @@ function subscribe(connectionOrConnections, options = {
     return [...extRefEdits, ...insertSubscriptionSupervisions(extRefEdits)];
 }
 
-const nsd72$3 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd72$2 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -37579,7 +37634,7 @@ const nsd72$3 = `<?xml version="1.0" encoding="UTF-8"?>
       </ConstructedAttributes>
 </NS>
 `;
-const nsd73$3 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd73$2 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -43823,7 +43878,7 @@ const nsd73$3 = `<?xml version="1.0" encoding="UTF-8"?>
       </CDCs>
 </NS>
 `;
-const nsd74$3 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd74$2 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -53798,7 +53853,7 @@ const nsd74$3 = `<?xml version="1.0" encoding="UTF-8"?>
       </LNClasses>
 </NS>
 `;
-const nsd7420$3 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd7420$2 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -59319,7 +59374,7 @@ const nsd7420$3 = `<?xml version="1.0" encoding="UTF-8"?>
       </LNClasses>
 </NS>
 `;
-const nsd81$3 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd81$2 = `<?xml version="1.0" encoding="UTF-8"?>
 <!--
 COPYRIGHT (c) IEC, 2016. All rights reserved. Disclaimer: The IEC disclaims liability for any personal injury, property or other damages of any nature whatsoever, whether special, indirect, consequential or compensatory, directly or indirectly resulting from this software and the document upon which its methods are based, use of, or reliance upon.
 -->
@@ -59513,11 +59568,11 @@ const cdcTag$1 = new Set(supportedCdc$2);
 function isSupportedCdc$1(cdc) {
     return cdcTag$1.has(cdc);
 }
-const defaultDoc72$1 = new DOMParser().parseFromString(nsd72$3, "application/xml");
-const defaultDoc73$1 = new DOMParser().parseFromString(nsd73$3, "application/xml");
-const defaultDoc74$1 = new DOMParser().parseFromString(nsd74$3, "application/xml");
-const defaultDoc7420$1 = new DOMParser().parseFromString(nsd7420$3, "application/xml");
-const defaultDoc81$1 = new DOMParser().parseFromString(nsd81$3, "application/xml");
+const defaultDoc72$1 = new DOMParser().parseFromString(nsd72$2, "application/xml");
+const defaultDoc73$1 = new DOMParser().parseFromString(nsd73$2, "application/xml");
+const defaultDoc74$1 = new DOMParser().parseFromString(nsd74$2, "application/xml");
+const defaultDoc7420$1 = new DOMParser().parseFromString(nsd7420$2, "application/xml");
+const defaultDoc81$1 = new DOMParser().parseFromString(nsd81$2, "application/xml");
 /** A utility function that returns a JSON containing the structure of a logical node class
  * as described in the IEC 61850-7-4 and IEC 61850-7-420 as JSON
  * @param lnClassOrCdc the logical node class to be constructed
@@ -59795,8 +59850,10 @@ function nsdToJson$1(lnClassOrCdc, nsds) {
         return data;
     }
     function dataObjectName(dataObject) {
-        const multiInstances = ['Omulti', 'Mmulti'];
-        const instance = multiInstances.includes(dataObject.getAttribute("presCond")) ? '1' : '';
+        const multiInstances = ["Omulti", "Mmulti"];
+        const instance = multiInstances.includes(dataObject.getAttribute("presCond"))
+            ? "1"
+            : "";
         const name = dataObject.getAttribute("name");
         return `${name}${instance}`;
     }
@@ -65601,7 +65658,7 @@ MdOutlinedField$2 = __decorate$2([
 /**
  * TODO(b/265336902): add docs
  */
-let Icon$6 = class Icon extends i$Z {
+let Icon$7 = class Icon extends i$Z {
     render() {
         return b$4 `<slot></slot>`;
     }
@@ -65638,7 +65695,7 @@ const styles$1P = i$10 `:host{font-size:var(--md-icon-size, 24px);width:var(--md
  * @final
  * @suppress {visibility}
  */
-let MdIcon$2 = class MdIcon extends Icon$6 {
+let MdIcon$2 = class MdIcon extends Icon$7 {
 };
 /** @nocollapse */
 MdIcon$2.styles = [styles$1P];
@@ -102036,9 +102093,9 @@ ace.define("ace/ext/menu_tools/overlay_page",["require","exports","module","ace/
  * @final
  * @suppress {visibility}
  */
-let OscdElevation$4 = class OscdElevation extends Elevation$3 {
+let OscdElevation$5 = class OscdElevation extends Elevation$3 {
 };
-OscdElevation$4.styles = [styles$2K];
+OscdElevation$5.styles = [styles$2K];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -102052,9 +102109,9 @@ OscdElevation$4.styles = [styles$2K];
  * @final
  * @suppress {visibility}
  */
-let OscdFocusRing$4 = class OscdFocusRing extends FocusRing$4 {
+let OscdFocusRing$5 = class OscdFocusRing extends FocusRing$4 {
 };
-OscdFocusRing$4.styles = [styles$2N];
+OscdFocusRing$5.styles = [styles$2N];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -102074,9 +102131,9 @@ OscdFocusRing$4.styles = [styles$2N];
  * @final
  * @suppress {visibility}
  */
-let OscdRipple$4 = class OscdRipple extends Ripple$5 {
+let OscdRipple$5 = class OscdRipple extends Ripple$5 {
 };
-OscdRipple$4.styles = [styles$2O];
+OscdRipple$5.styles = [styles$2O];
 
 /**
  * @license
@@ -102108,14 +102165,14 @@ OscdRipple$4.styles = [styles$2O];
  * @final
  * @suppress {visibility}
  */
-let OscdFilledButton$2 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
+let OscdFilledButton$3 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
 };
-OscdFilledButton$2.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
-    'md-elevation': OscdElevation$4,
+OscdFilledButton$3.scopedElements = {
+    'md-ripple': OscdRipple$5,
+    'md-focus-ring': OscdFocusRing$5,
+    'md-elevation': OscdElevation$5,
 };
-OscdFilledButton$2.styles = [
+OscdFilledButton$3.styles = [
     styles$2w,
     styles$2r,
     styles$2s,
@@ -102131,10 +102188,10 @@ OscdFilledButton$2.styles = [
  * @final
  * @suppress {visibility}
  */
-let OscdIcon$4 = class OscdIcon extends Icon$a {
+let OscdIcon$5 = class OscdIcon extends Icon$b {
 };
 /** @nocollapse */
-OscdIcon$4.styles = [styles$2I];
+OscdIcon$5.styles = [styles$2I];
 
 /**
  * @license
@@ -102182,8 +102239,8 @@ class OscdOutlinedIconButton extends ScopedElementsMixin$2(IconButton$4) {
     }
 }
 OscdOutlinedIconButton.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-ripple': OscdRipple$5,
+    'md-focus-ring': OscdFocusRing$5,
 };
 OscdOutlinedIconButton.styles = [styles$2L, styles$1n];
 
@@ -102242,13 +102299,13 @@ const styles$1m = i$10 `:host{--_container-height: var(--md-outlined-button-cont
  * @final
  * @suppress {visibility}
  */
-let OscdOutlinedButton$2 = class OscdOutlinedButton extends ScopedElementsMixin$2(OutlinedButton$1) {
+let OscdOutlinedButton$3 = class OscdOutlinedButton extends ScopedElementsMixin$2(OutlinedButton$1) {
 };
-OscdOutlinedButton$2.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+OscdOutlinedButton$3.scopedElements = {
+    'md-ripple': OscdRipple$5,
+    'md-focus-ring': OscdFocusRing$5,
 };
-OscdOutlinedButton$2.styles = [styles$2w, styles$1m];
+OscdOutlinedButton$3.styles = [styles$2w, styles$1m];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -102265,9 +102322,9 @@ OscdOutlinedButton$2.styles = [styles$2w, styles$1m];
  * @final
  * @suppress {visibility}
  */
-let OscdDivider$4 = class OscdDivider extends Divider$3 {
+let OscdDivider$5 = class OscdDivider extends Divider$3 {
 };
-OscdDivider$4.styles = [styles$2J];
+OscdDivider$5.styles = [styles$2J];
 
 /**
  * @license
@@ -102306,12 +102363,12 @@ OscdDivider$4.styles = [styles$2J];
  * @final
  * @suppress {visibility}
  */
-let OscdDialog$2 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
+let OscdDialog$3 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
 };
-OscdDialog$2.scopedElements = {
-    'md-divider': OscdDivider$4,
+OscdDialog$3.scopedElements = {
+    'md-divider': OscdDivider$5,
 };
-OscdDialog$2.styles = [styles$2u];
+OscdDialog$3.styles = [styles$2u];
 
 /** A dialog component for displaying warnings */
 class WarnDialog extends ScopedElementsMixin$2(i$Z) {
@@ -102355,8 +102412,8 @@ class WarnDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 WarnDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-dialog': OscdDialog$3,
+    'oscd-filled-button': OscdFilledButton$3,
 };
 WarnDialog.styles = i$10 `
     .dialog-content {
@@ -102624,10 +102681,10 @@ OscdEditorSource.scopedElements = {
      * Otherwise it will fail to render at all. You'll only get an empty tag, no web component.
      */
     'ace-editor': AceEditor$6,
-    'oscd-filled-button': OscdFilledButton$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-filled-button': OscdFilledButton$3,
+    'oscd-outlined-button': OscdOutlinedButton$3,
     'oscd-outlined-icon-button': OscdOutlinedIconButton,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$5,
     'warn-dialog': WarnDialog,
 };
 OscdEditorSource.styles = i$10 `
@@ -103873,7 +103930,7 @@ MdFab.styles = [styles$1g, styles$1i, styles$1h];
 /**
  * TODO(b/265336902): add docs
  */
-let Icon$5 = class Icon extends i$Z {
+let Icon$6 = class Icon extends i$Z {
     render() {
         return b$4 `<slot></slot>`;
     }
@@ -103901,7 +103958,7 @@ let Icon$5 = class Icon extends i$Z {
 const styles$1f = i$10 `:host{font-size:var(--md-icon-size, 24px);width:var(--md-icon-size, 24px);height:var(--md-icon-size, 24px);color:inherit;font-variation-settings:inherit;font-weight:400;font-family:var(--md-icon-font, Material Symbols Outlined);display:inline-flex;font-style:normal;place-items:center;place-content:center;line-height:1;overflow:hidden;letter-spacing:normal;text-transform:none;user-select:none;white-space:nowrap;word-wrap:normal;flex-shrink:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-moz-osx-font-smoothing:grayscale}::slotted(svg){fill:currentColor}::slotted(*){height:100%;width:100%}
 `;
 
-let MdIcon$1 = class MdIcon extends Icon$5 {
+let MdIcon$1 = class MdIcon extends Icon$6 {
 };
 /** @nocollapse */
 MdIcon$1.styles = [styles$1f];
@@ -104784,7 +104841,7 @@ Array(maxSmvAppId$1 - minSmvAppId$1)
 
 await fetch(new URL(new URL('assets/nsd-BZ5JISRf.json', import.meta.url).href)).then((res) => res.json());
 
-const nsd72$2 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd72$1 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -105324,7 +105381,7 @@ const nsd72$2 = `<?xml version="1.0" encoding="UTF-8"?>
       </ConstructedAttributes>
 </NS>
 `;
-const nsd73$2 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd73$1 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -111568,7 +111625,7 @@ const nsd73$2 = `<?xml version="1.0" encoding="UTF-8"?>
       </CDCs>
 </NS>
 `;
-const nsd74$2 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd74$1 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -121543,7 +121600,7 @@ const nsd74$2 = `<?xml version="1.0" encoding="UTF-8"?>
       </LNClasses>
 </NS>
 `;
-const nsd7420$2 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd7420$1 = `<?xml version="1.0" encoding="UTF-8"?>
 <NS xmlns="http://www.iec.ch/61850/2016/NSD"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.iec.ch/61850/2016/NSD NSD.xsd"
@@ -127064,7 +127121,7 @@ const nsd7420$2 = `<?xml version="1.0" encoding="UTF-8"?>
       </LNClasses>
 </NS>
 `;
-const nsd81$2 = `<?xml version="1.0" encoding="UTF-8"?>
+const nsd81$1 = `<?xml version="1.0" encoding="UTF-8"?>
 <!--
 COPYRIGHT (c) IEC, 2016. All rights reserved. Disclaimer: The IEC disclaims liability for any personal injury, property or other damages of any nature whatsoever, whether special, indirect, consequential or compensatory, directly or indirectly resulting from this software and the document upon which its methods are based, use of, or reliance upon.
 -->
@@ -127255,11 +127312,11 @@ const supportedCdc$1 = [
     "WYE",
 ];
 new Set(supportedCdc$1);
-new DOMParser().parseFromString(nsd72$2, "application/xml");
-new DOMParser().parseFromString(nsd73$2, "application/xml");
-new DOMParser().parseFromString(nsd74$2, "application/xml");
-new DOMParser().parseFromString(nsd7420$2, "application/xml");
-new DOMParser().parseFromString(nsd81$2, "application/xml");
+new DOMParser().parseFromString(nsd72$1, "application/xml");
+new DOMParser().parseFromString(nsd73$1, "application/xml");
+new DOMParser().parseFromString(nsd74$1, "application/xml");
+new DOMParser().parseFromString(nsd7420$1, "application/xml");
+new DOMParser().parseFromString(nsd81$1, "application/xml");
 
 const indexedSCLTags = ["ExtRef", "IEDName", "P", "ProtNs", "Val"];
 new Set(indexedSCLTags);
@@ -135261,7 +135318,7 @@ class ActionList extends FilterListBase$3 {
             hidden: !this.searchRegex.test(term$1(item)),
         })}"
           @click=${(evt) => {
-            const menu = evt.target instanceof Icon$5
+            const menu = evt.target instanceof Icon$6
                 ? evt.target.parentElement
                     .nextElementSibling
                 : evt.target.nextElementSibling;
@@ -136784,7 +136841,7 @@ function createBayWizard$5(parent) {
         }),
     };
 }
-function updateAction$2v(element) {
+function updateAction$2z(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -136801,7 +136858,7 @@ function editBayWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2v(element),
+            action: updateAction$2z(element),
         },
         content: renderBayWizard$5({
             name: element.getAttribute('name'),
@@ -137026,7 +137083,7 @@ function createConductingEquipmentWizard$5(parent) {
         }),
     };
 }
-function updateAction$2u(element) {
+function updateAction$2y(element) {
     return (inputs) => {
         const name = getValue$5(inputs.find(i => i.label === 'name'));
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -137043,7 +137100,7 @@ function editConductingEquipmentWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2u(element),
+            action: updateAction$2y(element),
         },
         content: renderConductingEquipmentWizard$5({
             name: element.getAttribute('name'),
@@ -137141,9 +137198,9 @@ const functionalConstraintEnum$5 = [
     'EX',
     'CO',
 ];
-const tSmpMod$3 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
-const tGSEControlType$3 = ['GOOSE', 'GSSE'];
-const tSecurityEnable$3 = ['None', 'Signature', 'SignatureAndEncryption'];
+const tSmpMod$4 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
+const tGSEControlType$4 = ['GOOSE', 'GSSE'];
+const tSecurityEnable$4 = ['None', 'Signature', 'SignatureAndEncryption'];
 const typeBase$5 = {
     IP: '([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])',
     OSI: '[0-9A-F]+',
@@ -137543,7 +137600,7 @@ function createConnectedApWizard$5(element) {
         ],
     };
 }
-function updateAction$2t(element) {
+function updateAction$2x(element) {
     return (inputs, wizard) => {
         const instType = wizard.querySelector('#instType').value === 'true';
         const addressContent = {};
@@ -137564,7 +137621,7 @@ function editConnectedApWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2t(element),
+            action: updateAction$2x(element),
         },
         content: [...contentAddress$5({ element, types: getTypes$5(element) })],
     };
@@ -138120,7 +138177,7 @@ function createEnumValWizard$5(parent) {
         content: renderContent$s({ ord, desc, value }),
     };
 }
-function updateAction$2s(element) {
+function updateAction$2w(element) {
     return (inputs) => {
         const value = getValue$5(inputs.find(i => i.label === 'value')) ?? '';
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -138155,7 +138212,7 @@ function editEnumValWizard$5(element) {
         primary: {
             icon: '',
             label: 'Save',
-            action: updateAction$2s(element),
+            action: updateAction$2w(element),
         },
         content: renderContent$s({ ord, desc, value }),
     };
@@ -138289,7 +138346,7 @@ function createEqFunctionWizard$5(parent) {
         ],
     };
 }
-function updateAction$2r(element) {
+function updateAction$2v(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -138311,7 +138368,7 @@ function editEqFunctionWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2r(element),
+            action: updateAction$2v(element),
         },
         content: [
             ...contentFunctionWizard$5({
@@ -138362,7 +138419,7 @@ function createEqSubFunctionWizard$5(parent) {
         ],
     };
 }
-function updateAction$2q(element) {
+function updateAction$2u(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -138384,7 +138441,7 @@ function editEqSubFunctionWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2q(element),
+            action: updateAction$2u(element),
         },
         content: [
             ...contentFunctionWizard$5({
@@ -138465,7 +138522,7 @@ function createGeneralEquipmentWizard$5(parent) {
         ],
     };
 }
-function updateAction$2p(element) {
+function updateAction$2t(element) {
     return (inputs) => {
         const attributes = {};
         const generalEquipmentKeys = ['name', 'desc', 'type', 'virtual'];
@@ -138488,7 +138545,7 @@ function editGeneralEquipmentWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2p(element),
+            action: updateAction$2t(element),
         },
         content: [
             ...contentGeneralEquipmentWizard$5({
@@ -138574,7 +138631,7 @@ function createLineWizard$5(parent) {
         ],
     };
 }
-function updateAction$2o(element) {
+function updateAction$2s(element) {
     return (inputs) => {
         const attributes = {};
         const lineKeys = ['name', 'desc', 'type', 'nomFreq', 'numPhases'];
@@ -138593,7 +138650,7 @@ function editLineWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2o(element),
+            action: updateAction$2s(element),
         },
         content: renderContent$r({
             name: element.getAttribute('name') ?? '',
@@ -138662,7 +138719,7 @@ function createPowerTransformerWizard$5(parent) {
         }),
     };
 }
-function updateAction$2n(element) {
+function updateAction$2r(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -138679,7 +138736,7 @@ function editPowerTransformerWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2n(element),
+            action: updateAction$2r(element),
         },
         content: renderPowerTransformerWizard$5({
             name: element.getAttribute('name'),
@@ -138748,7 +138805,7 @@ function createProcessWizard$5(parent) {
         ],
     };
 }
-function updateAction$2m(element) {
+function updateAction$2q(element) {
     return (inputs) => {
         const attributes = {};
         const tapProcessKeys = ['name', 'desc', 'type'];
@@ -138773,7 +138830,7 @@ function editProcessWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2m(element),
+            action: updateAction$2q(element),
         },
         content: [
             ...contentProcessWizard$5({
@@ -138944,7 +139001,7 @@ function createSubEquipmentWizard$5(parent) {
         ],
     };
 }
-function updateAction$2l(element) {
+function updateAction$2p(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'phase', 'virtual'];
@@ -138967,7 +139024,7 @@ function editSubEquipmentWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2l(element),
+            action: updateAction$2p(element),
         },
         content: [
             ...contentSubEquipmentWizard$5({
@@ -139019,7 +139076,7 @@ function createSubFunctionWizard$5(parent) {
         ],
     };
 }
-function updateAction$2k(element) {
+function updateAction$2o(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'type'];
@@ -139041,7 +139098,7 @@ function editSubFunctionWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2k(element),
+            action: updateAction$2o(element),
         },
         content: [
             ...contentFunctionWizard$5({
@@ -139172,7 +139229,7 @@ function getBitRateAction$5(oldBitRate, BitRate, multiplier, SubNetwork) {
         { node: oldBitRate },
     ];
 }
-function updateAction$2j(element) {
+function updateAction$2n(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -139224,7 +139281,7 @@ function editSubNetworkWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2j(element),
+            action: updateAction$2n(element),
         },
         content: renderContent$p({
             name,
@@ -139236,7 +139293,7 @@ function editSubNetworkWizard$5(element) {
     };
 }
 
-function render$J(options) {
+function render$N(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -139278,14 +139335,14 @@ function createSubstationWizard$5(parent) {
             label: 'add',
             action: createAction$1C(parent),
         },
-        content: render$J({
+        content: render$N({
             name: '',
             reservedValues: reservedNames$5(parent, 'Substation'),
             desc: '',
         }),
     };
 }
-function updateAction$2i(element) {
+function updateAction$2m(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -139302,9 +139359,9 @@ function editSubstationWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2i(element),
+            action: updateAction$2m(element),
         },
-        content: render$J({
+        content: render$N({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$5(element),
             desc: element.getAttribute('desc'),
@@ -139378,7 +139435,7 @@ function createTapChangerWizard$5(parent) {
         ],
     };
 }
-function updateAction$2h(element) {
+function updateAction$2l(element) {
     return (inputs) => {
         const attributes = {};
         const tapChangerKeys = ['name', 'desc', 'type', 'virtual'];
@@ -139401,7 +139458,7 @@ function editTapChangerWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2h(element),
+            action: updateAction$2l(element),
         },
         content: [
             ...contentTapChangerWizard$5({
@@ -139415,7 +139472,7 @@ function editTapChangerWizard$5(element) {
     };
 }
 
-function render$I({ content }) {
+function render$M({ content }) {
     return [
         b$4 `<md-filled-textfield
       type="textarea"
@@ -139450,12 +139507,12 @@ function createTextWizard$5(parent) {
             label: 'add',
             action: createAction$1A(parent),
         },
-        content: render$I({
+        content: render$M({
             content: '',
         }),
     };
 }
-function updateAction$2g(element) {
+function updateAction$2k(element) {
     return (inputs) => {
         const content = inputs.find(i => i.label === 'content').value;
         if (content === element.textContent) {
@@ -139478,9 +139535,9 @@ function editTextWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2g(element),
+            action: updateAction$2k(element),
         },
-        content: render$I({
+        content: render$M({
             content: element.textContent || '',
         }),
     };
@@ -139552,7 +139609,7 @@ function createTransformerWindingWizard$5(parent) {
         ],
     };
 }
-function updateAction$2f(element) {
+function updateAction$2j(element) {
     return (inputs) => {
         const attributes = {};
         const transformerWindingKeys = ['name', 'desc', 'type', 'virtual'];
@@ -139575,7 +139632,7 @@ function editTransformerWindingWizard$5(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$2f(element),
+            action: updateAction$2j(element),
         },
         content: [
             ...contentTransformerWindingWizard$5({
@@ -139595,7 +139652,7 @@ const initial$a = {
     Voltage: '110',
     multiplier: 'k',
 };
-function render$H(option) {
+function render$L(option) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -139685,7 +139742,7 @@ function createVoltageLevelWizard$5(parent) {
             label: 'add',
             action: createAction$1y(parent),
         },
-        content: render$H({
+        content: render$L({
             name: '',
             reservedValues: reservedNames$5(parent, 'VoltageLevel'),
             desc: '',
@@ -139729,7 +139786,7 @@ function getVoltageAction$5(oldVoltage, Voltage, multiplier, voltageLevel) {
         { node: oldVoltage },
     ];
 }
-function updateAction$2e(element) {
+function updateAction$2i(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -139779,9 +139836,9 @@ function editVoltageLevelWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2e(element),
+            action: updateAction$2i(element),
         },
-        content: render$H({
+        content: render$L({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$5(element),
             desc: element.getAttribute('desc'),
@@ -139829,7 +139886,7 @@ function mxxTimeUpdateAction$5(gse, oldMxxTime, newTimeValue, option) {
         { node: oldMxxTime },
     ];
 }
-function updateAction$2d(element) {
+function updateAction$2h(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -139864,7 +139921,7 @@ function editGseWizard$5(element) {
         primary: {
             label: 'save',
             icon: 'save',
-            action: updateAction$2d(element),
+            action: updateAction$2h(element),
         },
         content: [
             ...contentAddress$5({ element, types }),
@@ -139886,7 +139943,7 @@ function editGseWizard$5(element) {
     };
 }
 
-function render$G(options) {
+function render$K(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -139903,7 +139960,7 @@ function render$G(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="type"
-      .selectOptions=${tGSEControlType$3}
+      .selectOptions=${tGSEControlType$4}
       .value=${options.type}
       nullable
     ></scl-select>`,
@@ -139919,13 +139976,13 @@ function render$G(options) {
     ></scl-checkbox>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable$3}
+      .selectOptions=${tSecurityEnable$4}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
     ];
 }
-function updateAction$2c(element) {
+function updateAction$2g(element) {
     return (inputs) => {
         const name = getValue$5(inputs.find(i => i.label === 'name'));
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -139949,15 +140006,15 @@ function updateAction$2c(element) {
         ];
     };
 }
-function editGSEControlWizard$3(element) {
+function editGSEControlWizard$4(element) {
     return {
         title: 'Edit GSEControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2c(element),
+            action: updateAction$2g(element),
         },
-        content: render$G({
+        content: render$K({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$5(element),
             desc: element.getAttribute('desc'),
@@ -140005,7 +140062,7 @@ function renderEdit$5(name, iedNames, desc, type, manufacturer, owner) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$2b(element) {
+function updateAction$2f(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -140031,7 +140088,7 @@ function editIEDWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2b(element),
+            action: updateAction$2f(element),
         },
         content: renderEdit$5(element.getAttribute('name') ?? '', iedNames, element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('manufacturer'), element.getAttribute('owner')),
     };
@@ -140043,7 +140100,7 @@ function createIEDWizard$5(parent) {
         primary: {
             icon: 'add',
             label: 'Create',
-            action: updateAction$2b(parent),
+            action: updateAction$2f(parent),
         },
         content: renderAdd$5(parent.getAttribute('name') ?? '', iedNames, parent.getAttribute('desc')),
     };
@@ -140069,7 +140126,7 @@ function reservedInstLDevice$5(currentElement) {
         .map(ld => ld.getAttribute('inst') ?? '')
         .filter(name => name !== currentElement.getAttribute('inst'));
 }
-function render$F(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
+function render$J(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
     const content = [
         allowLdName
             ? b$4 `<scl-text-field
@@ -140140,7 +140197,7 @@ function createAction$1x(parent) {
         ];
     };
 }
-function updateAction$2a(element) {
+function updateAction$2e(element) {
     return (inputs) => {
         const ldNameAllowed = ldNameIsAllowed$5(element);
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -140169,7 +140226,7 @@ function createLDeviceWizard$5(parent) {
             label: 'save',
             action: createAction$1x(parent),
         },
-        content: render$F(null, null, null, reservedInstLDevice$5(parent), ldNameIsAllowed$5(parent), false),
+        content: render$J(null, null, null, reservedInstLDevice$5(parent), ldNameIsAllowed$5(parent), false),
     };
 }
 function editLDeviceWizard$5(element) {
@@ -140178,13 +140235,13 @@ function editLDeviceWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$2a(element),
+            action: updateAction$2e(element),
         },
-        content: render$F(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$5(element), ldNameIsAllowed$5(element), true),
+        content: render$J(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$5(element), ldNameIsAllowed$5(element), true),
     };
 }
 
-function updateAction$29(element) {
+function updateAction$2d(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -140210,13 +140267,13 @@ function editSMvWizard$5(element) {
         primary: {
             label: 'save',
             icon: 'edit',
-            action: updateAction$29(element),
+            action: updateAction$2d(element),
         },
         content: [...contentAddress$5({ element, types })],
     };
 }
 
-function render$E(options) {
+function render$I(options) {
     const fields = [
         b$4 `<scl-text-field
       label="name"
@@ -140238,7 +140295,7 @@ function render$E(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="smpMod"
-      .selectOptions=${tSmpMod$3}
+      .selectOptions=${tSmpMod$4}
       .value=${options.smpMod}
       nullable
     ></scl-select>`,
@@ -140258,7 +140315,7 @@ function render$E(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable$3}
+      .selectOptions=${tSecurityEnable$4}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
@@ -140272,7 +140329,7 @@ function render$E(options) {
     }
     return fields;
 }
-function updateAction$28(element) {
+function updateAction$2c(element) {
     return (inputs) => {
         const name = getValue$5(inputs.find(i => i.label === 'name'));
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -140306,15 +140363,15 @@ function updateAction$28(element) {
         ];
     };
 }
-function editSampledValueControlWizard$3(element) {
+function editSampledValueControlWizard$4(element) {
     return {
         title: 'Edit SampledValueControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$28(element),
+            action: updateAction$2c(element),
         },
-        content: render$E({
+        content: render$I({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$5(element),
             desc: element.getAttribute('desc'),
@@ -140328,34 +140385,34 @@ function editSampledValueControlWizard$3(element) {
     };
 }
 
-const smvOptKeys$3 = [
+const smvOptKeys$4 = [
     'refreshTime',
     'sampleRate',
     'dataSet',
     'security',
     'synchSourceId',
 ];
-function render$D(options) {
-    return smvOptKeys$3.map(key => b$4 `<scl-checkbox
+function render$H(options) {
+    return smvOptKeys$4.map(key => b$4 `<scl-checkbox
         label="${key}"
         .value=${options[key]}
         nullable
       ></scl-checkbox>`);
 }
-function updateAction$27(element) {
+function updateAction$2b(element) {
     return (inputs) => {
         const attributes = {};
-        for (const key of smvOptKeys$3) {
+        for (const key of smvOptKeys$4) {
             attributes[key] = getValue$5(inputs.find(i => i.label === key));
         }
-        if (!smvOptKeys$3.some(key => attributes[key] !== element.getAttribute(key)))
+        if (!smvOptKeys$4.some(key => attributes[key] !== element.getAttribute(key)))
             return [];
         return [{ element, attributes }];
     };
 }
-function editSmvOptsWizard$3(element) {
+function editSmvOptsWizard$4(element) {
     const options = {};
-    for (const key of smvOptKeys$3) {
+    for (const key of smvOptKeys$4) {
         options[key] = element.getAttribute(key);
     }
     return {
@@ -140363,13 +140420,13 @@ function editSmvOptsWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$27(element),
+            action: updateAction$2b(element),
         },
-        content: render$D(options),
+        content: render$H(options),
     };
 }
 
-function fcdaLabel$3(fcda) {
+function fcdaLabel$4(fcda) {
     const parts = [];
     const ldInst = fcda.getAttribute('ldInst');
     if (ldInst)
@@ -140390,7 +140447,7 @@ function fcdaLabel$3(fcda) {
         parts.push(`[${fc}]`);
     return parts.join('.');
 }
-function render$C(options) {
+function render$G(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -140406,14 +140463,14 @@ function render$C(options) {
         b$4 `<selection-list
       id="fcda-list"
       .items=${options.fcdas.map(fcda => ({
-            headline: fcdaLabel$3(fcda),
+            headline: fcdaLabel$4(fcda),
             attachedElement: fcda,
             selected: true,
         }))}
     ></selection-list>`,
     ];
 }
-function updateAction$26(element) {
+function updateAction$2a(element) {
     return (inputs, wizard) => {
         const name = getValue$5(inputs.find(i => i.label === 'name'));
         const desc = getValue$5(inputs.find(i => i.label === 'desc'));
@@ -140437,15 +140494,15 @@ function updateAction$26(element) {
         return edits;
     };
 }
-function editDataSetWizard$3(element) {
+function editDataSetWizard$4(element) {
     return {
         title: 'Edit DataSet',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$26(element),
+            action: updateAction$2a(element),
         },
-        content: render$C({
+        content: render$G({
             name: element.getAttribute('name') ?? '',
             desc: element.getAttribute('desc'),
             fcdas: Array.from(element.querySelectorAll('FCDA')),
@@ -140854,7 +140911,7 @@ function createLNodeWizard$5(parent) {
         ],
     };
 }
-function contentLNodeWizard$4(options) {
+function contentLNodeWizard$5(options) {
     const isIedRef = options.iedName !== 'None';
     return [
         b$4 `<scl-text-field
@@ -140897,7 +140954,7 @@ function contentLNodeWizard$4(options) {
     ></scl-text-field>`,
     ];
 }
-function updateLNodeAction$4(element) {
+function updateLNodeAction$5(element) {
     return (inputs) => {
         const attributes = {};
         const attributeKeys = ['iedName', 'ldInst', 'prefix', 'lnClass', 'lnInst'];
@@ -140924,7 +140981,7 @@ function updateLNodeAction$4(element) {
         return [];
     };
 }
-function editLNodeWizard$4(element) {
+function editLNodeWizard$5(element) {
     const [iedName, ldInst, prefix, lnClass, lnInst] = [
         'iedName',
         'ldInst',
@@ -140941,9 +140998,9 @@ function editLNodeWizard$4(element) {
         primary: {
             label: 'Save',
             icon: 'save',
-            action: updateLNodeAction$4(element),
+            action: updateLNodeAction$5(element),
         },
-        content: contentLNodeWizard$4({
+        content: contentLNodeWizard$5({
             iedName,
             ldInst,
             prefix,
@@ -141099,7 +141156,7 @@ function reservedInstLN$5(currentElement, prefixOverride) {
         .map(ln => ln.getAttribute('inst'))
         .filter(inst => inst !== null);
 }
-function updateAction$25(element) {
+function updateAction$29(element) {
     return (inputs, _wizard) => {
         const attributes = {};
         const keys = ['lnType', 'desc', 'prefix', 'lnClass', 'inst'];
@@ -141197,7 +141254,7 @@ function updateLNWizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$25(element),
+            action: updateAction$29(element),
         },
         content: renderUpdate$5(element),
     };
@@ -141210,7 +141267,7 @@ function getLNodeTypeOptions$5(element) {
         .map(type => type.getAttribute('id'))
         .filter((id) => !!id);
 }
-function render$B(element, lnodeTypeIds) {
+function render$F(element, lnodeTypeIds) {
     const lnType = element.getAttribute('lnType');
     const desc = element.getAttribute('desc');
     const lnClass = element.getAttribute('lnClass');
@@ -141247,7 +141304,7 @@ function render$B(element, lnodeTypeIds) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$24(element) {
+function updateAction$28(element) {
     return (inputs) => {
         const attributes = {};
         // Key attributes omitted from update are: 'lnClass', 'inst'.
@@ -141274,9 +141331,9 @@ function updateLN0Wizard$5(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$24(element),
+            action: updateAction$28(element),
         },
-        content: render$B(element, lnodeTypeIds),
+        content: render$F(element, lnodeTypeIds),
     };
 }
 
@@ -141469,7 +141526,7 @@ const wizards$5 = {
         create: emptyWizard$5,
     },
     DataSet: {
-        edit: editDataSetWizard$3,
+        edit: editDataSetWizard$4,
         create: emptyWizard$5,
     },
     DataSetDirectory: {
@@ -141549,7 +141606,7 @@ const wizards$5 = {
         create: emptyWizard$5,
     },
     GSEControl: {
-        edit: editGSEControlWizard$3,
+        edit: editGSEControlWizard$4,
         create: emptyWizard$5,
     },
     GSEDir: {
@@ -141609,7 +141666,7 @@ const wizards$5 = {
         create: emptyWizard$5,
     },
     LNode: {
-        edit: editLNodeWizard$4,
+        edit: editLNodeWizard$5,
         create: createLNodeWizard$5,
     },
     LNodeType: {
@@ -141701,7 +141758,7 @@ const wizards$5 = {
         create: emptyWizard$5,
     },
     SampledValueControl: {
-        edit: editSampledValueControlWizard$3,
+        edit: editSampledValueControlWizard$4,
         create: emptyWizard$5,
     },
     SecPerSamples: {
@@ -141757,7 +141814,7 @@ const wizards$5 = {
         create: emptyWizard$5,
     },
     SmvOpts: {
-        edit: editSmvOptsWizard$3,
+        edit: editSmvOptsWizard$4,
         create: emptyWizard$5,
     },
     SMVsc: {
@@ -167333,7 +167390,7 @@ let OscdSclIcon$3 = class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
     }
     static get scopedElements() {
         return {
-            'oscd-icon': OscdIcon$3,
+            'oscd-icon': OscdIcon$4,
         };
     }
     // Read the text node (ligature-like API)
@@ -167386,7 +167443,7 @@ let OscdSclIcon$3 = class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
  * standard `<slot></slot>` rendering from the Material base class so that
  * Material Symbols font ligatures continue to work as before.
  */
-let Icon$4 = class Icon extends Icon$a {
+let Icon$5 = class Icon extends Icon$b {
     constructor() {
         super(...arguments);
         this._sclName = '';
@@ -167451,10 +167508,10 @@ let Icon$4 = class Icon extends Icon$a {
  * @final
  * @suppress {visibility}
  */
-let OscdIcon$3 = class OscdIcon extends Icon$4 {
+let OscdIcon$4 = class OscdIcon extends Icon$5 {
 };
 /** @nocollapse */
-OscdIcon$3.styles = [styles$2I];
+OscdIcon$4.styles = [styles$2I];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -167474,9 +167531,9 @@ OscdIcon$3.styles = [styles$2I];
  * @final
  * @suppress {visibility}
  */
-let OscdRipple$3 = class OscdRipple extends Ripple$5 {
+let OscdRipple$4 = class OscdRipple extends Ripple$5 {
 };
-OscdRipple$3.styles = [styles$2O];
+OscdRipple$4.styles = [styles$2O];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -167490,9 +167547,9 @@ OscdRipple$3.styles = [styles$2O];
  * @final
  * @suppress {visibility}
  */
-let OscdFocusRing$3 = class OscdFocusRing extends FocusRing$4 {
+let OscdFocusRing$4 = class OscdFocusRing extends FocusRing$4 {
 };
-OscdFocusRing$3.styles = [styles$2N];
+OscdFocusRing$4.styles = [styles$2N];
 
 /**
  * @license
@@ -167739,8 +167796,8 @@ let OscdOutlinedSegmentedButton$1 = class OscdOutlinedSegmentedButton extends Sc
     }
 };
 OscdOutlinedSegmentedButton$1.scopedElements = {
-    'md-ripple': OscdRipple$3,
-    'md-focus-ring': OscdFocusRing$3,
+    'md-ripple': OscdRipple$4,
+    'md-focus-ring': OscdFocusRing$4,
 };
 OscdOutlinedSegmentedButton$1.styles = [
     styles$R,
@@ -168112,7 +168169,7 @@ function createBayWizard$4(parent) {
         }),
     };
 }
-function updateAction$23(element) {
+function updateAction$27(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -168129,7 +168186,7 @@ function editBayWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$23(element),
+            action: updateAction$27(element),
         },
         content: renderBayWizard$4({
             name: element.getAttribute('name'),
@@ -168354,7 +168411,7 @@ function createConductingEquipmentWizard$4(parent) {
         }),
     };
 }
-function updateAction$22(element) {
+function updateAction$26(element) {
     return (inputs) => {
         const name = getValue$4(inputs.find(i => i.label === 'name'));
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -168371,7 +168428,7 @@ function editConductingEquipmentWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$22(element),
+            action: updateAction$26(element),
         },
         content: renderConductingEquipmentWizard$4({
             name: element.getAttribute('name'),
@@ -168463,9 +168520,9 @@ const functionalConstraintEnum$4 = [
     'EX',
     'CO',
 ];
-const tSmpMod$2 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
-const tGSEControlType$2 = ['GOOSE', 'GSSE'];
-const tSecurityEnable$2 = ['None', 'Signature', 'SignatureAndEncryption'];
+const tSmpMod$3 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
+const tGSEControlType$3 = ['GOOSE', 'GSSE'];
+const tSecurityEnable$3 = ['None', 'Signature', 'SignatureAndEncryption'];
 const typeBase$4 = {
     IP: '([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])',
     OSI: '[0-9A-F]+',
@@ -168865,7 +168922,7 @@ function createConnectedApWizard$4(element) {
         ],
     };
 }
-function updateAction$21(element) {
+function updateAction$25(element) {
     return (inputs, wizard) => {
         const instType = wizard.querySelector('#instType').value === 'true';
         const addressContent = {};
@@ -168884,7 +168941,7 @@ function editConnectedApWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$21(element),
+            action: updateAction$25(element),
         },
         content: [...contentAddress$4({ element, types: getTypes$4(element) })],
     };
@@ -169440,7 +169497,7 @@ function createEnumValWizard$4(parent) {
         content: renderContent$n({ ord, desc, value }),
     };
 }
-function updateAction$20(element) {
+function updateAction$24(element) {
     return (inputs) => {
         const value = getValue$4(inputs.find(i => i.label === 'value')) ?? '';
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -169475,7 +169532,7 @@ function editEnumValWizard$4(element) {
         primary: {
             icon: '',
             label: 'Save',
-            action: updateAction$20(element),
+            action: updateAction$24(element),
         },
         content: renderContent$n({ ord, desc, value }),
     };
@@ -169609,7 +169666,7 @@ function createEqFunctionWizard$4(parent) {
         ],
     };
 }
-function updateAction$1$(element) {
+function updateAction$23(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -169631,7 +169688,7 @@ function editEqFunctionWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1$(element),
+            action: updateAction$23(element),
         },
         content: [
             ...contentFunctionWizard$4({
@@ -169682,7 +169739,7 @@ function createEqSubFunctionWizard$4(parent) {
         ],
     };
 }
-function updateAction$1_(element) {
+function updateAction$22(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -169704,7 +169761,7 @@ function editEqSubFunctionWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1_(element),
+            action: updateAction$22(element),
         },
         content: [
             ...contentFunctionWizard$4({
@@ -169785,7 +169842,7 @@ function createGeneralEquipmentWizard$4(parent) {
         ],
     };
 }
-function updateAction$1Z(element) {
+function updateAction$21(element) {
     return (inputs) => {
         const attributes = {};
         const generalEquipmentKeys = ['name', 'desc', 'type', 'virtual'];
@@ -169808,7 +169865,7 @@ function editGeneralEquipmentWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1Z(element),
+            action: updateAction$21(element),
         },
         content: [
             ...contentGeneralEquipmentWizard$4({
@@ -169894,7 +169951,7 @@ function createLineWizard$4(parent) {
         ],
     };
 }
-function updateAction$1Y(element) {
+function updateAction$20(element) {
     return (inputs) => {
         const attributes = {};
         const lineKeys = ['name', 'desc', 'type', 'nomFreq', 'numPhases'];
@@ -169913,7 +169970,7 @@ function editLineWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1Y(element),
+            action: updateAction$20(element),
         },
         content: renderContent$m({
             name: element.getAttribute('name') ?? '',
@@ -169982,7 +170039,7 @@ function createPowerTransformerWizard$4(parent) {
         }),
     };
 }
-function updateAction$1X(element) {
+function updateAction$1$(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -169999,7 +170056,7 @@ function editPowerTransformerWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1X(element),
+            action: updateAction$1$(element),
         },
         content: renderPowerTransformerWizard$4({
             name: element.getAttribute('name'),
@@ -170068,7 +170125,7 @@ function createProcessWizard$4(parent) {
         ],
     };
 }
-function updateAction$1W(element) {
+function updateAction$1_(element) {
     return (inputs) => {
         const attributes = {};
         const tapProcessKeys = ['name', 'desc', 'type'];
@@ -170093,7 +170150,7 @@ function editProcessWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1W(element),
+            action: updateAction$1_(element),
         },
         content: [
             ...contentProcessWizard$4({
@@ -170264,7 +170321,7 @@ function createSubEquipmentWizard$4(parent) {
         ],
     };
 }
-function updateAction$1V(element) {
+function updateAction$1Z(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'phase', 'virtual'];
@@ -170287,7 +170344,7 @@ function editSubEquipmentWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1V(element),
+            action: updateAction$1Z(element),
         },
         content: [
             ...contentSubEquipmentWizard$4({
@@ -170339,7 +170396,7 @@ function createSubFunctionWizard$4(parent) {
         ],
     };
 }
-function updateAction$1U(element) {
+function updateAction$1Y(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'type'];
@@ -170361,7 +170418,7 @@ function editSubFunctionWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1U(element),
+            action: updateAction$1Y(element),
         },
         content: [
             ...contentFunctionWizard$4({
@@ -170492,7 +170549,7 @@ function getBitRateAction$4(oldBitRate, BitRate, multiplier, SubNetwork) {
         { node: oldBitRate },
     ];
 }
-function updateAction$1T(element) {
+function updateAction$1X(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -170544,7 +170601,7 @@ function editSubNetworkWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1T(element),
+            action: updateAction$1X(element),
         },
         content: renderContent$k({
             name,
@@ -170556,7 +170613,7 @@ function editSubNetworkWizard$4(element) {
     };
 }
 
-function render$A(options) {
+function render$E(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -170598,14 +170655,14 @@ function createSubstationWizard$4(parent) {
             label: 'add',
             action: createAction$1j(parent),
         },
-        content: render$A({
+        content: render$E({
             name: '',
             reservedValues: reservedNames$4(parent, 'Substation'),
             desc: '',
         }),
     };
 }
-function updateAction$1S(element) {
+function updateAction$1W(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -170622,9 +170679,9 @@ function editSubstationWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1S(element),
+            action: updateAction$1W(element),
         },
-        content: render$A({
+        content: render$E({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$4(element),
             desc: element.getAttribute('desc'),
@@ -170698,7 +170755,7 @@ function createTapChangerWizard$4(parent) {
         ],
     };
 }
-function updateAction$1R(element) {
+function updateAction$1V(element) {
     return (inputs) => {
         const attributes = {};
         const tapChangerKeys = ['name', 'desc', 'type', 'virtual'];
@@ -170721,7 +170778,7 @@ function editTapChangerWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1R(element),
+            action: updateAction$1V(element),
         },
         content: [
             ...contentTapChangerWizard$4({
@@ -170735,7 +170792,7 @@ function editTapChangerWizard$4(element) {
     };
 }
 
-function render$z({ content }) {
+function render$D({ content }) {
     return [
         b$4 `<md-filled-textfield
       type="textarea"
@@ -170770,12 +170827,12 @@ function createTextWizard$4(parent) {
             label: 'add',
             action: createAction$1h(parent),
         },
-        content: render$z({
+        content: render$D({
             content: '',
         }),
     };
 }
-function updateAction$1Q(element) {
+function updateAction$1U(element) {
     return (inputs) => {
         const content = inputs.find(i => i.label === 'content').value;
         if (content === element.textContent) {
@@ -170798,9 +170855,9 @@ function editTextWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1Q(element),
+            action: updateAction$1U(element),
         },
-        content: render$z({
+        content: render$D({
             content: element.textContent || '',
         }),
     };
@@ -170872,7 +170929,7 @@ function createTransformerWindingWizard$4(parent) {
         ],
     };
 }
-function updateAction$1P(element) {
+function updateAction$1T(element) {
     return (inputs) => {
         const attributes = {};
         const transformerWindingKeys = ['name', 'desc', 'type', 'virtual'];
@@ -170895,7 +170952,7 @@ function editTransformerWindingWizard$4(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1P(element),
+            action: updateAction$1T(element),
         },
         content: [
             ...contentTransformerWindingWizard$4({
@@ -170915,7 +170972,7 @@ const initial$8 = {
     Voltage: '110',
     multiplier: 'k',
 };
-function render$y(option) {
+function render$C(option) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -171005,7 +171062,7 @@ function createVoltageLevelWizard$4(parent) {
             label: 'add',
             action: createAction$1f(parent),
         },
-        content: render$y({
+        content: render$C({
             name: '',
             reservedValues: reservedNames$4(parent, 'VoltageLevel'),
             desc: '',
@@ -171049,7 +171106,7 @@ function getVoltageAction$4(oldVoltage, Voltage, multiplier, voltageLevel) {
         { node: oldVoltage },
     ];
 }
-function updateAction$1O(element) {
+function updateAction$1S(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -171099,9 +171156,9 @@ function editVoltageLevelWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1O(element),
+            action: updateAction$1S(element),
         },
-        content: render$y({
+        content: render$C({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$4(element),
             desc: element.getAttribute('desc'),
@@ -171149,7 +171206,7 @@ function mxxTimeUpdateAction$4(gse, oldMxxTime, newTimeValue, option) {
         { node: oldMxxTime },
     ];
 }
-function updateAction$1N(element) {
+function updateAction$1R(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -171184,7 +171241,7 @@ function editGseWizard$4(element) {
         primary: {
             label: 'save',
             icon: 'save',
-            action: updateAction$1N(element),
+            action: updateAction$1R(element),
         },
         content: [
             ...contentAddress$4({ element, types }),
@@ -171206,7 +171263,7 @@ function editGseWizard$4(element) {
     };
 }
 
-function render$x(options) {
+function render$B(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -171223,7 +171280,7 @@ function render$x(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="type"
-      .selectOptions=${tGSEControlType$2}
+      .selectOptions=${tGSEControlType$3}
       .value=${options.type}
       nullable
     ></scl-select>`,
@@ -171239,13 +171296,13 @@ function render$x(options) {
     ></scl-checkbox>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable$2}
+      .selectOptions=${tSecurityEnable$3}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
     ];
 }
-function updateAction$1M(element) {
+function updateAction$1Q(element) {
     return (inputs) => {
         const name = getValue$4(inputs.find(i => i.label === 'name'));
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -171269,15 +171326,15 @@ function updateAction$1M(element) {
         ];
     };
 }
-function editGSEControlWizard$2(element) {
+function editGSEControlWizard$3(element) {
     return {
         title: 'Edit GSEControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1M(element),
+            action: updateAction$1Q(element),
         },
-        content: render$x({
+        content: render$B({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$4(element),
             desc: element.getAttribute('desc'),
@@ -171325,7 +171382,7 @@ function renderEdit$4(name, iedNames, desc, type, manufacturer, owner) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$1L(element) {
+function updateAction$1P(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -171351,7 +171408,7 @@ function editIEDWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1L(element),
+            action: updateAction$1P(element),
         },
         content: renderEdit$4(element.getAttribute('name') ?? '', iedNames, element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('manufacturer'), element.getAttribute('owner')),
     };
@@ -171363,7 +171420,7 @@ function createIEDWizard$4(parent) {
         primary: {
             icon: 'add',
             label: 'Create',
-            action: updateAction$1L(parent),
+            action: updateAction$1P(parent),
         },
         content: renderAdd$4(parent.getAttribute('name') ?? '', iedNames, parent.getAttribute('desc')),
     };
@@ -171389,7 +171446,7 @@ function reservedInstLDevice$4(currentElement) {
         .map(ld => ld.getAttribute('inst') ?? '')
         .filter(name => name !== currentElement.getAttribute('inst'));
 }
-function render$w(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
+function render$A(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
     const content = [
         allowLdName
             ? b$4 `<scl-text-field
@@ -171460,7 +171517,7 @@ function createAction$1e(parent) {
         ];
     };
 }
-function updateAction$1K(element) {
+function updateAction$1O(element) {
     return (inputs) => {
         const ldNameAllowed = ldNameIsAllowed$4(element);
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -171489,7 +171546,7 @@ function createLDeviceWizard$4(parent) {
             label: 'save',
             action: createAction$1e(parent),
         },
-        content: render$w(null, null, null, reservedInstLDevice$4(parent), ldNameIsAllowed$4(parent), false),
+        content: render$A(null, null, null, reservedInstLDevice$4(parent), ldNameIsAllowed$4(parent), false),
     };
 }
 function editLDeviceWizard$4(element) {
@@ -171498,13 +171555,13 @@ function editLDeviceWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1K(element),
+            action: updateAction$1O(element),
         },
-        content: render$w(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$4(element), ldNameIsAllowed$4(element), true),
+        content: render$A(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$4(element), ldNameIsAllowed$4(element), true),
     };
 }
 
-function updateAction$1J(element) {
+function updateAction$1N(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -171530,13 +171587,13 @@ function editSMvWizard$4(element) {
         primary: {
             label: 'save',
             icon: 'edit',
-            action: updateAction$1J(element),
+            action: updateAction$1N(element),
         },
         content: [...contentAddress$4({ element, types })],
     };
 }
 
-function render$v(options) {
+function render$z(options) {
     const fields = [
         b$4 `<scl-text-field
       label="name"
@@ -171558,7 +171615,7 @@ function render$v(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="smpMod"
-      .selectOptions=${tSmpMod$2}
+      .selectOptions=${tSmpMod$3}
       .value=${options.smpMod}
       nullable
     ></scl-select>`,
@@ -171578,7 +171635,7 @@ function render$v(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable$2}
+      .selectOptions=${tSecurityEnable$3}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
@@ -171592,7 +171649,7 @@ function render$v(options) {
     }
     return fields;
 }
-function updateAction$1I(element) {
+function updateAction$1M(element) {
     return (inputs) => {
         const name = getValue$4(inputs.find(i => i.label === 'name'));
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -171626,15 +171683,15 @@ function updateAction$1I(element) {
         ];
     };
 }
-function editSampledValueControlWizard$2(element) {
+function editSampledValueControlWizard$3(element) {
     return {
         title: 'Edit SampledValueControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1I(element),
+            action: updateAction$1M(element),
         },
-        content: render$v({
+        content: render$z({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$4(element),
             desc: element.getAttribute('desc'),
@@ -171648,34 +171705,34 @@ function editSampledValueControlWizard$2(element) {
     };
 }
 
-const smvOptKeys$2 = [
+const smvOptKeys$3 = [
     'refreshTime',
     'sampleRate',
     'dataSet',
     'security',
     'synchSourceId',
 ];
-function render$u(options) {
-    return smvOptKeys$2.map(key => b$4 `<scl-checkbox
+function render$y(options) {
+    return smvOptKeys$3.map(key => b$4 `<scl-checkbox
         label="${key}"
         .value=${options[key]}
         nullable
       ></scl-checkbox>`);
 }
-function updateAction$1H(element) {
+function updateAction$1L(element) {
     return (inputs) => {
         const attributes = {};
-        for (const key of smvOptKeys$2) {
+        for (const key of smvOptKeys$3) {
             attributes[key] = getValue$4(inputs.find(i => i.label === key));
         }
-        if (!smvOptKeys$2.some(key => attributes[key] !== element.getAttribute(key)))
+        if (!smvOptKeys$3.some(key => attributes[key] !== element.getAttribute(key)))
             return [];
         return [{ element, attributes }];
     };
 }
-function editSmvOptsWizard$2(element) {
+function editSmvOptsWizard$3(element) {
     const options = {};
-    for (const key of smvOptKeys$2) {
+    for (const key of smvOptKeys$3) {
         options[key] = element.getAttribute(key);
     }
     return {
@@ -171683,13 +171740,13 @@ function editSmvOptsWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1H(element),
+            action: updateAction$1L(element),
         },
-        content: render$u(options),
+        content: render$y(options),
     };
 }
 
-function fcdaLabel$2(fcda) {
+function fcdaLabel$3(fcda) {
     const parts = [];
     const ldInst = fcda.getAttribute('ldInst');
     if (ldInst)
@@ -171710,7 +171767,7 @@ function fcdaLabel$2(fcda) {
         parts.push(`[${fc}]`);
     return parts.join('.');
 }
-function render$t(options) {
+function render$x(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -171726,14 +171783,14 @@ function render$t(options) {
         b$4 `<selection-list
       id="fcda-list"
       .items=${options.fcdas.map(fcda => ({
-            headline: fcdaLabel$2(fcda),
+            headline: fcdaLabel$3(fcda),
             attachedElement: fcda,
             selected: true,
         }))}
     ></selection-list>`,
     ];
 }
-function updateAction$1G(element) {
+function updateAction$1K(element) {
     return (inputs, wizard) => {
         const name = getValue$4(inputs.find(i => i.label === 'name'));
         const desc = getValue$4(inputs.find(i => i.label === 'desc'));
@@ -171757,15 +171814,15 @@ function updateAction$1G(element) {
         return edits;
     };
 }
-function editDataSetWizard$2(element) {
+function editDataSetWizard$3(element) {
     return {
         title: 'Edit DataSet',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1G(element),
+            action: updateAction$1K(element),
         },
-        content: render$t({
+        content: render$x({
             name: element.getAttribute('name') ?? '',
             desc: element.getAttribute('desc'),
             fcdas: Array.from(element.querySelectorAll('FCDA')),
@@ -172174,7 +172231,7 @@ function createLNodeWizard$4(parent) {
         ],
     };
 }
-function contentLNodeWizard$3(options) {
+function contentLNodeWizard$4(options) {
     const isIedRef = options.iedName !== 'None';
     return [
         b$4 `<scl-text-field
@@ -172217,7 +172274,7 @@ function contentLNodeWizard$3(options) {
     ></scl-text-field>`,
     ];
 }
-function updateLNodeAction$3(element) {
+function updateLNodeAction$4(element) {
     return (inputs) => {
         const attributes = {};
         const attributeKeys = ['iedName', 'ldInst', 'prefix', 'lnClass', 'lnInst'];
@@ -172244,7 +172301,7 @@ function updateLNodeAction$3(element) {
         return [];
     };
 }
-function editLNodeWizard$3(element) {
+function editLNodeWizard$4(element) {
     const [iedName, ldInst, prefix, lnClass, lnInst] = [
         'iedName',
         'ldInst',
@@ -172261,9 +172318,9 @@ function editLNodeWizard$3(element) {
         primary: {
             label: 'Save',
             icon: 'save',
-            action: updateLNodeAction$3(element),
+            action: updateLNodeAction$4(element),
         },
-        content: contentLNodeWizard$3({
+        content: contentLNodeWizard$4({
             iedName,
             ldInst,
             prefix,
@@ -172419,7 +172476,7 @@ function reservedInstLN$4(currentElement, prefixOverride) {
         .map(ln => ln.getAttribute('inst'))
         .filter(inst => inst !== null);
 }
-function updateAction$1F(element) {
+function updateAction$1J(element) {
     return (inputs, _wizard) => {
         const attributes = {};
         const keys = ['lnType', 'desc', 'prefix', 'lnClass', 'inst'];
@@ -172517,7 +172574,7 @@ function updateLNWizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1F(element),
+            action: updateAction$1J(element),
         },
         content: renderUpdate$4(element),
     };
@@ -172530,7 +172587,7 @@ function getLNodeTypeOptions$4(element) {
         .map(type => type.getAttribute('id'))
         .filter((id) => !!id);
 }
-function render$s(element, lnodeTypeIds) {
+function render$w(element, lnodeTypeIds) {
     const lnType = element.getAttribute('lnType');
     const desc = element.getAttribute('desc');
     const lnClass = element.getAttribute('lnClass');
@@ -172567,7 +172624,7 @@ function render$s(element, lnodeTypeIds) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$1E(element) {
+function updateAction$1I(element) {
     return (inputs) => {
         const attributes = {};
         // Key attributes omitted from update are: 'lnClass', 'inst'.
@@ -172594,9 +172651,9 @@ function updateLN0Wizard$4(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1E(element),
+            action: updateAction$1I(element),
         },
-        content: render$s(element, lnodeTypeIds),
+        content: render$w(element, lnodeTypeIds),
     };
 }
 
@@ -172789,7 +172846,7 @@ const wizards$4 = {
         create: emptyWizard$4,
     },
     DataSet: {
-        edit: editDataSetWizard$2,
+        edit: editDataSetWizard$3,
         create: emptyWizard$4,
     },
     DataSetDirectory: {
@@ -172869,7 +172926,7 @@ const wizards$4 = {
         create: emptyWizard$4,
     },
     GSEControl: {
-        edit: editGSEControlWizard$2,
+        edit: editGSEControlWizard$3,
         create: emptyWizard$4,
     },
     GSEDir: {
@@ -172929,7 +172986,7 @@ const wizards$4 = {
         create: emptyWizard$4,
     },
     LNode: {
-        edit: editLNodeWizard$3,
+        edit: editLNodeWizard$4,
         create: createLNodeWizard$4,
     },
     LNodeType: {
@@ -173021,7 +173078,7 @@ const wizards$4 = {
         create: emptyWizard$4,
     },
     SampledValueControl: {
-        edit: editSampledValueControlWizard$2,
+        edit: editSampledValueControlWizard$3,
         create: emptyWizard$4,
     },
     SecPerSamples: {
@@ -173077,7 +173134,7 @@ const wizards$4 = {
         create: emptyWizard$4,
     },
     SmvOpts: {
-        edit: editSmvOptsWizard$2,
+        edit: editSmvOptsWizard$3,
         create: emptyWizard$4,
     },
     SMVsc: {
@@ -174617,9 +174674,9 @@ OscdItem$4.styles = [styles$2G];
 let OscdListItem$4 = class OscdListItem extends ScopedElementsMixin$2(ListItemEl$4) {
 };
 OscdListItem$4.scopedElements = {
-    'md-ripple': OscdRipple$3,
+    'md-ripple': OscdRipple$4,
     'md-item': OscdItem$4,
-    'md-focus-ring': OscdFocusRing$3,
+    'md-focus-ring': OscdFocusRing$4,
 };
 OscdListItem$4.styles = [styles$2F];
 
@@ -174638,9 +174695,9 @@ OscdListItem$4.styles = [styles$2F];
  * @final
  * @suppress {visibility}
  */
-let OscdDivider$3 = class OscdDivider extends Divider$3 {
+let OscdDivider$4 = class OscdDivider extends Divider$3 {
 };
-OscdDivider$3.styles = [styles$2J];
+OscdDivider$4.styles = [styles$2J];
 
 function subscribeDataSetToIed(ied, dataSet, controlBlock) {
     const ln0 = ied.querySelector('LN0');
@@ -175748,8 +175805,8 @@ let OscdIconButton$4 = class OscdIconButton extends ScopedElementsMixin$2(IconBu
     }
 };
 OscdIconButton$4.scopedElements = {
-    'md-ripple': OscdRipple$3,
-    'md-focus-ring': OscdFocusRing$3,
+    'md-ripple': OscdRipple$4,
+    'md-focus-ring': OscdFocusRing$4,
 };
 OscdIconButton$4.styles = [styles$2L, styles$2H];
 
@@ -175869,11 +175926,11 @@ let VirtualizedFilteredList$1 = class VirtualizedFilteredList extends ScopedElem
     }
 };
 VirtualizedFilteredList$1.scopedElements = {
-    'oscd-icon': OscdIcon$3,
+    'oscd-icon': OscdIcon$4,
     'oscd-icon-button': OscdIconButton$4,
     'oscd-list': OscdList$4,
     'oscd-list-item': OscdListItem$4,
-    'oscd-divider': OscdDivider$3,
+    'oscd-divider': OscdDivider$4,
     'oscd-outlined-text-field': OscdOutlinedTextField$4,
 };
 VirtualizedFilteredList$1.styles = i$10 `
@@ -176267,10 +176324,10 @@ class SubscriberList extends ScopedElementsMixin$2(SubscriberListContainer$1) {
     }
 }
 SubscriberList.scopedElements = {
-    'oscd-icon': OscdIcon$3,
+    'oscd-icon': OscdIcon$4,
     'oscd-list': OscdList$4,
     'oscd-list-item': OscdListItem$4,
-    'oscd-divider': OscdDivider$3,
+    'oscd-divider': OscdDivider$4,
     'virtualized-filtered-list': VirtualizedFilteredList$1,
 };
 SubscriberList.styles = i$10 `
@@ -176354,9 +176411,9 @@ __decorate$2([
  * @final
  * @suppress {visibility}
  */
-let OscdElevation$3 = class OscdElevation extends Elevation$3 {
+let OscdElevation$4 = class OscdElevation extends Elevation$3 {
 };
-OscdElevation$3.styles = [styles$2K];
+OscdElevation$4.styles = [styles$2K];
 
 /**
  * @license
@@ -176423,8 +176480,8 @@ InternalMenu$4.styles = [styles$2E];
 let OscdMenu$4 = class OscdMenu extends ScopedElementsMixin$2(InternalMenu$4) {
 };
 OscdMenu$4.scopedElements = {
-    'md-focus-ring': OscdFocusRing$3,
-    'md-elevation': OscdElevation$3,
+    'md-focus-ring': OscdFocusRing$4,
+    'md-elevation': OscdElevation$4,
 };
 OscdMenu$4.styles = [styles$2E];
 
@@ -176456,9 +176513,9 @@ OscdMenu$4.styles = [styles$2E];
 let OscdMenuItem$3 = class OscdMenuItem extends ScopedElementsMixin$2(MenuItemEl$2) {
 };
 OscdMenuItem$3.scopedElements = {
-    'md-ripple': OscdRipple$3,
+    'md-ripple': OscdRipple$4,
     'md-item': OscdItem$4,
-    'md-focus-ring': OscdFocusRing$3,
+    'md-focus-ring': OscdFocusRing$4,
 };
 OscdMenuItem$3.styles = [styles$2D];
 
@@ -176788,10 +176845,10 @@ class ControlBlockList extends ScopedElementsMixin$2(i$Z) {
     }
 }
 ControlBlockList.scopedElements = {
-    'oscd-icon': OscdIcon$3,
+    'oscd-icon': OscdIcon$4,
     'oscd-list-item': OscdListItem$4,
     'oscd-icon-button': OscdIconButton$4,
-    'oscd-divider': OscdDivider$3,
+    'oscd-divider': OscdDivider$4,
     'oscd-menu': OscdMenu$4,
     'oscd-menu-item': OscdMenuItem$3,
     'virtualized-filtered-list': VirtualizedFilteredList$1,
@@ -176900,7 +176957,7 @@ class IedList extends ScopedElementsMixin$2(i$Z) {
     }
 }
 IedList.scopedElements = {
-    'oscd-icon': OscdIcon$3,
+    'oscd-icon': OscdIcon$4,
     'oscd-list-item': OscdListItem$4,
     'virtualized-filtered-list': VirtualizedFilteredList$1,
 };
@@ -177039,7 +177096,7 @@ class OscdEditorSubscriberMsgBinding extends ScopedElementsMixin$2(i$Z) {
     }
 }
 OscdEditorSubscriberMsgBinding.scopedElements = {
-    'oscd-icon': OscdIcon$3,
+    'oscd-icon': OscdIcon$4,
     'oscd-outlined-segmented-button': OscdOutlinedSegmentedButton$1,
     'oscd-outlined-segmented-button-set': OscdOutlinedSegmentedButtonSet$1,
     'subscriber-list': SubscriberList,
@@ -177924,7 +177981,7 @@ let OscdSclIcon$2 = class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
     }
     static get scopedElements() {
         return {
-            'oscd-icon': OscdIcon$2,
+            'oscd-icon': OscdIcon$3,
         };
     }
     // Read the text node (ligature-like API)
@@ -177977,7 +178034,7 @@ let OscdSclIcon$2 = class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
  * standard `<slot></slot>` rendering from the Material base class so that
  * Material Symbols font ligatures continue to work as before.
  */
-let Icon$3 = class Icon extends Icon$a {
+let Icon$4 = class Icon extends Icon$b {
     constructor() {
         super(...arguments);
         this._sclName = '';
@@ -178042,10 +178099,10 @@ let Icon$3 = class Icon extends Icon$a {
  * @final
  * @suppress {visibility}
  */
-let OscdIcon$2 = class OscdIcon extends Icon$3 {
+let OscdIcon$3 = class OscdIcon extends Icon$4 {
 };
 /** @nocollapse */
-OscdIcon$2.styles = [styles$2I];
+OscdIcon$3.styles = [styles$2I];
 
 /** @returns the `value` or `maybeValue` of `input` depending on type. */
 function getValue$3(input) {
@@ -178252,7 +178309,7 @@ function createBayWizard$3(parent) {
         }),
     };
 }
-function updateAction$1D(element) {
+function updateAction$1H(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -178269,7 +178326,7 @@ function editBayWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1D(element),
+            action: updateAction$1H(element),
         },
         content: renderBayWizard$3({
             name: element.getAttribute('name'),
@@ -178494,7 +178551,7 @@ function createConductingEquipmentWizard$3(parent) {
         }),
     };
 }
-function updateAction$1C(element) {
+function updateAction$1G(element) {
     return (inputs) => {
         const name = getValue$3(inputs.find(i => i.label === 'name'));
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -178511,7 +178568,7 @@ function editConductingEquipmentWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1C(element),
+            action: updateAction$1G(element),
         },
         content: renderConductingEquipmentWizard$3({
             name: element.getAttribute('name'),
@@ -178603,9 +178660,9 @@ const functionalConstraintEnum$3 = [
     'EX',
     'CO',
 ];
-const tSmpMod$1 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
-const tGSEControlType$1 = ['GOOSE', 'GSSE'];
-const tSecurityEnable$1 = ['None', 'Signature', 'SignatureAndEncryption'];
+const tSmpMod$2 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
+const tGSEControlType$2 = ['GOOSE', 'GSSE'];
+const tSecurityEnable$2 = ['None', 'Signature', 'SignatureAndEncryption'];
 const typeBase$3 = {
     IP: '([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])',
     OSI: '[0-9A-F]+',
@@ -179005,7 +179062,7 @@ function createConnectedApWizard$3(element) {
         ],
     };
 }
-function updateAction$1B(element) {
+function updateAction$1F(element) {
     return (inputs, wizard) => {
         const instType = wizard.querySelector('#instType').value === 'true';
         const addressContent = {};
@@ -179024,7 +179081,7 @@ function editConnectedApWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1B(element),
+            action: updateAction$1F(element),
         },
         content: [...contentAddress$3({ element, types: getTypes$3(element) })],
     };
@@ -179580,7 +179637,7 @@ function createEnumValWizard$3(parent) {
         content: renderContent$i({ ord, desc, value }),
     };
 }
-function updateAction$1A(element) {
+function updateAction$1E(element) {
     return (inputs) => {
         const value = getValue$3(inputs.find(i => i.label === 'value')) ?? '';
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -179615,7 +179672,7 @@ function editEnumValWizard$3(element) {
         primary: {
             icon: '',
             label: 'Save',
-            action: updateAction$1A(element),
+            action: updateAction$1E(element),
         },
         content: renderContent$i({ ord, desc, value }),
     };
@@ -179749,7 +179806,7 @@ function createEqFunctionWizard$3(parent) {
         ],
     };
 }
-function updateAction$1z(element) {
+function updateAction$1D(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -179771,7 +179828,7 @@ function editEqFunctionWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1z(element),
+            action: updateAction$1D(element),
         },
         content: [
             ...contentFunctionWizard$3({
@@ -179822,7 +179879,7 @@ function createEqSubFunctionWizard$3(parent) {
         ],
     };
 }
-function updateAction$1y(element) {
+function updateAction$1C(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -179844,7 +179901,7 @@ function editEqSubFunctionWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1y(element),
+            action: updateAction$1C(element),
         },
         content: [
             ...contentFunctionWizard$3({
@@ -179925,7 +179982,7 @@ function createGeneralEquipmentWizard$3(parent) {
         ],
     };
 }
-function updateAction$1x(element) {
+function updateAction$1B(element) {
     return (inputs) => {
         const attributes = {};
         const generalEquipmentKeys = ['name', 'desc', 'type', 'virtual'];
@@ -179948,7 +180005,7 @@ function editGeneralEquipmentWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1x(element),
+            action: updateAction$1B(element),
         },
         content: [
             ...contentGeneralEquipmentWizard$3({
@@ -180034,7 +180091,7 @@ function createLineWizard$3(parent) {
         ],
     };
 }
-function updateAction$1w(element) {
+function updateAction$1A(element) {
     return (inputs) => {
         const attributes = {};
         const lineKeys = ['name', 'desc', 'type', 'nomFreq', 'numPhases'];
@@ -180053,7 +180110,7 @@ function editLineWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1w(element),
+            action: updateAction$1A(element),
         },
         content: renderContent$h({
             name: element.getAttribute('name') ?? '',
@@ -180122,7 +180179,7 @@ function createPowerTransformerWizard$3(parent) {
         }),
     };
 }
-function updateAction$1v(element) {
+function updateAction$1z(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -180139,7 +180196,7 @@ function editPowerTransformerWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1v(element),
+            action: updateAction$1z(element),
         },
         content: renderPowerTransformerWizard$3({
             name: element.getAttribute('name'),
@@ -180208,7 +180265,7 @@ function createProcessWizard$3(parent) {
         ],
     };
 }
-function updateAction$1u(element) {
+function updateAction$1y(element) {
     return (inputs) => {
         const attributes = {};
         const tapProcessKeys = ['name', 'desc', 'type'];
@@ -180233,7 +180290,7 @@ function editProcessWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1u(element),
+            action: updateAction$1y(element),
         },
         content: [
             ...contentProcessWizard$3({
@@ -180404,7 +180461,7 @@ function createSubEquipmentWizard$3(parent) {
         ],
     };
 }
-function updateAction$1t(element) {
+function updateAction$1x(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'phase', 'virtual'];
@@ -180427,7 +180484,7 @@ function editSubEquipmentWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1t(element),
+            action: updateAction$1x(element),
         },
         content: [
             ...contentSubEquipmentWizard$3({
@@ -180479,7 +180536,7 @@ function createSubFunctionWizard$3(parent) {
         ],
     };
 }
-function updateAction$1s(element) {
+function updateAction$1w(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'type'];
@@ -180501,7 +180558,7 @@ function editSubFunctionWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1s(element),
+            action: updateAction$1w(element),
         },
         content: [
             ...contentFunctionWizard$3({
@@ -180632,7 +180689,7 @@ function getBitRateAction$3(oldBitRate, BitRate, multiplier, SubNetwork) {
         { node: oldBitRate },
     ];
 }
-function updateAction$1r(element) {
+function updateAction$1v(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -180684,7 +180741,7 @@ function editSubNetworkWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1r(element),
+            action: updateAction$1v(element),
         },
         content: renderContent$f({
             name,
@@ -180696,7 +180753,7 @@ function editSubNetworkWizard$3(element) {
     };
 }
 
-function render$r(options) {
+function render$v(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -180738,14 +180795,14 @@ function createSubstationWizard$3(parent) {
             label: 'add',
             action: createAction$10(parent),
         },
-        content: render$r({
+        content: render$v({
             name: '',
             reservedValues: reservedNames$3(parent, 'Substation'),
             desc: '',
         }),
     };
 }
-function updateAction$1q(element) {
+function updateAction$1u(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -180762,9 +180819,9 @@ function editSubstationWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1q(element),
+            action: updateAction$1u(element),
         },
-        content: render$r({
+        content: render$v({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$3(element),
             desc: element.getAttribute('desc'),
@@ -180838,7 +180895,7 @@ function createTapChangerWizard$3(parent) {
         ],
     };
 }
-function updateAction$1p(element) {
+function updateAction$1t(element) {
     return (inputs) => {
         const attributes = {};
         const tapChangerKeys = ['name', 'desc', 'type', 'virtual'];
@@ -180861,7 +180918,7 @@ function editTapChangerWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1p(element),
+            action: updateAction$1t(element),
         },
         content: [
             ...contentTapChangerWizard$3({
@@ -180875,7 +180932,7 @@ function editTapChangerWizard$3(element) {
     };
 }
 
-function render$q({ content }) {
+function render$u({ content }) {
     return [
         b$4 `<md-filled-textfield
       type="textarea"
@@ -180910,12 +180967,12 @@ function createTextWizard$3(parent) {
             label: 'add',
             action: createAction$_(parent),
         },
-        content: render$q({
+        content: render$u({
             content: '',
         }),
     };
 }
-function updateAction$1o(element) {
+function updateAction$1s(element) {
     return (inputs) => {
         const content = inputs.find(i => i.label === 'content').value;
         if (content === element.textContent) {
@@ -180938,9 +180995,9 @@ function editTextWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1o(element),
+            action: updateAction$1s(element),
         },
-        content: render$q({
+        content: render$u({
             content: element.textContent || '',
         }),
     };
@@ -181012,7 +181069,7 @@ function createTransformerWindingWizard$3(parent) {
         ],
     };
 }
-function updateAction$1n(element) {
+function updateAction$1r(element) {
     return (inputs) => {
         const attributes = {};
         const transformerWindingKeys = ['name', 'desc', 'type', 'virtual'];
@@ -181035,7 +181092,7 @@ function editTransformerWindingWizard$3(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$1n(element),
+            action: updateAction$1r(element),
         },
         content: [
             ...contentTransformerWindingWizard$3({
@@ -181055,7 +181112,7 @@ const initial$6 = {
     Voltage: '110',
     multiplier: 'k',
 };
-function render$p(option) {
+function render$t(option) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -181145,7 +181202,7 @@ function createVoltageLevelWizard$3(parent) {
             label: 'add',
             action: createAction$Y(parent),
         },
-        content: render$p({
+        content: render$t({
             name: '',
             reservedValues: reservedNames$3(parent, 'VoltageLevel'),
             desc: '',
@@ -181189,7 +181246,7 @@ function getVoltageAction$3(oldVoltage, Voltage, multiplier, voltageLevel) {
         { node: oldVoltage },
     ];
 }
-function updateAction$1m(element) {
+function updateAction$1q(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -181239,9 +181296,9 @@ function editVoltageLevelWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1m(element),
+            action: updateAction$1q(element),
         },
-        content: render$p({
+        content: render$t({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$3(element),
             desc: element.getAttribute('desc'),
@@ -181289,7 +181346,7 @@ function mxxTimeUpdateAction$3(gse, oldMxxTime, newTimeValue, option) {
         { node: oldMxxTime },
     ];
 }
-function updateAction$1l(element) {
+function updateAction$1p(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -181324,7 +181381,7 @@ function editGseWizard$3(element) {
         primary: {
             label: 'save',
             icon: 'save',
-            action: updateAction$1l(element),
+            action: updateAction$1p(element),
         },
         content: [
             ...contentAddress$3({ element, types }),
@@ -181346,7 +181403,7 @@ function editGseWizard$3(element) {
     };
 }
 
-function render$o(options) {
+function render$s(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -181363,7 +181420,7 @@ function render$o(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="type"
-      .selectOptions=${tGSEControlType$1}
+      .selectOptions=${tGSEControlType$2}
       .value=${options.type}
       nullable
     ></scl-select>`,
@@ -181379,13 +181436,13 @@ function render$o(options) {
     ></scl-checkbox>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable$1}
+      .selectOptions=${tSecurityEnable$2}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
     ];
 }
-function updateAction$1k(element) {
+function updateAction$1o(element) {
     return (inputs) => {
         const name = getValue$3(inputs.find(i => i.label === 'name'));
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -181409,15 +181466,15 @@ function updateAction$1k(element) {
         ];
     };
 }
-function editGSEControlWizard$1(element) {
+function editGSEControlWizard$2(element) {
     return {
         title: 'Edit GSEControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1k(element),
+            action: updateAction$1o(element),
         },
-        content: render$o({
+        content: render$s({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$3(element),
             desc: element.getAttribute('desc'),
@@ -181465,7 +181522,7 @@ function renderEdit$3(name, iedNames, desc, type, manufacturer, owner) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$1j(element) {
+function updateAction$1n(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -181491,7 +181548,7 @@ function editIEDWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1j(element),
+            action: updateAction$1n(element),
         },
         content: renderEdit$3(element.getAttribute('name') ?? '', iedNames, element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('manufacturer'), element.getAttribute('owner')),
     };
@@ -181503,7 +181560,7 @@ function createIEDWizard$3(parent) {
         primary: {
             icon: 'add',
             label: 'Create',
-            action: updateAction$1j(parent),
+            action: updateAction$1n(parent),
         },
         content: renderAdd$3(parent.getAttribute('name') ?? '', iedNames, parent.getAttribute('desc')),
     };
@@ -181529,7 +181586,7 @@ function reservedInstLDevice$3(currentElement) {
         .map(ld => ld.getAttribute('inst') ?? '')
         .filter(name => name !== currentElement.getAttribute('inst'));
 }
-function render$n(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
+function render$r(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
     const content = [
         allowLdName
             ? b$4 `<scl-text-field
@@ -181600,7 +181657,7 @@ function createAction$X(parent) {
         ];
     };
 }
-function updateAction$1i(element) {
+function updateAction$1m(element) {
     return (inputs) => {
         const ldNameAllowed = ldNameIsAllowed$3(element);
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -181629,7 +181686,7 @@ function createLDeviceWizard$3(parent) {
             label: 'save',
             action: createAction$X(parent),
         },
-        content: render$n(null, null, null, reservedInstLDevice$3(parent), ldNameIsAllowed$3(parent), false),
+        content: render$r(null, null, null, reservedInstLDevice$3(parent), ldNameIsAllowed$3(parent), false),
     };
 }
 function editLDeviceWizard$3(element) {
@@ -181638,13 +181695,13 @@ function editLDeviceWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1i(element),
+            action: updateAction$1m(element),
         },
-        content: render$n(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$3(element), ldNameIsAllowed$3(element), true),
+        content: render$r(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$3(element), ldNameIsAllowed$3(element), true),
     };
 }
 
-function updateAction$1h(element) {
+function updateAction$1l(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -181670,13 +181727,13 @@ function editSMvWizard$3(element) {
         primary: {
             label: 'save',
             icon: 'edit',
-            action: updateAction$1h(element),
+            action: updateAction$1l(element),
         },
         content: [...contentAddress$3({ element, types })],
     };
 }
 
-function render$m(options) {
+function render$q(options) {
     const fields = [
         b$4 `<scl-text-field
       label="name"
@@ -181698,7 +181755,7 @@ function render$m(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="smpMod"
-      .selectOptions=${tSmpMod$1}
+      .selectOptions=${tSmpMod$2}
       .value=${options.smpMod}
       nullable
     ></scl-select>`,
@@ -181718,7 +181775,7 @@ function render$m(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable$1}
+      .selectOptions=${tSecurityEnable$2}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
@@ -181732,7 +181789,7 @@ function render$m(options) {
     }
     return fields;
 }
-function updateAction$1g(element) {
+function updateAction$1k(element) {
     return (inputs) => {
         const name = getValue$3(inputs.find(i => i.label === 'name'));
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -181766,15 +181823,15 @@ function updateAction$1g(element) {
         ];
     };
 }
-function editSampledValueControlWizard$1(element) {
+function editSampledValueControlWizard$2(element) {
     return {
         title: 'Edit SampledValueControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1g(element),
+            action: updateAction$1k(element),
         },
-        content: render$m({
+        content: render$q({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$3(element),
             desc: element.getAttribute('desc'),
@@ -181788,34 +181845,34 @@ function editSampledValueControlWizard$1(element) {
     };
 }
 
-const smvOptKeys$1 = [
+const smvOptKeys$2 = [
     'refreshTime',
     'sampleRate',
     'dataSet',
     'security',
     'synchSourceId',
 ];
-function render$l(options) {
-    return smvOptKeys$1.map(key => b$4 `<scl-checkbox
+function render$p(options) {
+    return smvOptKeys$2.map(key => b$4 `<scl-checkbox
         label="${key}"
         .value=${options[key]}
         nullable
       ></scl-checkbox>`);
 }
-function updateAction$1f(element) {
+function updateAction$1j(element) {
     return (inputs) => {
         const attributes = {};
-        for (const key of smvOptKeys$1) {
+        for (const key of smvOptKeys$2) {
             attributes[key] = getValue$3(inputs.find(i => i.label === key));
         }
-        if (!smvOptKeys$1.some(key => attributes[key] !== element.getAttribute(key)))
+        if (!smvOptKeys$2.some(key => attributes[key] !== element.getAttribute(key)))
             return [];
         return [{ element, attributes }];
     };
 }
-function editSmvOptsWizard$1(element) {
+function editSmvOptsWizard$2(element) {
     const options = {};
-    for (const key of smvOptKeys$1) {
+    for (const key of smvOptKeys$2) {
         options[key] = element.getAttribute(key);
     }
     return {
@@ -181823,13 +181880,13 @@ function editSmvOptsWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1f(element),
+            action: updateAction$1j(element),
         },
-        content: render$l(options),
+        content: render$p(options),
     };
 }
 
-function fcdaLabel$1(fcda) {
+function fcdaLabel$2(fcda) {
     const parts = [];
     const ldInst = fcda.getAttribute('ldInst');
     if (ldInst)
@@ -181850,7 +181907,7 @@ function fcdaLabel$1(fcda) {
         parts.push(`[${fc}]`);
     return parts.join('.');
 }
-function render$k(options) {
+function render$o(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -181866,14 +181923,14 @@ function render$k(options) {
         b$4 `<selection-list
       id="fcda-list"
       .items=${options.fcdas.map(fcda => ({
-            headline: fcdaLabel$1(fcda),
+            headline: fcdaLabel$2(fcda),
             attachedElement: fcda,
             selected: true,
         }))}
     ></selection-list>`,
     ];
 }
-function updateAction$1e(element) {
+function updateAction$1i(element) {
     return (inputs, wizard) => {
         const name = getValue$3(inputs.find(i => i.label === 'name'));
         const desc = getValue$3(inputs.find(i => i.label === 'desc'));
@@ -181897,15 +181954,15 @@ function updateAction$1e(element) {
         return edits;
     };
 }
-function editDataSetWizard$1(element) {
+function editDataSetWizard$2(element) {
     return {
         title: 'Edit DataSet',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1e(element),
+            action: updateAction$1i(element),
         },
-        content: render$k({
+        content: render$o({
             name: element.getAttribute('name') ?? '',
             desc: element.getAttribute('desc'),
             fcdas: Array.from(element.querySelectorAll('FCDA')),
@@ -182314,7 +182371,7 @@ function createLNodeWizard$3(parent) {
         ],
     };
 }
-function contentLNodeWizard$2(options) {
+function contentLNodeWizard$3(options) {
     const isIedRef = options.iedName !== 'None';
     return [
         b$4 `<scl-text-field
@@ -182357,7 +182414,7 @@ function contentLNodeWizard$2(options) {
     ></scl-text-field>`,
     ];
 }
-function updateLNodeAction$2(element) {
+function updateLNodeAction$3(element) {
     return (inputs) => {
         const attributes = {};
         const attributeKeys = ['iedName', 'ldInst', 'prefix', 'lnClass', 'lnInst'];
@@ -182384,7 +182441,7 @@ function updateLNodeAction$2(element) {
         return [];
     };
 }
-function editLNodeWizard$2(element) {
+function editLNodeWizard$3(element) {
     const [iedName, ldInst, prefix, lnClass, lnInst] = [
         'iedName',
         'ldInst',
@@ -182401,9 +182458,9 @@ function editLNodeWizard$2(element) {
         primary: {
             label: 'Save',
             icon: 'save',
-            action: updateLNodeAction$2(element),
+            action: updateLNodeAction$3(element),
         },
-        content: contentLNodeWizard$2({
+        content: contentLNodeWizard$3({
             iedName,
             ldInst,
             prefix,
@@ -182559,7 +182616,7 @@ function reservedInstLN$3(currentElement, prefixOverride) {
         .map(ln => ln.getAttribute('inst'))
         .filter(inst => inst !== null);
 }
-function updateAction$1d(element) {
+function updateAction$1h(element) {
     return (inputs, _wizard) => {
         const attributes = {};
         const keys = ['lnType', 'desc', 'prefix', 'lnClass', 'inst'];
@@ -182657,7 +182714,7 @@ function updateLNWizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1d(element),
+            action: updateAction$1h(element),
         },
         content: renderUpdate$3(element),
     };
@@ -182670,7 +182727,7 @@ function getLNodeTypeOptions$3(element) {
         .map(type => type.getAttribute('id'))
         .filter((id) => !!id);
 }
-function render$j(element, lnodeTypeIds) {
+function render$n(element, lnodeTypeIds) {
     const lnType = element.getAttribute('lnType');
     const desc = element.getAttribute('desc');
     const lnClass = element.getAttribute('lnClass');
@@ -182707,7 +182764,7 @@ function render$j(element, lnodeTypeIds) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$1c(element) {
+function updateAction$1g(element) {
     return (inputs) => {
         const attributes = {};
         // Key attributes omitted from update are: 'lnClass', 'inst'.
@@ -182734,9 +182791,9 @@ function updateLN0Wizard$3(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1c(element),
+            action: updateAction$1g(element),
         },
-        content: render$j(element, lnodeTypeIds),
+        content: render$n(element, lnodeTypeIds),
     };
 }
 
@@ -182929,7 +182986,7 @@ const wizards$3 = {
         create: emptyWizard$3,
     },
     DataSet: {
-        edit: editDataSetWizard$1,
+        edit: editDataSetWizard$2,
         create: emptyWizard$3,
     },
     DataSetDirectory: {
@@ -183009,7 +183066,7 @@ const wizards$3 = {
         create: emptyWizard$3,
     },
     GSEControl: {
-        edit: editGSEControlWizard$1,
+        edit: editGSEControlWizard$2,
         create: emptyWizard$3,
     },
     GSEDir: {
@@ -183069,7 +183126,7 @@ const wizards$3 = {
         create: emptyWizard$3,
     },
     LNode: {
-        edit: editLNodeWizard$2,
+        edit: editLNodeWizard$3,
         create: createLNodeWizard$3,
     },
     LNodeType: {
@@ -183161,7 +183218,7 @@ const wizards$3 = {
         create: emptyWizard$3,
     },
     SampledValueControl: {
-        edit: editSampledValueControlWizard$1,
+        edit: editSampledValueControlWizard$2,
         create: emptyWizard$3,
     },
     SecPerSamples: {
@@ -183217,7 +183274,7 @@ const wizards$3 = {
         create: emptyWizard$3,
     },
     SmvOpts: {
-        edit: editSmvOptsWizard$1,
+        edit: editSmvOptsWizard$2,
         create: emptyWizard$3,
     },
     SMVsc: {
@@ -184322,9 +184379,9 @@ __decorate$2([
  * @final
  * @suppress {visibility}
  */
-let OscdRipple$2 = class OscdRipple extends Ripple$5 {
+let OscdRipple$3 = class OscdRipple extends Ripple$5 {
 };
-OscdRipple$2.styles = [styles$2O];
+OscdRipple$3.styles = [styles$2O];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -184338,9 +184395,9 @@ OscdRipple$2.styles = [styles$2O];
  * @final
  * @suppress {visibility}
  */
-let OscdFocusRing$2 = class OscdFocusRing extends FocusRing$4 {
+let OscdFocusRing$3 = class OscdFocusRing extends FocusRing$4 {
 };
-OscdFocusRing$2.styles = [styles$2N];
+OscdFocusRing$3.styles = [styles$2N];
 
 const noCheckmarkFixStyles = i$10 `
   .md3-segmented-button--without-checkmark .md3-segmented-button__checkmark {
@@ -184386,8 +184443,8 @@ class OscdOutlinedSegmentedButton extends ScopedElementsMixin$2(OutlinedSegmente
     }
 }
 OscdOutlinedSegmentedButton.scopedElements = {
-    'md-ripple': OscdRipple$2,
-    'md-focus-ring': OscdFocusRing$2,
+    'md-ripple': OscdRipple$3,
+    'md-focus-ring': OscdFocusRing$3,
 };
 OscdOutlinedSegmentedButton.styles = [
     styles$R,
@@ -184463,8 +184520,8 @@ let OscdIconButton$3 = class OscdIconButton extends ScopedElementsMixin$2(IconBu
     }
 };
 OscdIconButton$3.scopedElements = {
-    'md-ripple': OscdRipple$2,
-    'md-focus-ring': OscdFocusRing$2,
+    'md-ripple': OscdRipple$3,
+    'md-focus-ring': OscdFocusRing$3,
 };
 OscdIconButton$3.styles = [styles$2L, styles$2H];
 
@@ -184588,9 +184645,9 @@ OscdItem$3.styles = [styles$2G];
 let OscdListItem$3 = class OscdListItem extends ScopedElementsMixin$2(ListItemEl$4) {
 };
 OscdListItem$3.scopedElements = {
-    'md-ripple': OscdRipple$2,
+    'md-ripple': OscdRipple$3,
     'md-item': OscdItem$3,
-    'md-focus-ring': OscdFocusRing$2,
+    'md-focus-ring': OscdFocusRing$3,
 };
 OscdListItem$3.styles = [styles$2F];
 
@@ -184620,8 +184677,8 @@ OscdListItem$3.styles = [styles$2F];
 let OscdCheckbox$1 = class OscdCheckbox extends ScopedElementsMixin$2(Checkbox$2) {
 };
 OscdCheckbox$1.scopedElements = {
-    'md-ripple': OscdRipple$2,
-    'md-focus-ring': OscdFocusRing$2,
+    'md-ripple': OscdRipple$3,
+    'md-focus-ring': OscdFocusRing$3,
 };
 OscdCheckbox$1.styles = [styles$2C];
 
@@ -184654,8 +184711,8 @@ OscdCheckbox$1.styles = [styles$2C];
 let OscdRadio$2 = class OscdRadio extends ScopedElementsMixin$2(Radio$2) {
 };
 OscdRadio$2.scopedElements = {
-    'md-ripple': OscdRipple$2,
-    'md-focus-ring': OscdFocusRing$2,
+    'md-ripple': OscdRipple$3,
+    'md-focus-ring': OscdFocusRing$3,
 };
 OscdRadio$2.styles = [styles$2t];
 
@@ -184898,7 +184955,7 @@ let OscdSelectionList$1 = class OscdSelectionList extends FilterListBase$2 {
 };
 OscdSelectionList$1.scopedElements = {
     'oscd-outlined-text-field': OscdOutlinedTextField$3,
-    'oscd-icon': OscdIcon$2,
+    'oscd-icon': OscdIcon$3,
     'oscd-list': OscdList$3,
     'oscd-list-item': OscdListItem$3,
     'oscd-checkbox': OscdCheckbox$1,
@@ -184971,9 +185028,9 @@ function newSelectionListChangeEvent$1(selectedElements, eventInitDict) {
  * @final
  * @suppress {visibility}
  */
-let OscdDivider$2 = class OscdDivider extends Divider$3 {
+let OscdDivider$3 = class OscdDivider extends Divider$3 {
 };
-OscdDivider$2.styles = [styles$2J];
+OscdDivider$3.styles = [styles$2J];
 
 /**
  * @license
@@ -185012,12 +185069,12 @@ OscdDivider$2.styles = [styles$2J];
  * @final
  * @suppress {visibility}
  */
-let OscdDialog$1 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
+let OscdDialog$2 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
 };
-OscdDialog$1.scopedElements = {
-    'md-divider': OscdDivider$2,
+OscdDialog$2.scopedElements = {
+    'md-divider': OscdDivider$3,
 };
-OscdDialog$1.styles = [styles$2u];
+OscdDialog$2.styles = [styles$2u];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -185033,9 +185090,9 @@ OscdDialog$1.styles = [styles$2u];
  * @final
  * @suppress {visibility}
  */
-let OscdElevation$2 = class OscdElevation extends Elevation$3 {
+let OscdElevation$3 = class OscdElevation extends Elevation$3 {
 };
-OscdElevation$2.styles = [styles$2K];
+OscdElevation$3.styles = [styles$2K];
 
 /**
  * @license
@@ -185067,14 +185124,14 @@ OscdElevation$2.styles = [styles$2K];
  * @final
  * @suppress {visibility}
  */
-let OscdFilledButton$1 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
+let OscdFilledButton$2 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
 };
-OscdFilledButton$1.scopedElements = {
-    'md-ripple': OscdRipple$2,
-    'md-focus-ring': OscdFocusRing$2,
-    'md-elevation': OscdElevation$2,
+OscdFilledButton$2.scopedElements = {
+    'md-ripple': OscdRipple$3,
+    'md-focus-ring': OscdFocusRing$3,
+    'md-elevation': OscdElevation$3,
 };
-OscdFilledButton$1.styles = [
+OscdFilledButton$2.styles = [
     styles$2w,
     styles$2r,
     styles$2s,
@@ -185112,13 +185169,13 @@ OscdFilledButton$1.styles = [
  * @final
  * @suppress {visibility}
  */
-let OscdOutlinedButton$1 = class OscdOutlinedButton extends ScopedElementsMixin$2(OutlinedButton$1) {
+let OscdOutlinedButton$2 = class OscdOutlinedButton extends ScopedElementsMixin$2(OutlinedButton$1) {
 };
-OscdOutlinedButton$1.scopedElements = {
-    'md-ripple': OscdRipple$2,
-    'md-focus-ring': OscdFocusRing$2,
+OscdOutlinedButton$2.scopedElements = {
+    'md-ripple': OscdRipple$3,
+    'md-focus-ring': OscdFocusRing$3,
 };
-OscdOutlinedButton$1.styles = [styles$2w, styles$1m];
+OscdOutlinedButton$2.styles = [styles$2w, styles$1m];
 
 var _a$4, _b$1;
 /**
@@ -185175,12 +185232,12 @@ let OscdFilterButton$1 = class OscdFilterButton extends (_b$1 = ScopedElementsMi
 _a$4 = OscdFilterButton$1;
 OscdFilterButton$1.scopedElements = {
     ...Reflect.get(_b$1, "scopedElements", _a$4),
-    'oscd-dialog': OscdDialog$1,
+    'oscd-dialog': OscdDialog$2,
     'oscd-icon-button': OscdIconButton$3,
-    'oscd-icon': OscdIcon$2,
+    'oscd-icon': OscdIcon$3,
     'oscd-scl-icon': OscdSclIcon$2,
-    'oscd-outlined-button': OscdOutlinedButton$1,
-    'oscd-filled-button': OscdFilledButton$1,
+    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-filled-button': OscdFilledButton$2,
 };
 OscdFilterButton$1.styles = i$10 `
     ${OscdSelectionList$1.styles}
@@ -185284,8 +185341,8 @@ InternalMenu$3.styles = [styles$2E];
 let OscdMenu$3 = class OscdMenu extends ScopedElementsMixin$2(InternalMenu$3) {
 };
 OscdMenu$3.scopedElements = {
-    'md-focus-ring': OscdFocusRing$2,
-    'md-elevation': OscdElevation$2,
+    'md-focus-ring': OscdFocusRing$3,
+    'md-elevation': OscdElevation$3,
 };
 OscdMenu$3.styles = [styles$2E];
 
@@ -185317,9 +185374,9 @@ OscdMenu$3.styles = [styles$2E];
 let OscdMenuItem$2 = class OscdMenuItem extends ScopedElementsMixin$2(MenuItemEl$2) {
 };
 OscdMenuItem$2.scopedElements = {
-    'md-ripple': OscdRipple$2,
+    'md-ripple': OscdRipple$3,
     'md-item': OscdItem$3,
-    'md-focus-ring': OscdFocusRing$2,
+    'md-focus-ring': OscdFocusRing$3,
 };
 OscdMenuItem$2.styles = [styles$2D];
 
@@ -185614,11 +185671,11 @@ class VirtualizedFilteredList extends ScopedElementsMixin$2(i$Z) {
     }
 }
 VirtualizedFilteredList.scopedElements = {
-    'oscd-icon': OscdIcon$2,
+    'oscd-icon': OscdIcon$3,
     'oscd-icon-button': OscdIconButton$3,
     'oscd-list': OscdList$3,
     'oscd-list-item': OscdListItem$3,
-    'oscd-divider': OscdDivider$2,
+    'oscd-divider': OscdDivider$3,
     'oscd-outlined-text-field': OscdOutlinedTextField$3,
 };
 VirtualizedFilteredList.styles = i$10 `
@@ -186181,13 +186238,13 @@ class FcdaBindingList extends ScopedElementsMixin$2(i$Z) {
     }
 }
 FcdaBindingList.scopedElements = {
-    'oscd-icon': OscdIcon$2,
+    'oscd-icon': OscdIcon$3,
     'oscd-icon-button': OscdIconButton$3,
     'oscd-list-item': OscdListItem$3,
     'oscd-filter-button': OscdFilterButton$1,
     'oscd-menu': OscdMenu$3,
     'oscd-menu-item': OscdMenuItem$2,
-    'oscd-divider': OscdDivider$2,
+    'oscd-divider': OscdDivider$3,
     'virtualized-filtered-list': VirtualizedFilteredList,
 };
 FcdaBindingList.styles = i$10 `
@@ -186601,9 +186658,9 @@ class ExtRefLnBindingList extends ScopedElementsMixin$2(i$Z) {
     }
 }
 ExtRefLnBindingList.scopedElements = {
-    'oscd-icon': OscdIcon$2,
+    'oscd-icon': OscdIcon$3,
     'oscd-list-item': OscdListItem$3,
-    'oscd-divider': OscdDivider$2,
+    'oscd-divider': OscdDivider$3,
     'virtualized-filtered-list': VirtualizedFilteredList,
 };
 ExtRefLnBindingList.styles = i$10 `
@@ -186756,7 +186813,7 @@ class OscdEditorSubscriberDatabinding extends ScopedElementsMixin$2(i$Z) {
     }
 }
 OscdEditorSubscriberDatabinding.scopedElements = {
-    'oscd-icon': OscdIcon$2,
+    'oscd-icon': OscdIcon$3,
     'oscd-outlined-segmented-button': OscdOutlinedSegmentedButton,
     'oscd-outlined-segmented-button-set': OscdOutlinedSegmentedButtonSet,
     'fcda-binding-list': FcdaBindingList,
@@ -186987,9 +187044,9 @@ const styles$M = i$10 `
  * @final
  * @suppress {visibility}
  */
-let OscdFocusRing$1 = class OscdFocusRing extends FocusRing$4 {
+let OscdFocusRing$2 = class OscdFocusRing extends FocusRing$4 {
 };
-OscdFocusRing$1.styles = [styles$2N];
+OscdFocusRing$2.styles = [styles$2N];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -187009,9 +187066,9 @@ OscdFocusRing$1.styles = [styles$2N];
  * @final
  * @suppress {visibility}
  */
-let OscdRipple$1 = class OscdRipple extends Ripple$5 {
+let OscdRipple$2 = class OscdRipple extends Ripple$5 {
 };
-OscdRipple$1.styles = [styles$2O];
+OscdRipple$2.styles = [styles$2O];
 
 /**
  * @license
@@ -187046,8 +187103,8 @@ OscdRipple$1.styles = [styles$2O];
 let OscdTextButton$1 = class OscdTextButton extends ScopedElementsMixin$2(TextButton$2) {
 };
 OscdTextButton$1.scopedElements = {
-    'md-ripple': OscdRipple$1,
-    'md-focus-ring': OscdFocusRing$1,
+    'md-ripple': OscdRipple$2,
+    'md-focus-ring': OscdFocusRing$2,
 };
 OscdTextButton$1.styles = [styles$2w, styles$2v];
 
@@ -187089,8 +187146,8 @@ class OscdFilledIconButton extends ScopedElementsMixin$2(IconButton$4) {
     }
 }
 OscdFilledIconButton.scopedElements = {
-    'md-ripple': OscdRipple$1,
-    'md-focus-ring': OscdFocusRing$1,
+    'md-ripple': OscdRipple$2,
+    'md-focus-ring': OscdFocusRing$2,
 };
 OscdFilledIconButton.styles = [styles$2L, styles$2M];
 
@@ -187138,7 +187195,7 @@ const pathsSVG$1 = {
 const gooseIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$1['gooseIcon']}</svg>`;
 const reportIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$1['reportIcon']}</svg>`;
 const smvIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$1['smvIcon']}</svg>`;
-const dataSetIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$1['dataSetIcon']}</svg>`;
+const dataSetIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$1['dataSetIcon']}</svg>`;
 const logIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG$1['logIcon']}</svg>`;
 const inputIcon$1 = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 <path fill="currentColor" d="M14,12L10,8V11H2V13H10V16M20,18V6C20,4.89 19.1,4 18,4H6A2,2 0 0,0 4,6V9H6V6H18V18H6V15H4V18A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18Z" />
@@ -187731,7 +187788,7 @@ const SCL_ICONS$1 = {
     gooseIcon: gooseIcon$1,
     reportIcon: reportIcon$1,
     smvIcon: smvIcon$1,
-    dataSetIcon: dataSetIcon,
+    dataSetIcon: dataSetIcon$1,
     logIcon: logIcon$1,
     inputIcon: inputIcon$1,
     clientIcon: clientIcon$1,
@@ -187837,7 +187894,7 @@ let OscdSclIcon$1 = class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
     }
     static get scopedElements() {
         return {
-            'oscd-icon': OscdIcon$1,
+            'oscd-icon': OscdIcon$2,
         };
     }
     // Read the text node (ligature-like API)
@@ -187890,7 +187947,7 @@ let OscdSclIcon$1 = class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
  * standard `<slot></slot>` rendering from the Material base class so that
  * Material Symbols font ligatures continue to work as before.
  */
-let Icon$2 = class Icon extends Icon$a {
+let Icon$3 = class Icon extends Icon$b {
     constructor() {
         super(...arguments);
         this._sclName = '';
@@ -187955,10 +188012,10 @@ let Icon$2 = class Icon extends Icon$a {
  * @final
  * @suppress {visibility}
  */
-let OscdIcon$1 = class OscdIcon extends Icon$2 {
+let OscdIcon$2 = class OscdIcon extends Icon$3 {
 };
 /** @nocollapse */
-OscdIcon$1.styles = [styles$2I];
+OscdIcon$2.styles = [styles$2I];
 
 /**
  * @license
@@ -188194,8 +188251,8 @@ const styles$L = i$10 `@layer styles, hcm;@layer styles{:host{display:inline-fle
 let OscdSwitch$1 = class OscdSwitch extends ScopedElementsMixin$2(Switch) {
 };
 OscdSwitch$1.scopedElements = {
-    'md-ripple': OscdRipple$1,
-    'md-focus-ring': OscdFocusRing$1,
+    'md-ripple': OscdRipple$2,
+    'md-focus-ring': OscdFocusRing$2,
 };
 OscdSwitch$1.styles = [styles$L];
 
@@ -188213,9 +188270,9 @@ OscdSwitch$1.styles = [styles$L];
  * @final
  * @suppress {visibility}
  */
-let OscdElevation$1 = class OscdElevation extends Elevation$3 {
+let OscdElevation$2 = class OscdElevation extends Elevation$3 {
 };
-OscdElevation$1.styles = [styles$2K];
+OscdElevation$2.styles = [styles$2K];
 
 /**
  * @license
@@ -188282,8 +188339,8 @@ InternalMenu$2.styles = [styles$2E];
 let OscdMenu$2 = class OscdMenu extends ScopedElementsMixin$2(InternalMenu$2) {
 };
 OscdMenu$2.scopedElements = {
-    'md-focus-ring': OscdFocusRing$1,
-    'md-elevation': OscdElevation$1,
+    'md-focus-ring': OscdFocusRing$2,
+    'md-elevation': OscdElevation$2,
 };
 OscdMenu$2.styles = [styles$2E];
 
@@ -188324,8 +188381,8 @@ let OscdIconButton$2 = class OscdIconButton extends ScopedElementsMixin$2(IconBu
     }
 };
 OscdIconButton$2.scopedElements = {
-    'md-ripple': OscdRipple$1,
-    'md-focus-ring': OscdFocusRing$1,
+    'md-ripple': OscdRipple$2,
+    'md-focus-ring': OscdFocusRing$2,
 };
 OscdIconButton$2.styles = [styles$2L, styles$2H];
 
@@ -188493,9 +188550,9 @@ OscdItem$2.styles = [styles$2G];
 let OscdListItem$2 = class OscdListItem extends ScopedElementsMixin$2(ListItemEl$4) {
 };
 OscdListItem$2.scopedElements = {
-    'md-ripple': OscdRipple$1,
+    'md-ripple': OscdRipple$2,
     'md-item': OscdItem$2,
-    'md-focus-ring': OscdFocusRing$1,
+    'md-focus-ring': OscdFocusRing$2,
 };
 OscdListItem$2.styles = [styles$2F];
 
@@ -188661,7 +188718,7 @@ class OscdEditorTemplateTextfield extends ScopedElementsMixin$2(OscdOutlinedText
 OscdEditorTemplateTextfield.scopedElements = {
     'oscd-outlined-field': OscdOutlinedField$2,
     'oscd-icon-button': OscdIconButton$2,
-    'oscd-icon': OscdIcon$1,
+    'oscd-icon': OscdIcon$2,
     'oscd-menu': OscdMenu$2,
     'oscd-switch': OscdSwitch$1,
     'oscd-list-item': OscdListItem$2,
@@ -188718,9 +188775,9 @@ __decorate$2([
  * @final
  * @suppress {visibility}
  */
-let OscdDivider$1 = class OscdDivider extends Divider$3 {
+let OscdDivider$2 = class OscdDivider extends Divider$3 {
 };
-OscdDivider$1.styles = [styles$2J];
+OscdDivider$2.styles = [styles$2J];
 
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
@@ -188778,9 +188835,9 @@ OscdList$2.styles = [styles$N];
 let OscdMenuItem$1 = class OscdMenuItem extends ScopedElementsMixin$2(MenuItemEl$2) {
 };
 OscdMenuItem$1.scopedElements = {
-    'md-ripple': OscdRipple$1,
+    'md-ripple': OscdRipple$2,
     'md-item': OscdItem$2,
-    'md-focus-ring': OscdFocusRing$1,
+    'md-focus-ring': OscdFocusRing$2,
 };
 OscdMenuItem$1.styles = [styles$2D];
 
@@ -188901,7 +188958,7 @@ class OscdActionList extends FilterListBase$1 {
             hidden: !this.searchRegex.test(term(item)),
         })}"
           @click=${(evt) => {
-            const menu = evt.target instanceof Icon$a
+            const menu = evt.target instanceof Icon$b
                 ? evt.target.parentElement
                     .nextElementSibling
                 : evt.target.nextElementSibling;
@@ -189026,10 +189083,10 @@ ${item.headline && item.supportingText ? '-' : ''}${item.supportingText}"
 }
 OscdActionList.scopedElements = {
     'oscd-outlined-text-field': OscdOutlinedTextField$2,
-    'oscd-icon': OscdIcon$1,
+    'oscd-icon': OscdIcon$2,
     'oscd-list': OscdList$2,
     'oscd-list-item': OscdListItem$2,
-    'oscd-divider': OscdDivider$1,
+    'oscd-divider': OscdDivider$2,
     'oscd-menu': OscdMenu$2,
     'oscd-menu-item': OscdMenuItem$1,
 };
@@ -189278,7 +189335,7 @@ function createBayWizard$2(parent) {
         }),
     };
 }
-function updateAction$1b(element) {
+function updateAction$1f(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -189295,7 +189352,7 @@ function editBayWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1b(element),
+            action: updateAction$1f(element),
         },
         content: renderBayWizard$2({
             name: element.getAttribute('name'),
@@ -189520,7 +189577,7 @@ function createConductingEquipmentWizard$2(parent) {
         }),
     };
 }
-function updateAction$1a(element) {
+function updateAction$1e(element) {
     return (inputs) => {
         const name = getValue$2(inputs.find(i => i.label === 'name'));
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -189537,7 +189594,7 @@ function editConductingEquipmentWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$1a(element),
+            action: updateAction$1e(element),
         },
         content: renderConductingEquipmentWizard$2({
             name: element.getAttribute('name'),
@@ -189629,9 +189686,9 @@ const functionalConstraintEnum$2 = [
     'EX',
     'CO',
 ];
-const tSmpMod = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
-const tGSEControlType = ['GOOSE', 'GSSE'];
-const tSecurityEnable = ['None', 'Signature', 'SignatureAndEncryption'];
+const tSmpMod$1 = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
+const tGSEControlType$1 = ['GOOSE', 'GSSE'];
+const tSecurityEnable$1 = ['None', 'Signature', 'SignatureAndEncryption'];
 const typeBase$2 = {
     IP: '([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])',
     OSI: '[0-9A-F]+',
@@ -190031,7 +190088,7 @@ function createConnectedApWizard$2(element) {
         ],
     };
 }
-function updateAction$19(element) {
+function updateAction$1d(element) {
     return (inputs, wizard) => {
         const instType = wizard.querySelector('#instType').value === 'true';
         const addressContent = {};
@@ -190052,7 +190109,7 @@ function editConnectedApWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$19(element),
+            action: updateAction$1d(element),
         },
         content: [...contentAddress$2({ element, types: getTypes$2(element) })],
     };
@@ -190608,7 +190665,7 @@ function createEnumValWizard$2(parent) {
         content: renderContent$d({ ord, desc, value }),
     };
 }
-function updateAction$18(element) {
+function updateAction$1c(element) {
     return (inputs) => {
         const value = getValue$2(inputs.find(i => i.label === 'value')) ?? '';
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -190643,7 +190700,7 @@ function editEnumValWizard$2(element) {
         primary: {
             icon: '',
             label: 'Save',
-            action: updateAction$18(element),
+            action: updateAction$1c(element),
         },
         content: renderContent$d({ ord, desc, value }),
     };
@@ -190777,7 +190834,7 @@ function createEqFunctionWizard$2(parent) {
         ],
     };
 }
-function updateAction$17(element) {
+function updateAction$1b(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -190799,7 +190856,7 @@ function editEqFunctionWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$17(element),
+            action: updateAction$1b(element),
         },
         content: [
             ...contentFunctionWizard$2({
@@ -190850,7 +190907,7 @@ function createEqSubFunctionWizard$2(parent) {
         ],
     };
 }
-function updateAction$16(element) {
+function updateAction$1a(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -190872,7 +190929,7 @@ function editEqSubFunctionWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$16(element),
+            action: updateAction$1a(element),
         },
         content: [
             ...contentFunctionWizard$2({
@@ -190953,7 +191010,7 @@ function createGeneralEquipmentWizard$2(parent) {
         ],
     };
 }
-function updateAction$15(element) {
+function updateAction$19(element) {
     return (inputs) => {
         const attributes = {};
         const generalEquipmentKeys = ['name', 'desc', 'type', 'virtual'];
@@ -190976,7 +191033,7 @@ function editGeneralEquipmentWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$15(element),
+            action: updateAction$19(element),
         },
         content: [
             ...contentGeneralEquipmentWizard$2({
@@ -191062,7 +191119,7 @@ function createLineWizard$2(parent) {
         ],
     };
 }
-function updateAction$14(element) {
+function updateAction$18(element) {
     return (inputs) => {
         const attributes = {};
         const lineKeys = ['name', 'desc', 'type', 'nomFreq', 'numPhases'];
@@ -191081,7 +191138,7 @@ function editLineWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$14(element),
+            action: updateAction$18(element),
         },
         content: renderContent$c({
             name: element.getAttribute('name') ?? '',
@@ -191150,7 +191207,7 @@ function createPowerTransformerWizard$2(parent) {
         }),
     };
 }
-function updateAction$13(element) {
+function updateAction$17(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -191167,7 +191224,7 @@ function editPowerTransformerWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$13(element),
+            action: updateAction$17(element),
         },
         content: renderPowerTransformerWizard$2({
             name: element.getAttribute('name'),
@@ -191236,7 +191293,7 @@ function createProcessWizard$2(parent) {
         ],
     };
 }
-function updateAction$12(element) {
+function updateAction$16(element) {
     return (inputs) => {
         const attributes = {};
         const tapProcessKeys = ['name', 'desc', 'type'];
@@ -191261,7 +191318,7 @@ function editProcessWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$12(element),
+            action: updateAction$16(element),
         },
         content: [
             ...contentProcessWizard$2({
@@ -191432,7 +191489,7 @@ function createSubEquipmentWizard$2(parent) {
         ],
     };
 }
-function updateAction$11(element) {
+function updateAction$15(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'phase', 'virtual'];
@@ -191455,7 +191512,7 @@ function editSubEquipmentWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$11(element),
+            action: updateAction$15(element),
         },
         content: [
             ...contentSubEquipmentWizard$2({
@@ -191507,7 +191564,7 @@ function createSubFunctionWizard$2(parent) {
         ],
     };
 }
-function updateAction$10(element) {
+function updateAction$14(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'type'];
@@ -191529,7 +191586,7 @@ function editSubFunctionWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$10(element),
+            action: updateAction$14(element),
         },
         content: [
             ...contentFunctionWizard$2({
@@ -191660,7 +191717,7 @@ function getBitRateAction$2(oldBitRate, BitRate, multiplier, SubNetwork) {
         { node: oldBitRate },
     ];
 }
-function updateAction$$(element) {
+function updateAction$13(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -191712,7 +191769,7 @@ function editSubNetworkWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$$(element),
+            action: updateAction$13(element),
         },
         content: renderContent$a({
             name,
@@ -191724,7 +191781,7 @@ function editSubNetworkWizard$2(element) {
     };
 }
 
-function render$i(options) {
+function render$m(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -191766,14 +191823,14 @@ function createSubstationWizard$2(parent) {
             label: 'add',
             action: createAction$J(parent),
         },
-        content: render$i({
+        content: render$m({
             name: '',
             reservedValues: reservedNames$2(parent, 'Substation'),
             desc: '',
         }),
     };
 }
-function updateAction$_(element) {
+function updateAction$12(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -191790,9 +191847,9 @@ function editSubstationWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$_(element),
+            action: updateAction$12(element),
         },
-        content: render$i({
+        content: render$m({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$2(element),
             desc: element.getAttribute('desc'),
@@ -191866,7 +191923,7 @@ function createTapChangerWizard$2(parent) {
         ],
     };
 }
-function updateAction$Z(element) {
+function updateAction$11(element) {
     return (inputs) => {
         const attributes = {};
         const tapChangerKeys = ['name', 'desc', 'type', 'virtual'];
@@ -191889,7 +191946,7 @@ function editTapChangerWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$Z(element),
+            action: updateAction$11(element),
         },
         content: [
             ...contentTapChangerWizard$2({
@@ -191903,7 +191960,7 @@ function editTapChangerWizard$2(element) {
     };
 }
 
-function render$h({ content }) {
+function render$l({ content }) {
     return [
         b$4 `<md-filled-textfield
       type="textarea"
@@ -191938,12 +191995,12 @@ function createTextWizard$2(parent) {
             label: 'add',
             action: createAction$H(parent),
         },
-        content: render$h({
+        content: render$l({
             content: '',
         }),
     };
 }
-function updateAction$Y(element) {
+function updateAction$10(element) {
     return (inputs) => {
         const content = inputs.find(i => i.label === 'content').value;
         if (content === element.textContent) {
@@ -191966,9 +192023,9 @@ function editTextWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$Y(element),
+            action: updateAction$10(element),
         },
-        content: render$h({
+        content: render$l({
             content: element.textContent || '',
         }),
     };
@@ -192040,7 +192097,7 @@ function createTransformerWindingWizard$2(parent) {
         ],
     };
 }
-function updateAction$X(element) {
+function updateAction$$(element) {
     return (inputs) => {
         const attributes = {};
         const transformerWindingKeys = ['name', 'desc', 'type', 'virtual'];
@@ -192063,7 +192120,7 @@ function editTransformerWindingWizard$2(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$X(element),
+            action: updateAction$$(element),
         },
         content: [
             ...contentTransformerWindingWizard$2({
@@ -192083,7 +192140,7 @@ const initial$4 = {
     Voltage: '110',
     multiplier: 'k',
 };
-function render$g(option) {
+function render$k(option) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -192173,7 +192230,7 @@ function createVoltageLevelWizard$2(parent) {
             label: 'add',
             action: createAction$F(parent),
         },
-        content: render$g({
+        content: render$k({
             name: '',
             reservedValues: reservedNames$2(parent, 'VoltageLevel'),
             desc: '',
@@ -192217,7 +192274,7 @@ function getVoltageAction$2(oldVoltage, Voltage, multiplier, voltageLevel) {
         { node: oldVoltage },
     ];
 }
-function updateAction$W(element) {
+function updateAction$_(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -192267,9 +192324,9 @@ function editVoltageLevelWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$W(element),
+            action: updateAction$_(element),
         },
-        content: render$g({
+        content: render$k({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$2(element),
             desc: element.getAttribute('desc'),
@@ -192317,7 +192374,7 @@ function mxxTimeUpdateAction$2(gse, oldMxxTime, newTimeValue, option) {
         { node: oldMxxTime },
     ];
 }
-function updateAction$V(element) {
+function updateAction$Z(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -192352,7 +192409,7 @@ function editGseWizard$2(element) {
         primary: {
             label: 'save',
             icon: 'save',
-            action: updateAction$V(element),
+            action: updateAction$Z(element),
         },
         content: [
             ...contentAddress$2({ element, types }),
@@ -192374,7 +192431,7 @@ function editGseWizard$2(element) {
     };
 }
 
-function render$f(options) {
+function render$j(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -192391,7 +192448,7 @@ function render$f(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="type"
-      .selectOptions=${tGSEControlType}
+      .selectOptions=${tGSEControlType$1}
       .value=${options.type}
       nullable
     ></scl-select>`,
@@ -192407,13 +192464,13 @@ function render$f(options) {
     ></scl-checkbox>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable}
+      .selectOptions=${tSecurityEnable$1}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
     ];
 }
-function updateAction$U(element) {
+function updateAction$Y(element) {
     return (inputs) => {
         const name = getValue$2(inputs.find(i => i.label === 'name'));
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -192437,15 +192494,15 @@ function updateAction$U(element) {
         ];
     };
 }
-function editGSEControlWizard(element) {
+function editGSEControlWizard$1(element) {
     return {
         title: 'Edit GSEControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$U(element),
+            action: updateAction$Y(element),
         },
-        content: render$f({
+        content: render$j({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$2(element),
             desc: element.getAttribute('desc'),
@@ -192493,7 +192550,7 @@ function renderEdit$2(name, iedNames, desc, type, manufacturer, owner) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$T(element) {
+function updateAction$X(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -192519,7 +192576,7 @@ function editIEDWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$T(element),
+            action: updateAction$X(element),
         },
         content: renderEdit$2(element.getAttribute('name') ?? '', iedNames, element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('manufacturer'), element.getAttribute('owner')),
     };
@@ -192531,7 +192588,7 @@ function createIEDWizard$2(parent) {
         primary: {
             icon: 'add',
             label: 'Create',
-            action: updateAction$T(parent),
+            action: updateAction$X(parent),
         },
         content: renderAdd$2(parent.getAttribute('name') ?? '', iedNames, parent.getAttribute('desc')),
     };
@@ -192557,7 +192614,7 @@ function reservedInstLDevice$2(currentElement) {
         .map(ld => ld.getAttribute('inst') ?? '')
         .filter(name => name !== currentElement.getAttribute('inst'));
 }
-function render$e(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
+function render$i(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
     const content = [
         allowLdName
             ? b$4 `<scl-text-field
@@ -192628,7 +192685,7 @@ function createAction$E(parent) {
         ];
     };
 }
-function updateAction$S(element) {
+function updateAction$W(element) {
     return (inputs) => {
         const ldNameAllowed = ldNameIsAllowed$2(element);
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -192657,7 +192714,7 @@ function createLDeviceWizard$2(parent) {
             label: 'save',
             action: createAction$E(parent),
         },
-        content: render$e(null, null, null, reservedInstLDevice$2(parent), ldNameIsAllowed$2(parent), false),
+        content: render$i(null, null, null, reservedInstLDevice$2(parent), ldNameIsAllowed$2(parent), false),
     };
 }
 function editLDeviceWizard$2(element) {
@@ -192666,13 +192723,13 @@ function editLDeviceWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$S(element),
+            action: updateAction$W(element),
         },
-        content: render$e(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$2(element), ldNameIsAllowed$2(element), true),
+        content: render$i(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$2(element), ldNameIsAllowed$2(element), true),
     };
 }
 
-function updateAction$R(element) {
+function updateAction$V(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -192698,13 +192755,13 @@ function editSMvWizard$2(element) {
         primary: {
             label: 'save',
             icon: 'edit',
-            action: updateAction$R(element),
+            action: updateAction$V(element),
         },
         content: [...contentAddress$2({ element, types })],
     };
 }
 
-function render$d(options) {
+function render$h(options) {
     const fields = [
         b$4 `<scl-text-field
       label="name"
@@ -192726,7 +192783,7 @@ function render$d(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="smpMod"
-      .selectOptions=${tSmpMod}
+      .selectOptions=${tSmpMod$1}
       .value=${options.smpMod}
       nullable
     ></scl-select>`,
@@ -192746,7 +192803,7 @@ function render$d(options) {
     ></scl-text-field>`,
         b$4 `<scl-select
       label="securityEnabled"
-      .selectOptions=${tSecurityEnable}
+      .selectOptions=${tSecurityEnable$1}
       .value=${options.securityEnabled}
       nullable
     ></scl-select>`,
@@ -192760,7 +192817,7 @@ function render$d(options) {
     }
     return fields;
 }
-function updateAction$Q(element) {
+function updateAction$U(element) {
     return (inputs) => {
         const name = getValue$2(inputs.find(i => i.label === 'name'));
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -192794,15 +192851,15 @@ function updateAction$Q(element) {
         ];
     };
 }
-function editSampledValueControlWizard(element) {
+function editSampledValueControlWizard$1(element) {
     return {
         title: 'Edit SampledValueControl',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$Q(element),
+            action: updateAction$U(element),
         },
-        content: render$d({
+        content: render$h({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$2(element),
             desc: element.getAttribute('desc'),
@@ -192816,34 +192873,34 @@ function editSampledValueControlWizard(element) {
     };
 }
 
-const smvOptKeys = [
+const smvOptKeys$1 = [
     'refreshTime',
     'sampleRate',
     'dataSet',
     'security',
     'synchSourceId',
 ];
-function render$c(options) {
-    return smvOptKeys.map(key => b$4 `<scl-checkbox
+function render$g(options) {
+    return smvOptKeys$1.map(key => b$4 `<scl-checkbox
         label="${key}"
         .value=${options[key]}
         nullable
       ></scl-checkbox>`);
 }
-function updateAction$P(element) {
+function updateAction$T(element) {
     return (inputs) => {
         const attributes = {};
-        for (const key of smvOptKeys) {
+        for (const key of smvOptKeys$1) {
             attributes[key] = getValue$2(inputs.find(i => i.label === key));
         }
-        if (!smvOptKeys.some(key => attributes[key] !== element.getAttribute(key)))
+        if (!smvOptKeys$1.some(key => attributes[key] !== element.getAttribute(key)))
             return [];
         return [{ element, attributes }];
     };
 }
-function editSmvOptsWizard(element) {
+function editSmvOptsWizard$1(element) {
     const options = {};
-    for (const key of smvOptKeys) {
+    for (const key of smvOptKeys$1) {
         options[key] = element.getAttribute(key);
     }
     return {
@@ -192851,13 +192908,13 @@ function editSmvOptsWizard(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$P(element),
+            action: updateAction$T(element),
         },
-        content: render$c(options),
+        content: render$g(options),
     };
 }
 
-function fcdaLabel(fcda) {
+function fcdaLabel$1(fcda) {
     const parts = [];
     const ldInst = fcda.getAttribute('ldInst');
     if (ldInst)
@@ -192878,7 +192935,7 @@ function fcdaLabel(fcda) {
         parts.push(`[${fc}]`);
     return parts.join('.');
 }
-function render$b(options) {
+function render$f(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -192894,14 +192951,14 @@ function render$b(options) {
         b$4 `<selection-list
       id="fcda-list"
       .items=${options.fcdas.map(fcda => ({
-            headline: fcdaLabel(fcda),
+            headline: fcdaLabel$1(fcda),
             attachedElement: fcda,
             selected: true,
         }))}
     ></selection-list>`,
     ];
 }
-function updateAction$O(element) {
+function updateAction$S(element) {
     return (inputs, wizard) => {
         const name = getValue$2(inputs.find(i => i.label === 'name'));
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -192925,15 +192982,15 @@ function updateAction$O(element) {
         return edits;
     };
 }
-function editDataSetWizard(element) {
+function editDataSetWizard$1(element) {
     return {
         title: 'Edit DataSet',
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$O(element),
+            action: updateAction$S(element),
         },
-        content: render$b({
+        content: render$f({
             name: element.getAttribute('name') ?? '',
             desc: element.getAttribute('desc'),
             fcdas: Array.from(element.querySelectorAll('FCDA')),
@@ -192941,7 +192998,7 @@ function editDataSetWizard(element) {
     };
 }
 
-function createDATypeAction(parent) {
+function createDATypeAction$1(parent) {
     return (inputs) => {
         const daTypeAttrs = {};
         const daTypeKeys = ['id', 'desc'];
@@ -192954,13 +193011,13 @@ function createDATypeAction(parent) {
         ];
     };
 }
-function createDATypeWizard(parent) {
+function createDATypeWizard$1(parent) {
     return {
         title: 'Add DAType',
         primary: {
             icon: 'Save',
             label: 'Save',
-            action: createDATypeAction(parent),
+            action: createDATypeAction$1(parent),
         },
         content: [
             b$4 `<scl-text-field
@@ -193382,7 +193439,7 @@ function createLNodeWizard$2(parent) {
         ],
     };
 }
-function contentLNodeWizard$1(options) {
+function contentLNodeWizard$2(options) {
     const isIedRef = options.iedName !== 'None';
     return [
         b$4 `<scl-text-field
@@ -193425,7 +193482,7 @@ function contentLNodeWizard$1(options) {
     ></scl-text-field>`,
     ];
 }
-function updateLNodeAction$1(element) {
+function updateLNodeAction$2(element) {
     return (inputs) => {
         const attributes = {};
         const attributeKeys = ['iedName', 'ldInst', 'prefix', 'lnClass', 'lnInst'];
@@ -193452,7 +193509,7 @@ function updateLNodeAction$1(element) {
         return [];
     };
 }
-function editLNodeWizard$1(element) {
+function editLNodeWizard$2(element) {
     const [iedName, ldInst, prefix, lnClass, lnInst] = [
         'iedName',
         'ldInst',
@@ -193469,9 +193526,9 @@ function editLNodeWizard$1(element) {
         primary: {
             label: 'Save',
             icon: 'save',
-            action: updateLNodeAction$1(element),
+            action: updateLNodeAction$2(element),
         },
-        content: contentLNodeWizard$1({
+        content: contentLNodeWizard$2({
             iedName,
             ldInst,
             prefix,
@@ -193627,7 +193684,7 @@ function reservedInstLN$2(currentElement, prefixOverride) {
         .map(ln => ln.getAttribute('inst'))
         .filter(inst => inst !== null);
 }
-function updateAction$N(element) {
+function updateAction$R(element) {
     return (inputs, _wizard) => {
         const attributes = {};
         const keys = ['lnType', 'desc', 'prefix', 'lnClass', 'inst'];
@@ -193725,7 +193782,7 @@ function updateLNWizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$N(element),
+            action: updateAction$R(element),
         },
         content: renderUpdate$2(element),
     };
@@ -193738,7 +193795,7 @@ function getLNodeTypeOptions$2(element) {
         .map(type => type.getAttribute('id'))
         .filter((id) => !!id);
 }
-function render$a(element, lnodeTypeIds) {
+function render$e(element, lnodeTypeIds) {
     const lnType = element.getAttribute('lnType');
     const desc = element.getAttribute('desc');
     const lnClass = element.getAttribute('lnClass');
@@ -193775,7 +193832,7 @@ function render$a(element, lnodeTypeIds) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$M(element) {
+function updateAction$Q(element) {
     return (inputs) => {
         const attributes = {};
         // Key attributes omitted from update are: 'lnClass', 'inst'.
@@ -193802,13 +193859,13 @@ function updateLN0Wizard$2(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$M(element),
+            action: updateAction$Q(element),
         },
-        content: render$a(element, lnodeTypeIds),
+        content: render$e(element, lnodeTypeIds),
     };
 }
 
-function createBDaAction(parent) {
+function createBDaAction$1(parent) {
     return (inputs) => {
         const name = getValue$2(inputs.find(i => i.label === 'name'));
         const desc = getValue$2(inputs.find(i => i.label === 'desc'));
@@ -193848,7 +193905,7 @@ function createBDaAction(parent) {
         ];
     };
 }
-function createBDaWizard(element) {
+function createBDaWizard$1(element) {
     const doc = element.ownerDocument;
     const name = '';
     const desc = null;
@@ -193865,7 +193922,7 @@ function createBDaWizard(element) {
         primary: {
             icon: '',
             label: 'save',
-            action: createBDaAction(element),
+            action: createBDaAction$1(element),
         },
         content: [
             ...renderAbstractDataAttributeContent$2(name, desc, bType, doOrEnumTypes, type, sAddr, valKind, valImport, Val, data),
@@ -193978,7 +194035,7 @@ const wizards$2 = {
     },
     BDA: {
         edit: editBDaWizard$2,
-        create: createBDaWizard,
+        create: createBDaWizard$1,
     },
     BitRate: {
         edit: emptyWizard$2,
@@ -194042,7 +194099,7 @@ const wizards$2 = {
     },
     DAType: {
         edit: emptyWizard$2,
-        create: createDATypeWizard,
+        create: createDATypeWizard$1,
     },
     DO: {
         edit: editDoWizard$2,
@@ -194061,7 +194118,7 @@ const wizards$2 = {
         create: emptyWizard$2,
     },
     DataSet: {
-        edit: editDataSetWizard,
+        edit: editDataSetWizard$1,
         create: emptyWizard$2,
     },
     DataSetDirectory: {
@@ -194141,7 +194198,7 @@ const wizards$2 = {
         create: emptyWizard$2,
     },
     GSEControl: {
-        edit: editGSEControlWizard,
+        edit: editGSEControlWizard$1,
         create: emptyWizard$2,
     },
     GSEDir: {
@@ -194201,7 +194258,7 @@ const wizards$2 = {
         create: emptyWizard$2,
     },
     LNode: {
-        edit: editLNodeWizard$1,
+        edit: editLNodeWizard$2,
         create: createLNodeWizard$2,
     },
     LNodeType: {
@@ -194293,7 +194350,7 @@ const wizards$2 = {
         create: emptyWizard$2,
     },
     SampledValueControl: {
-        edit: editSampledValueControlWizard,
+        edit: editSampledValueControlWizard$1,
         create: emptyWizard$2,
     },
     SecPerSamples: {
@@ -194349,7 +194406,7 @@ const wizards$2 = {
         create: emptyWizard$2,
     },
     SmvOpts: {
-        edit: editSmvOptsWizard,
+        edit: editSmvOptsWizard$1,
         create: emptyWizard$2,
     },
     SMVsc: {
@@ -196175,7 +196232,7 @@ class OscdEditorTemplate extends ScopedElementsMixin$2(i$Z) {
 OscdEditorTemplate.scopedElements = {
     'oscd-text-button': OscdTextButton$1,
     'oscd-filled-icon-button': OscdFilledIconButton,
-    'oscd-icon': OscdIcon$1,
+    'oscd-icon': OscdIcon$2,
     'oscd-action-list': OscdActionList,
     'oscd-editor-template-textfield': OscdEditorTemplateTextfield,
     'oscd-scl-dialogs': OscdSclDialogs$2,
@@ -196285,6 +196342,86 @@ __decorate$2([
     e$1o('oscd-scl-dialogs')
 ], OscdEditorTemplate.prototype, "editDialog", void 0);
 
+const oscdMd3Mappings = i$10 `
+  :host {
+    --md-sys-color-error: var(--oscd-theme-error, #dc322f);
+    --md-sys-color-error-container: var(--oscd-theme-base2, #eee8d5);
+    --md-sys-color-inverse-on-surface: var(--oscd-theme-base3, #fdf6e3);
+    --md-sys-color-inverse-surface: var(--oscd-theme-base03, #002b36);
+    --md-sys-color-on-error: var(--oscd-theme-base3, #fdf6e3);
+    --md-sys-color-on-error-container: var(--oscd-theme-base00, #657b83);
+    --md-sys-color-on-primary: var(--oscd-theme-base3, #fdf6e3);
+    --md-sys-color-on-primary-container: var(--oscd-theme-base00, #657b83);
+    --md-sys-color-on-secondary: var(--oscd-theme-base3, #fdf6e3);
+    --md-sys-color-on-secondary-container: var(--oscd-theme-base00, #657b83);
+    --md-sys-color-on-surface: var(--oscd-theme-base00, #657b83);
+    --md-sys-color-on-surface-variant: var(--oscd-theme-base0, #839496);
+    --md-sys-color-on-tertiary-container: var(--oscd-theme-base00, #657b83);
+    --md-sys-color-outline: var(--oscd-theme-base01, #586e75);
+    --md-sys-color-outline-variant: var(--oscd-theme-base1, #93a1a1);
+    --md-sys-color-primary: var(--oscd-theme-primary, #2aa198);
+    --md-sys-color-primary-container: var(--oscd-theme-base2, #eee8d5);
+    --md-sys-color-scrim: #000;
+    --md-sys-color-secondary: var(--oscd-theme-secondary, #6c71c4);
+    --md-sys-color-secondary-container: var(--oscd-theme-base2, #eee8d5);
+    --md-sys-color-shadow: #000;
+    --md-sys-color-surface: var(--oscd-theme-base3, #fdf6e3);
+    --md-sys-color-surface-container: var(--oscd-theme-base2, #eee8d5);
+    --md-sys-color-surface-container-high: var(--oscd-theme-base2, #eee8d5);
+    --md-sys-color-surface-container-highest: var(--oscd-theme-base2, #eee8d5);
+    --md-sys-color-surface-container-low: var(--oscd-theme-base3, #fdf6e3);
+    --md-sys-color-tertiary: var(--oscd-theme-secondary, #6c71c4);
+    --md-sys-color-tertiary-container: var(--oscd-theme-base2, #eee8d5);
+  }
+`;
+i$10 `
+  :host {
+    --oscd-ace-editor-syntax-keyword-color: var(
+      --oscd-theme-secondary,
+      #0b335b
+    );
+    --oscd-ace-editor-syntax-string-color: var(--oscd-theme-base00, #46505d);
+    --oscd-ace-editor-syntax-tag-color: var(--oscd-theme-secondary, #0b335b);
+    --oscd-ace-editor-syntax-attribute-name-color: var(
+      --oscd-theme-primary,
+      #2485e5
+    );
+    --oscd-ace-editor-syntax-comment-color: var(--oscd-theme-base01, #3d4651);
+    --oscd-ace-editor-syntax-number-color: var(--oscd-theme-base00, #46505d);
+    --oscd-ace-editor-syntax-invalid-color: var(--oscd-theme-error, #dc322f);
+    --oscd-ace-editor-syntax-storage-color: var(--oscd-theme-primary, #2485e5);
+    --oscd-ace-editor-syntax-operator-color: var(--oscd-theme-base01, #3d4651);
+    --oscd-ace-editor-syntax-parameter-color: var(
+      --oscd-theme-warning,
+      #b58900
+    );
+    --oscd-ace-editor-syntax-regex-color: var(--oscd-theme-error, #dc322f);
+    --oscd-ace-editor-step-color: var(--oscd-theme-warning, #b58900);
+  }
+`;
+
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-ripple
+ * @summary Ripples, also known as state layers, are visual indicators used to
+ * communicate the status of a component or interactive element.
+ *
+ * indicates its state. State layers provide a systematic approach to
+ * visualizing states by using opacity. A layer can be applied to an entire
+ * element or in a circular shape and only one state layer can be applied at a
+ * given time.
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdRipple$1 = class OscdRipple extends Ripple$5 {
+};
+OscdRipple$1.styles = [styles$2O];
+
 /*
  * GENERATED SOURCE FILE. DO NOT MODIFY.
  * Modifications will be overwritten.
@@ -196354,6 +196491,22 @@ let OscdItem$1 = class OscdItem extends Item$4 {
 };
 OscdItem$1.styles = [styles$2G];
 
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-focus-ring
+ * TODO(b/267336424): add docs
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdFocusRing$1 = class OscdFocusRing extends FocusRing$4 {
+};
+OscdFocusRing$1.styles = [styles$2N];
+
 /**
  * @license
  * Copyright 2022 Google LLC
@@ -196361,7 +196514,7 @@ OscdItem$1.styles = [styles$2G];
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -196405,11 +196558,51 @@ OscdItem$1.styles = [styles$2G];
 let OscdListItem$1 = class OscdListItem extends ScopedElementsMixin$2(ListItemEl$4) {
 };
 OscdListItem$1.scopedElements = {
-    'md-ripple': OscdRipple$4,
+    'md-ripple': OscdRipple$1,
     'md-item': OscdItem$1,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-focus-ring': OscdFocusRing$1,
 };
 OscdListItem$1.styles = [styles$2F];
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @tagname oscd-outlined-button
+ * @summary Buttons help people take action, such as sending an email, sharing a
+ * document, or liking a comment.
+ *
+ * __Emphasis:__ Medium emphasis – For important actions that don’t distract
+ * from other onscreen elements.
+ *
+ * __Rationale:__ Use an outlined button for actions that need attention but
+ * aren’t the primary action, such as “See all” or “Add to cart.” This is also
+ * the button to use for giving someone the opportunity to change their mind or
+ * escape a flow.
+ *
+ * __Example usages:__
+ * - Reply
+ * - View all
+ * - Add to cart
+ * - Take out of trash
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdOutlinedButton$1 = class OscdOutlinedButton extends ScopedElementsMixin$2(OutlinedButton$1) {
+};
+OscdOutlinedButton$1.scopedElements = {
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
+};
+OscdOutlinedButton$1.styles = [styles$2w, styles$1m];
 
 /**
  * @license
@@ -196418,7 +196611,7 @@ OscdListItem$1.styles = [styles$2F];
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -196437,8 +196630,8 @@ OscdListItem$1.styles = [styles$2F];
 class OscdCheckbox extends ScopedElementsMixin$2(Checkbox$2) {
 }
 OscdCheckbox.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
 };
 OscdCheckbox.styles = [styles$2C];
 
@@ -196449,7 +196642,7 @@ OscdCheckbox.styles = [styles$2C];
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -196471,307 +196664,10 @@ OscdCheckbox.styles = [styles$2C];
 let OscdRadio$1 = class OscdRadio extends ScopedElementsMixin$2(Radio$2) {
 };
 OscdRadio$1.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
 };
 OscdRadio$1.styles = [styles$2t];
-
-/*
- * GENERATED SOURCE FILE. DO NOT MODIFY.
- * Modifications will be overwritten.
- * To prevent this file from being overwritten, remove this comment entirely.
- */
-/**
- * @tagname oscd-list
- * @summary Lists are continuous, vertical indexes of text or images.
- *
- * Lists consist of one or more list items, and can contain actions represented
- * by icons and text. List items come in three sizes: one-line, two-line, and
- * three-line.
- *
- * __Takeaways:__
- *
- * - Lists should be sorted in logical ways that make content easy to scan, such
- *   as alphabetical, numerical, chronological, or by user preference.
- * - Lists present content in a way that makes it easy to identify a specific
- *   item in a collection and act on it.
- * - Lists should present icons, text, and actions in a consistent format.
- *
- * @final
- * @suppress {visibility}
- */
-let OscdList$1 = class OscdList extends List$2 {
-};
-OscdList$1.styles = [styles$N];
-
-/*
- * GENERATED SOURCE FILE. DO NOT MODIFY.
- * Modifications will be overwritten.
- * To prevent this file from being overwritten, remove this comment entirely.
- */
-/**
- * @tagname oscd-outlined-field
- * TODO(b/228525797): add docs
- * @final
- * @suppress {visibility}
- */
-let OscdOutlinedField$1 = class OscdOutlinedField extends OutlinedField$4 {
-};
-OscdOutlinedField$1.styles = [styles$2y, styles$2z];
-
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
- * @license
- * Copyright 2025 Omicron Energy GmbH
- * SPDX-License-Identifier: Apache-2.0
- */
-/**
- * @tag oscd-outlined-text-field
- * @summary A Material Design outlined text field component.
- * This component is a wrapper around the `OutlinedTextField` from Material Web Components,
- * providing a scoped element that uses the `OscdOutlinedField` as its field.
- * @final
- * @suppress {visibility}
- */
-let OscdOutlinedTextField$1 = class OscdOutlinedTextField extends ScopedElementsMixin$2(OutlinedTextField$2) {
-    constructor() {
-        super(...arguments);
-        this.fieldTag = i$Y `oscd-outlined-field`;
-    }
-};
-OscdOutlinedTextField$1.styles = [styles$2A, styles$2B];
-OscdOutlinedTextField$1.scopedElements = {
-    'oscd-outlined-field': OscdOutlinedField$1,
-};
-
-const DEFAULT_REGEX = /.*/i;
-function searchRegex(filter) {
-    if (!filter) {
-        return /.*/i;
-    }
-    const terms = filter
-        .replace(/[.+^${}()|[\]\\]/g, '\\$&')
-        .trim()
-        .match(/(?:[^\s"']+|['"][^'"]*["'])+/g) ?? [];
-    const expandedTerms = terms.map(term => term.replace(/\*/g, '.*').replace(/\?/g, '.{1}').replace(/"|'/g, ''));
-    const regexString = expandedTerms.map(term => `(?=.*${term})`);
-    return new RegExp(`${regexString.join('')}.*`, 'i');
-}
-function debounce$4(callback, delay = 100) {
-    let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            callback(...args);
-        }, delay);
-    };
-}
-// Base class for all filterable list components
-class FilterListBase extends ScopedElementsMixin$2(i$Z) {
-    constructor() {
-        super(...arguments);
-        /** Whether list items can be filtered on `headline` and `supportingText` */
-        this.filterable = false;
-        /** Placeholder for search input field */
-        this.searchhelper = 'search';
-        this._searchValue = '';
-        this._cachedRegex = DEFAULT_REGEX;
-    }
-    /** Current search filter value. Updates search regex when changed. */
-    set searchValue(value) {
-        const oldVal = this._searchValue;
-        if (oldVal === value) {
-            return;
-        }
-        this._searchValue = value ?? '';
-        this.searchRegex = searchRegex(value);
-    }
-    get searchValue() {
-        return this._searchValue;
-    }
-    get searchRegex() {
-        return this._cachedRegex;
-    }
-    set searchRegex(value) {
-        if (value && value instanceof RegExp) {
-            this._cachedRegex = value;
-        }
-        else {
-            this._cachedRegex = DEFAULT_REGEX;
-        }
-    }
-    onFilter() {
-        if (!this.searchInput) {
-            return;
-        }
-        this.searchValue = this.searchInput.value;
-    }
-    renderSearchField() {
-        return this.filterable
-            ? b$4 `<oscd-outlined-text-field
-          .value=${this._searchValue}
-          placeholder="${this.searchhelper}"
-          @input="${debounce$4(() => this.onFilter())}"
-        >
-          <oscd-icon slot="leading-icon">search</oscd-icon>
-        </oscd-outlined-text-field>`
-            : b$4 ``;
-    }
-}
-__decorate$2([
-    n$1k({ type: Boolean })
-], FilterListBase.prototype, "filterable", void 0);
-__decorate$2([
-    n$1k({ type: String })
-], FilterListBase.prototype, "searchhelper", void 0);
-__decorate$2([
-    e$1o('oscd-outlined-text-field')
-], FilterListBase.prototype, "searchInput", void 0);
-__decorate$2([
-    r$N()
-], FilterListBase.prototype, "_searchValue", void 0);
-__decorate$2([
-    n$1k({ type: String })
-], FilterListBase.prototype, "searchValue", null);
-
-function renderListItemCheckbox(item) {
-    return b$4 `<oscd-checkbox
-    slot="start"
-    ?checked=${item.selected}
-    ?disabled=${item.disabled}
-  ></oscd-checkbox>`;
-}
-function renderListItemRadioButton(item, name) {
-    return b$4 `<oscd-radio
-    slot="start"
-    name=${name}
-    ?checked=${item.selected}
-    ?disabled=${item.disabled}
-  ></oscd-radio>`;
-}
-/**
- * @tag oscd-selection-list
- *  List component to select from a set of options
- * */
-class OscdSelectionList extends FilterListBase {
-    constructor() {
-        super(...arguments);
-        this.multiselect = false;
-        // @property({ type: String })
-        // name: string =
-        //   `oscd-selection-list-${Math.random().toString(36).substr(2, 9)}`;
-        this.items = [];
-    }
-    get selectedElements() {
-        const elements = [];
-        this.items.forEach(item => {
-            if (item.selected && item.attachedElement) {
-                elements.push(item.attachedElement);
-            }
-        });
-        return elements;
-    }
-    renderListItem(item) {
-        return b$4 `<oscd-list-item
-      type="button"
-      @click=${() => {
-            item.selected = !item.selected;
-            if (!this.multiselect) {
-                this.items.forEach(i => {
-                    if (i !== item) {
-                        i.selected = false;
-                    }
-                });
-            }
-            this.dispatchEvent(newSelectionListChangeEvent(this.selectedElements));
-            this.requestUpdate('items');
-        }}
-      class="${e$1l({
-            hidden: !this.searchRegex?.test(`${item.headline} ${item.supportingText ?? ''}`),
-        })}"
-    >
-      ${this.multiselect
-            ? renderListItemCheckbox(item)
-            : renderListItemRadioButton(item, 'radio-group')}
-
-      <div slot="headline">${item.headline}</div>
-      ${item.supportingText
-            ? b$4 `<div slot="supporting-text">${item.supportingText}</div>`
-            : b$4 ``}
-    </oscd-list-item>`;
-    }
-    render() {
-        return b$4 `<section>
-      ${this.renderSearchField()}
-      <oscd-list class="listitems">
-        ${this.items.map(item => this.renderListItem(item))}</oscd-list
-      >
-    </section>`;
-    }
-}
-OscdSelectionList.scopedElements = {
-    'oscd-outlined-text-field': OscdOutlinedTextField$1,
-    'oscd-icon': OscdIcon$4,
-    'oscd-list': OscdList$1,
-    'oscd-list-item': OscdListItem$1,
-    'oscd-checkbox': OscdCheckbox,
-    'oscd-radio': OscdRadio$1,
-};
-OscdSelectionList.styles = i$10 `
-    section {
-      display: flex;
-      flex-direction: column;
-    }
-
-    oscd-outlined-text-field {
-      background-color: var(--md-sys-color-surface, #fef7ff);
-      --oscd-outlined-text-field-container-shape: 32px;
-      padding: 8px;
-    }
-
-    .listitems {
-      flex: auto;
-    }
-
-    oscd-radio {
-      --md-radio-hover-state-layer-opacity: 0;
-      --md-radio-pressed-state-layer-opacity: 0;
-      --md-radio-selected-hover-state-layer-opacity: 0;
-      --md-radio-selected-pressed-state-layer-opacity: 0;
-    }
-
-    oscd-checkbox {
-      --md-checkbox-hover-state-layer-opacity: 0;
-      --md-checkbox-pressed-state-layer-opacity: 0;
-      --md-checkbox-selected-hover-state-layer-opacity: 0;
-      --md-checkbox-selected-pressed-state-layer-opacity: 0;
-    }
-
-    .hidden {
-      display: none;
-    }
-  `;
-__decorate$2([
-    n$1k({ type: Boolean })
-], OscdSelectionList.prototype, "multiselect", void 0);
-__decorate$2([
-    n$1k({ type: Array })
-], OscdSelectionList.prototype, "items", void 0);
-__decorate$2([
-    n$1k({ type: Array })
-], OscdSelectionList.prototype, "selectedElements", null);
-function newSelectionListChangeEvent(selectedElements, eventInitDict) {
-    return new CustomEvent('selection-list-change', {
-        bubbles: true,
-        composed: true,
-        ...eventInitDict,
-        detail: { selectedElements, ...eventInitDict?.detail },
-    });
-}
 
 const elementIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 <path fill="currentColor" d="M9,7H15V9H11V11H15V13H11V15H15V17H9V7M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />
@@ -196800,8 +196696,8 @@ const pathsSVG = {
   4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7
   7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0
   9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z" fill="currentColor"></path>`,
-    dAIcon: w$a `<path fill="currentColor" d="m4.2 0c-2.31 0-4.2 1.89-4.2 4.2v11.6c0 2.31 1.89 4.2 4.2 4.2h18.1c2.31 0 4.2-1.89 4.2-4.2v-11.6c0-2.31-1.89-4.2-4.2-4.2zm0 1.89h18.1c1.29 0 2.3 1.01 2.3 2.3v11.6c0 1.29-1.01 2.31-2.3 2.31h-18.1c-1.29 0-2.3-1.01-2.3-2.31v-11.6c0-1.29 1.01-2.3 2.3-2.3z"/><path fill="currentColor" d="m12.5 9.94q0 1.55-0.509 2.71-0.503 1.15-1.43 1.76-0.923 0.611-2.12 0.611h-3.37v-10h3.02q2.11 0 3.26 1.28 1.15 1.27 1.15 3.65zm-1.76 0q0-1.61-0.698-2.46-0.698-0.852-1.99-0.852h-1.24v6.77h1.48q1.12 0 1.79-0.931 0.663-0.931 0.663-2.53z"/><path fill="currentColor" d="m19.7 15-0.74-2.56h-3.18l-0.74 2.56h-1.75l3.04-10h2.06l3.03 10zm-1.13-4.13-0.823-2.88-0.379-1.46q-0.0947 0.412-0.178 0.739-0.0829 0.327-1.02 3.59z"/>`,
-    dOIcon: w$a `<path fill="none" stroke="currentColor" stroke-width="1.89" d="m4.2 0.945h18.1c1.8 0 3.25 1.45 3.25 3.25v11.6c0 1.8-1.45 3.25-3.25 3.25h-18.1c-1.8 0-3.25-1.45-3.25-3.25v-11.6c0-1.8 1.45-3.25 3.25-3.25z"/><path d="m12.1 9.94q0 1.55-0.509 2.71-0.503 1.15-1.43 1.76-0.923 0.611-2.12 0.611h-3.37v-10h3.02q2.11 0 3.26 1.28 1.15 1.27 1.15 3.65zm-1.76 0q0-1.61-0.698-2.46-0.698-0.852-1.99-0.852h-1.24v6.77h1.48q1.12 0 1.79-0.931 0.663-0.931 0.663-2.53z"/><path d="m21.6 9.97q0 1.56-0.515 2.75-0.515 1.19-1.47 1.82-0.959 0.625-2.24 0.625-1.97 0-3.08-1.39-1.11-1.39-1.11-3.81 0-2.41 1.11-3.76t3.1-1.35 3.1 1.36q1.12 1.36 1.12 3.74zm-1.78 0q0-1.62-0.639-2.54-0.639-0.923-1.79-0.923-1.17 0-1.81 0.916-0.639 0.909-0.639 2.54 0 1.65 0.651 2.6 0.657 0.945 1.79 0.945 1.17 0 1.81-0.923 0.639-0.923 0.639-2.62z"/>`,
+    dAIcon: w$a `<path fill="currentColor" d="m4.2 0c-2.31 0-4.2 1.89-4.2 4.2v11.6c0 2.31 1.89 4.2 4.2 4.2h18.1c2.31 0 4.2-1.89 4.2-4.2v-11.6c0-2.31-1.89-4.2-4.2-4.2zm0 1.89h18.1c1.29 0 2.3 1.01 2.3 2.3v11.6c0 1.29-1.01 2.31-2.3 2.31h-18.1c-1.29 0-2.3-1.01-2.3-2.31v-11.6c0-1.29 1.01-2.3 2.3-2.3z"/><path stroke="none" fill="currentColor" d="m12.5 9.94q0 1.55-0.509 2.71-0.503 1.15-1.43 1.76-0.923 0.611-2.12 0.611h-3.37v-10h3.02q2.11 0 3.26 1.28 1.15 1.27 1.15 3.65zm-1.76 0q0-1.61-0.698-2.46-0.698-0.852-1.99-0.852h-1.24v6.77h1.48q1.12 0 1.79-0.931 0.663-0.931 0.663-2.53z"/><path stroke="none" fill="currentColor" d="m19.7 15-0.74-2.56h-3.18l-0.74 2.56h-1.75l3.04-10h2.06l3.03 10zm-1.13-4.13-0.823-2.88-0.379-1.46q-0.0947 0.412-0.178 0.739-0.0829 0.327-1.02 3.59z"/>`,
+    dOIcon: w$a `<path fill="none" stroke="currentColor" stroke-width="1.89" d="m4.2 0.945h18.1c1.8 0 3.25 1.45 3.25 3.25v11.6c0 1.8-1.45 3.25-3.25 3.25h-18.1c-1.8 0-3.25-1.45-3.25-3.25v-11.6c0-1.8 1.45-3.25 3.25-3.25z"/><path stroke="none" fill="currentColor" d="m12.1 9.94q0 1.55-0.509 2.71-0.503 1.15-1.43 1.76-0.923 0.611-2.12 0.611h-3.37v-10h3.02q2.11 0 3.26 1.28 1.15 1.27 1.15 3.65zm-1.76 0q0-1.61-0.698-2.46-0.698-0.852-1.99-0.852h-1.24v6.77h1.48q1.12 0 1.79-0.931 0.663-0.931 0.663-2.53z"/><path stroke="none" fill="currentColor" d="m21.6 9.97q0 1.56-0.515 2.75-0.515 1.19-1.47 1.82-0.959 0.625-2.24 0.625-1.97 0-3.08-1.39-1.11-1.39-1.11-3.81 0-2.41 1.11-3.76t3.1-1.35 3.1 1.36q1.12 1.36 1.12 3.74zm-1.78 0q0-1.62-0.639-2.54-0.639-0.923-1.79-0.923-1.17 0-1.81 0.916-0.639 0.909-0.639 2.54 0 1.65 0.651 2.6 0.657 0.945 1.79 0.945 1.17 0 1.81-0.923 0.639-0.923 0.639-2.62z"/>`,
     enumIcon: w$a `<path fill="none" stroke="currentColor" stroke-width="1.89" d="m4.2 0.945h18.1c1.8 0 3.25 1.45 3.25 3.25v11.6c0 1.8-1.45 3.25-3.25 3.25h-18.1c-1.8 0-3.25-1.45-3.25-3.25v-11.6c0-1.8 1.45-3.25 3.25-3.25z"/><path d="m5.37 15v-10h6.56v1.62h-4.81v2.51h4.45v1.62h-4.45v2.64h5.06v1.62z"/><path d="m18.5 15-3.63-7.71q0.107 1.12 0.107 1.8v5.9h-1.55v-10h1.99l3.69 7.77q-0.107-1.07-0.107-1.95v-5.82h1.55v10z"/>`,
     info: w$a `<path d="M0 0h24v24H0z" fill="none"></path><path d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="currentColor"></path>`,
     warning: w$a `<path d="M0 0h24v24H0z" fill="none"></path><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="currentColor"></path>`,
@@ -196810,12 +196706,14 @@ const pathsSVG = {
     lNIcon: w$a `<path stroke="currentColor" stroke-width="1.89" fill="none" d="m4.2 0.945h18.1c1.8 0 3.25 1.45 3.25 3.25v11.6c0 1.8-1.45 3.25-3.25 3.25h-18.1c-1.8 0-3.25-1.45-3.25-3.25v-11.6c0-1.8 1.45-3.25 3.25-3.25z"/><path fill="currentColor" d="m5.71 15v-10h1.75v8.39h4.47v1.62z"/><path fill="currentColor" d="m18.2 15-3.63-7.71q0.107 1.12 0.107 1.8v5.9h-1.55v-10h1.99l3.69 7.77q-0.107-1.07-0.107-1.95v-5.82h1.55v10z"/>`,
     logIcon: w$a `<path fill="currentColor" d="M9,7H11V15H15V17H9V7M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />`,
     reportIcon: w$a `<path fill="currentColor" d="M9,7H13A2,2 0 0,1 15,9V11C15,11.84 14.5,12.55 13.76,12.85L15,17H13L11.8,13H11V17H9V7M11,9V11H13V9H11M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,16.41 7.58,20 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />`,
+    dataSetIcon: w$a `<path fill="currentColor" d="M9,7H12.5A3.5,3.5 0 0,1 16,10.5V13.5A3.5,3.5 0 0,1 12.5,17H9V7M11,9V15H12.5A1.5,1.5 0 0,0 14,13.5V10.5A1.5,1.5 0 0,0 12.5,9H11M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12C4,16.41 7.58,20 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />`,
     smvIcon: w$a `<path fill="currentColor" d="M11,7H15V9H11V11H13A2,2 0 0,1 15,13V15A2,2 0 0,1 13,17H9V15H13V13H11A2,2 0 0,1 9,11V9A2,2 0 0,1 11,7M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z" />`,
     reset: w$a ``,
 };
 const gooseIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG['gooseIcon']}</svg>`;
 const reportIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG['reportIcon']}</svg>`;
 const smvIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG['smvIcon']}</svg>`;
+const dataSetIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG['dataSetIcon']}</svg>`;
 const logIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">${pathsSVG['logIcon']}</svg>`;
 const inputIcon = w$a `<svg style="width:24px;height:24px" viewBox="0 0 24 24">
 <path fill="currentColor" d="M14,12L10,8V11H2V13H10V16M20,18V6C20,4.89 19.1,4 18,4H6A2,2 0 0,0 4,6V9H6V6H18V18H6V15H4V18A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18Z" />
@@ -197390,24 +197288,28 @@ const furtherPowerSystemEquipmentLogicalNode = w$a `<svg viewBox="0 0 24 24">
 
 /**
  * @license
- * Copyright 2022 Google LLC
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
-/**
- * @license
- * Copyright 2025 Omicron Energy GmbH
- * SPDX-License-Identifier: Apache-2.0
- */
+function pathToSvg(type) {
+    return w$a `<svg
+    xmlns="http://www.w3.org/2000/svg"
+    height="24"
+    viewBox="0 0 26.5 24"
+    width="24"
+  >
+    ${pathsSVG[type]}
+  </svg> `;
+}
 const SCL_ICONS = {
-    // From compare.ts
     elementIcon: elementIcon,
     attributeIcon: attributeIcon,
     contentIcon: contentIcon,
-    // From icons.ts
     editIcon: editIcon,
     gooseIcon: gooseIcon,
     reportIcon: reportIcon,
     smvIcon: smvIcon,
+    dataSetIcon: dataSetIcon,
     logIcon: logIcon,
     inputIcon: inputIcon,
     clientIcon: clientIcon,
@@ -197431,11 +197333,9 @@ const SCL_ICONS = {
     lineIcon: lineIcon,
     processIcon: processIcon,
     transformerWindingIcon: transformerWindingIcon,
-    // From ied-icons.ts
     accessPointIcon: accessPointIcon,
     serverIcon: serverIcon,
     logicalDeviceIcon: logicalDeviceIcon,
-    // From lnode.ts
     systemLogicalNode: systemLogicalNode,
     automationLogicalNode: automationLogicalNode,
     controlLogicalNode: controlLogicalNode,
@@ -197463,43 +197363,526 @@ const SCL_ICONS = {
     EnumType: pathToSvg('enumIcon'),
     LNodeType: pathToSvg('lNIcon'),
 });
-function pathToSvg(type) {
-    return w$a `<svg
-    xmlns="http://www.w3.org/2000/svg"
-    height="24"
-    viewBox="0 0 26.5 24"
-    width="24"
-  >
-    ${pathsSVG[type]}
-  </svg> `;
-}
-// export function getFilterIcon(
-//   type: iconType,
-//   state: boolean,
-// ): SVGTemplateResult {
-//   if (type === 'reset') {
-//     return svg``;
-//   }
-//   const height = iconProperties[type]?.height ?? 24;
-//   const width = iconProperties[type]?.width ?? 24;
-//   return svg`<svg
-//     slot="${state ? 'onIcon' : 'offIcon'}"
-//     xmlns="http://www.w3.org/2000/svg"
-//     height="${height}"
-//     viewBox="0 0 ${width} ${height}"
-//     width="${width}"
-//   >
-//     ${icons.pathsSVG[type]}
-//   </svg> `;
-// }
-/**
- * Returns an SVG template result for the given icon name.
- * @param name - The name of the icon to retrieve
- * @returns The SVG template result, or undefined if the icon doesn't exist
- */
 function toSVG(name) {
     return SCL_ICONS[name];
 }
+
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * Internal Icon base class that extends the Material Design Icon with
+ * automatic SCL icon resolution.
+ *
+ * When the text content of the element matches a key in {@link SCL_ICONS},
+ * the corresponding SVG is rendered instead of the default Material Symbols
+ * font ligature. If no match is found the element falls through to the
+ * standard `<slot></slot>` rendering from the Material base class so that
+ * Material Symbols font ligatures continue to work as before.
+ */
+let Icon$2 = class Icon extends Icon$b {
+    constructor() {
+        super(...arguments);
+        this._sclName = '';
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        this._updateSclName();
+        this._observer = new MutationObserver(() => {
+            this._updateSclName();
+        });
+        this._observer.observe(this, {
+            characterData: true,
+            subtree: true,
+            childList: true,
+        });
+    }
+    disconnectedCallback() {
+        super.disconnectedCallback();
+        this._observer?.disconnect();
+        this._observer = undefined;
+    }
+    _updateSclName() {
+        const name = (this.textContent ?? '').trim();
+        if (name !== this._sclName) {
+            this._sclName = name;
+            this.requestUpdate();
+        }
+    }
+    render() {
+        const sclSvg = SCL_ICONS[this._sclName];
+        if (sclSvg) {
+            return b$4 `${sclSvg}`;
+        }
+        return super.render();
+    }
+};
+
+/**
+ * @license
+ * Copyright 2022 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * Icon component that renders SCL domain icons by name or falls back to
+ * Material Symbols font ligatures.
+ *
+ * @example
+ * ```html
+ * <!-- SCL icon by name -->
+ * <oscd-icon>gooseIcon</oscd-icon>
+ *
+ * <!-- Material Symbols ligature (unchanged) -->
+ * <oscd-icon>edit</oscd-icon>
+ * ```
+ *
+ * @tagname oscd-icon
+ * @final
+ * @suppress {visibility}
+ */
+let OscdIcon$1 = class OscdIcon extends Icon$2 {
+};
+/** @nocollapse */
+OscdIcon$1.styles = [styles$2I];
+
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-list
+ * @summary Lists are continuous, vertical indexes of text or images.
+ *
+ * Lists consist of one or more list items, and can contain actions represented
+ * by icons and text. List items come in three sizes: one-line, two-line, and
+ * three-line.
+ *
+ * __Takeaways:__
+ *
+ * - Lists should be sorted in logical ways that make content easy to scan, such
+ *   as alphabetical, numerical, chronological, or by user preference.
+ * - Lists present content in a way that makes it easy to identify a specific
+ *   item in a collection and act on it.
+ * - Lists should present icons, text, and actions in a consistent format.
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdList$1 = class OscdList extends List$2 {
+};
+OscdList$1.styles = [styles$N];
+
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-outlined-field
+ * TODO(b/228525797): add docs
+ * @final
+ * @suppress {visibility}
+ */
+let OscdOutlinedField$1 = class OscdOutlinedField extends OutlinedField$4 {
+};
+OscdOutlinedField$1.styles = [styles$2y, styles$2z];
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @tag oscd-outlined-text-field
+ * @summary A Material Design outlined text field component.
+ * This component is a wrapper around the `OutlinedTextField` from Material Web Components,
+ * providing a scoped element that uses the `OscdOutlinedField` as its field.
+ * @final
+ * @suppress {visibility}
+ */
+let OscdOutlinedTextField$1 = class OscdOutlinedTextField extends ScopedElementsMixin$2(OutlinedTextField$2) {
+    constructor() {
+        super(...arguments);
+        this.fieldTag = i$Y `oscd-outlined-field`;
+    }
+};
+OscdOutlinedTextField$1.styles = [styles$2A, styles$2B];
+OscdOutlinedTextField$1.scopedElements = {
+    'oscd-outlined-field': OscdOutlinedField$1,
+};
+
+const DEFAULT_REGEX = /.*/i;
+function searchRegex(filter) {
+    if (!filter) {
+        return /.*/i;
+    }
+    const terms = filter
+        .replace(/[.+^${}()|[\]\\]/g, '\\$&')
+        .trim()
+        .match(/(?:[^\s"']+|['"][^'"]*["'])+/g) ?? [];
+    const expandedTerms = terms.map(term => term.replace(/\*/g, '.*').replace(/\?/g, '.{1}').replace(/"|'/g, ''));
+    const regexString = expandedTerms.map(term => `(?=.*${term})`);
+    return new RegExp(`${regexString.join('')}.*`, 'i');
+}
+function debounce$4(callback, delay = 100) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            callback(...args);
+        }, delay);
+    };
+}
+// Base class for all filterable list components
+class FilterListBase extends ScopedElementsMixin$2(i$Z) {
+    constructor() {
+        super(...arguments);
+        /** Whether list items can be filtered on `headline` and `supportingText` */
+        this.filterable = false;
+        /** Placeholder for search input field */
+        this.searchhelper = 'search';
+        this._searchValue = '';
+        this._cachedRegex = DEFAULT_REGEX;
+    }
+    /** Current search filter value. Updates search regex when changed. */
+    set searchValue(value) {
+        const oldVal = this._searchValue;
+        if (oldVal === value) {
+            return;
+        }
+        this._searchValue = value ?? '';
+        this.searchRegex = searchRegex(value);
+    }
+    get searchValue() {
+        return this._searchValue;
+    }
+    get searchRegex() {
+        return this._cachedRegex;
+    }
+    set searchRegex(value) {
+        if (value && value instanceof RegExp) {
+            this._cachedRegex = value;
+        }
+        else {
+            this._cachedRegex = DEFAULT_REGEX;
+        }
+    }
+    onFilter() {
+        if (!this.searchInput) {
+            return;
+        }
+        this.searchValue = this.searchInput.value;
+    }
+    renderSearchField() {
+        return this.filterable
+            ? b$4 `<oscd-outlined-text-field
+          .value=${this._searchValue}
+          placeholder="${this.searchhelper}"
+          @input="${debounce$4(() => this.onFilter())}"
+        >
+          <oscd-icon slot="leading-icon">search</oscd-icon>
+        </oscd-outlined-text-field>`
+            : b$4 ``;
+    }
+}
+__decorate$2([
+    n$1k({ type: Boolean })
+], FilterListBase.prototype, "filterable", void 0);
+__decorate$2([
+    n$1k({ type: String })
+], FilterListBase.prototype, "searchhelper", void 0);
+__decorate$2([
+    e$1o('oscd-outlined-text-field')
+], FilterListBase.prototype, "searchInput", void 0);
+__decorate$2([
+    r$N()
+], FilterListBase.prototype, "_searchValue", void 0);
+__decorate$2([
+    n$1k({ type: String })
+], FilterListBase.prototype, "searchValue", null);
+
+function renderListItemCheckbox(item) {
+    return b$4 `<oscd-checkbox
+    slot="start"
+    ?checked=${item.selected}
+    ?disabled=${item.disabled}
+  ></oscd-checkbox>`;
+}
+function renderListItemRadioButton(item, name) {
+    return b$4 `<oscd-radio
+    slot="start"
+    name=${name}
+    ?checked=${item.selected}
+    ?disabled=${item.disabled}
+  ></oscd-radio>`;
+}
+/**
+ * @tag oscd-selection-list
+ *  List component to select from a set of options
+ * */
+class OscdSelectionList extends FilterListBase {
+    constructor() {
+        super(...arguments);
+        this.multiselect = false;
+        // @property({ type: String })
+        // name: string =
+        //   `oscd-selection-list-${Math.random().toString(36).substr(2, 9)}`;
+        this.items = [];
+    }
+    get selectedElements() {
+        const elements = [];
+        this.items.forEach(item => {
+            if (item.selected && item.attachedElement) {
+                elements.push(item.attachedElement);
+            }
+        });
+        return elements;
+    }
+    renderListItem(item) {
+        return b$4 `<oscd-list-item
+      type="button"
+      @click=${() => {
+            item.selected = !item.selected;
+            if (!this.multiselect) {
+                this.items.forEach(i => {
+                    if (i !== item) {
+                        i.selected = false;
+                    }
+                });
+            }
+            this.dispatchEvent(newSelectionListChangeEvent(this.selectedElements));
+            this.requestUpdate('items');
+        }}
+      class="${e$1l({
+            hidden: !this.searchRegex?.test(`${item.headline} ${item.supportingText ?? ''}`),
+        })}"
+    >
+      ${this.multiselect
+            ? renderListItemCheckbox(item)
+            : renderListItemRadioButton(item, 'radio-group')}
+
+      <div slot="headline">${item.headline}</div>
+      ${item.supportingText
+            ? b$4 `<div slot="supporting-text">${item.supportingText}</div>`
+            : b$4 ``}
+    </oscd-list-item>`;
+    }
+    render() {
+        return b$4 `<section>
+      ${this.renderSearchField()}
+      <oscd-list class="listitems">
+        ${this.items.map(item => this.renderListItem(item))}</oscd-list
+      >
+    </section>`;
+    }
+}
+OscdSelectionList.scopedElements = {
+    'oscd-outlined-text-field': OscdOutlinedTextField$1,
+    'oscd-icon': OscdIcon$1,
+    'oscd-list': OscdList$1,
+    'oscd-list-item': OscdListItem$1,
+    'oscd-checkbox': OscdCheckbox,
+    'oscd-radio': OscdRadio$1,
+};
+OscdSelectionList.styles = i$10 `
+    section {
+      display: flex;
+      flex-direction: column;
+    }
+
+    oscd-outlined-text-field {
+      background-color: var(--md-sys-color-surface, #fef7ff);
+      --md-outlined-text-field-container-shape: 32px;
+      padding: 8px;
+    }
+
+    .listitems {
+      flex: auto;
+    }
+
+    oscd-radio {
+      --md-radio-hover-state-layer-opacity: 0;
+      --md-radio-pressed-state-layer-opacity: 0;
+      --md-radio-selected-hover-state-layer-opacity: 0;
+      --md-radio-selected-pressed-state-layer-opacity: 0;
+    }
+
+    oscd-checkbox {
+      --md-checkbox-hover-state-layer-opacity: 0;
+      --md-checkbox-pressed-state-layer-opacity: 0;
+      --md-checkbox-selected-hover-state-layer-opacity: 0;
+      --md-checkbox-selected-pressed-state-layer-opacity: 0;
+    }
+
+    .hidden {
+      display: none;
+    }
+  `;
+__decorate$2([
+    n$1k({ type: Boolean })
+], OscdSelectionList.prototype, "multiselect", void 0);
+__decorate$2([
+    n$1k({ type: Array })
+], OscdSelectionList.prototype, "items", void 0);
+__decorate$2([
+    n$1k({ type: Array })
+], OscdSelectionList.prototype, "selectedElements", null);
+function newSelectionListChangeEvent(selectedElements, eventInitDict) {
+    return new CustomEvent('selection-list-change', {
+        bubbles: true,
+        composed: true,
+        ...eventInitDict,
+        detail: { selectedElements, ...eventInitDict?.detail },
+    });
+}
+
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-divider
+ * @summary A divider is a thin line that groups content in lists and
+ * containers.
+ *
+ * list items or define tappable regions in an accordion.
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdDivider$1 = class OscdDivider extends Divider$3 {
+};
+OscdDivider$1.styles = [styles$2J];
+
+/**
+ * @license
+ * Copyright 2023 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @tagname oscd-dialog
+ * @summary Dialogs can require an action, communicate information, or help
+ * users accomplish a task. There are two types of dialogs: basic and
+ * full-screen.
+ *
+ * A dialog is a modal window that appears in front of app content to provide
+ * critical information or ask for a decision. Dialogs disable all app
+ * functionality when they appear, and remain on screen until confirmed,
+ * dismissed, or a required action has been taken.
+ *
+ * Dialogs are purposefully interruptive, so they should be used sparingly.
+ * A less disruptive alternative is to use a menu, which provides options
+ * without interrupting a user’s experience.
+ *
+ * On mobile devices only, complex dialogs should be displayed fullscreen.
+ *
+ * __Example usages:__
+ * - Common use cases for basic dialogs include alerts, quick selection, and
+ * confirmation.
+ * - More complex dialogs may contain actions that require a series of tasks
+ * to complete. One example is creating a calendar entry with the event title,
+ * date, location, and time.
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdDialog$1 = class OscdDialog extends ScopedElementsMixin$2(Dialog$4) {
+};
+OscdDialog$1.scopedElements = {
+    'md-divider': OscdDivider$1,
+};
+OscdDialog$1.styles = [styles$2u];
+
+/*
+ * GENERATED SOURCE FILE. DO NOT MODIFY.
+ * Modifications will be overwritten.
+ * To prevent this file from being overwritten, remove this comment entirely.
+ */
+/**
+ * @tagname oscd-elevation
+ * The `<oscd-elevation>` custom element with default styles.
+ *
+ * Elevation is the relative distance between two surfaces along the z-axis.
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdElevation$1 = class OscdElevation extends Elevation$3 {
+};
+OscdElevation$1.styles = [styles$2K];
+
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @tagname oscd-filled-button
+ * @summary Buttons help people take action, such as sending an email, sharing a
+ * document, or liking a comment.
+ *
+ * __Emphasis:__ High emphasis – For the primary, most important, or most common
+ * action on a screen
+ *
+ * __Rationale:__ The filled button’s contrasting surface color makes it the
+ * most prominent button after the FAB. It’s used for final or unblocking
+ * actions in a flow.
+ *
+ * __Example usages:__
+ * - Save
+ * - Confirm
+ * - Done
+ *
+ * @final
+ * @suppress {visibility}
+ */
+let OscdFilledButton$1 = class OscdFilledButton extends ScopedElementsMixin$2(FilledButton$2) {
+};
+OscdFilledButton$1.scopedElements = {
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
+    'md-elevation': OscdElevation$1,
+};
+OscdFilledButton$1.styles = [
+    styles$2w,
+    styles$2r,
+    styles$2s,
+];
+
+/**
+ * @license
+ * Copyright 2022 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/**
+ * @license
+ * Copyright 2026 OMICRON electronics GmbH
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /**
  * @tagname oscd-scl-icon
  * @summary SCL icon component.
@@ -197513,7 +197896,7 @@ class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
     }
     static get scopedElements() {
         return {
-            'oscd-icon': OscdIcon$4,
+            'oscd-icon': OscdIcon$1,
         };
     }
     // Read the text node (ligature-like API)
@@ -197558,7 +197941,7 @@ class OscdSclIcon extends ScopedElementsMixin$2(i$Z) {
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -197588,8 +197971,8 @@ let OscdIconButton$1 = class OscdIconButton extends ScopedElementsMixin$2(IconBu
     }
 };
 OscdIconButton$1.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
 };
 OscdIconButton$1.styles = [styles$2L, styles$2H];
 
@@ -197648,19 +198031,15 @@ class OscdFilterButton extends (_b = ScopedElementsMixin$2(OscdSelectionList)) {
 _a$3 = OscdFilterButton;
 OscdFilterButton.scopedElements = {
     ...Reflect.get(_b, "scopedElements", _a$3),
-    'oscd-dialog': OscdDialog$2,
+    'oscd-dialog': OscdDialog$1,
     'oscd-icon-button': OscdIconButton$1,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-scl-icon': OscdSclIcon,
-    'oscd-outlined-button': OscdOutlinedButton$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-outlined-button': OscdOutlinedButton$1,
+    'oscd-filled-button': OscdFilledButton$1,
 };
 OscdFilterButton.styles = i$10 `
     ${OscdSelectionList.styles}
-    oscd-icon-button {
-      color: var(--mdc-theme-on-surface);
-    }
-
     oscd-dialog {
       max-height: calc(100vh - 150px);
     }
@@ -197692,215 +198071,19 @@ function newFilterButtonCloseEvent(selectedElements, eventInitDict) {
     });
 }
 
-const [nsd72$1, nsd73$1, nsd74$1, nsd7420$1, nsd81$1] = [
-    nsd72$3,
-    nsd73$3,
-    nsd74$3,
-    nsd7420$3,
-    nsd81$3,
-].map(nsdStr => new DOMParser().parseFromString(nsdStr, 'application/xml'));
-
-let nsdoc72 = undefined;
-let nsdoc73 = undefined;
-let nsdoc74 = undefined;
-let nsdoc81 = undefined;
-/**
- * Initialize the full Nsdoc object.
- * @returns A fully initialized Nsdoc object for wizards/editors to use.
- */
 function initializeNsdoc() {
-    [nsdoc72, nsdoc73, nsdoc74, nsdoc81] = [
-        localStorage.getItem('IEC 61850-7-2')
-            ? new DOMParser().parseFromString(localStorage.getItem('IEC 61850-7-2'), 'application/xml')
-            : undefined,
-        localStorage.getItem('IEC 61850-7-3')
-            ? new DOMParser().parseFromString(localStorage.getItem('IEC 61850-7-3'), 'application/xml')
-            : undefined,
-        localStorage.getItem('IEC 61850-7-4')
-            ? new DOMParser().parseFromString(localStorage.getItem('IEC 61850-7-4'), 'application/xml')
-            : undefined,
-        localStorage.getItem('IEC 61850-8-1')
-            ? new DOMParser().parseFromString(localStorage.getItem('IEC 61850-8-1'), 'application/xml')
-            : undefined,
-    ];
-    const getDataDescriptions = {
-        LN: {
-            getDataDescription: getLNDataDescription,
-        },
-        LN0: {
-            getDataDescription: getLNDataDescription,
-        },
-        DO: {
-            getDataDescription: getDODataDescription,
-        },
-        SDO: {
-            getDataDescription: getSDODataDescription,
-        },
-        DOI: {
-            getDataDescription: getDODataDescription,
-        },
-        DA: {
-            getDataDescription: getDADataDescription,
-        },
-        BDA: {
-            getDataDescription: getBDADataDescription,
-        },
-        DAI: {
-            getDataDescription: getDADataDescription,
-        },
-    };
-    /**
-     * Getting data descriptions for LN(0) elements out of the IEC 61850-7-4 .nsdoc file.
-     * @param element - The element to use for searching the LN description.
-     * @returns Documentation from the .nsdoc file for this LN(0) file, or the lnClass attribute in case no description can be found.
-     */
-    function getLNDataDescription(element) {
-        const lnClassAttribute = element.getAttribute('lnClass');
-        const lnClass = nsd74$1.querySelector(`NS > LNClasses > LNClass[name="${lnClassAttribute}"]`);
-        const lnClassDescription = getNsdocDocumentation(nsdoc74, lnClass?.getAttribute('titleID'));
-        return {
-            label: lnClassDescription
-                ? lnClassDescription + ' (' + lnClassAttribute + ')'
-                : lnClassAttribute,
-        };
-    }
-    /**
-     * Getting data descriptions for DO(I) elements out of the IEC 61850-7-4 .nsdoc file.
-     * @param element - The element to use for searching the DO description.
-     * @returns Documentation from the .nsdoc file for this DO(I) file, or the name attribute in case no description can be found.
-     */
-    function getDODataDescription(element) {
-        const doName = element.getAttribute('name');
-        const lnClass = nsd74$1.querySelector(`NS > LNClasses > LNClass[name="${element.parentElement?.getAttribute('lnClass')}"]`);
-        const base = lnClass?.getAttribute('base');
-        const dObject = lnClass?.querySelector(`DataObject[name="${doName}"]`) ??
-            getInheritedDataObject(base, doName);
-        return {
-            label: getNsdocDocumentation(nsdoc74, dObject?.getAttribute('descID')) ??
-                doName,
-        };
-    }
-    /**
-     * Getting data descriptions for SDO elements out of the IEC 61850-7-3 .nsdoc file.
-     * @param element - The element to use for searching the SDO description.
-     * @returns Documentation from the .nsdoc file for this SDO element, or the name attribute in case no description can be found.
-     */
-    function getSDODataDescription(element) {
-        const sdoName = element.getAttribute('name');
-        const subDataObject = nsd73$1.querySelector(`CDCs > CDC[name="${element.parentElement?.getAttribute('cdc')}"] > SubDataObject[name="${sdoName}"]`);
-        return {
-            label: getNsdocDocumentation(nsdoc73, subDataObject?.getAttribute('descID')) ?? sdoName,
-        };
-    }
-    /**
-     * Getting data descriptions for DA(I) elements out of the IEC 61850-7-3 and IEC 61850-8-1 .nsdoc file.
-     * @param element - The element to use for searching the DA description.
-     * @returns Documentation from the .nsdoc file for this DA(I) element, or the name attribute in case no description can be found.
-     */
-    function getDADataDescription(element) {
-        const daElementName = element.getAttribute('name');
-        const cdcName = element.closest('DOType').getAttribute('cdc');
-        const serviceDataAttr = nsd81$1.querySelector(`ServiceCDCs > ServiceCDC[cdc="${cdcName}"] > ServiceDataAttribute[name="${daElementName}"]`);
-        if (serviceDataAttr) {
-            const id = serviceDataAttr?.getAttribute('descID') ??
-                nsd81$1
-                    .querySelector(`ServiceConstructedAttributes > ServiceConstructedAttribute[name="${daElementName}"]`)
-                    ?.getAttribute('titleID') ??
-                '';
-            return {
-                label: getNsdocDocumentation(nsdoc81, id) ?? daElementName,
-            };
-        }
-        else {
-            const dataAttr = nsd73$1.querySelector(`NS > CDCs > CDC[name="${cdcName}"] > DataAttribute[name="${daElementName}"]`);
-            return {
-                label: getNsdocDocumentation(nsdoc73, dataAttr?.getAttribute('descID')) ??
-                    daElementName,
-            };
-        }
-    }
-    /**
-     * Getting data descriptions for BDA elements out of the IEC 61850-7-3 and IEC 61850-8-1 .nsdoc file.
-     * @param element - The element to use for searching the BDA description.
-     * @param ancestors - In this function, we need an ancestor to get a 'CDC' attribute.
-     * @returns Documentation from the .nsdoc file for this BDA element, or the name attribute in case no description can be found.
-     */
-    function getBDADataDescription(element, ancestors) {
-        const bdaElementName = element.getAttribute('name');
-        const daParent = ancestors?.filter(x => x.tagName === 'DA')[0];
-        const serviceDataAttr = nsd81$1.querySelector(`ServiceConstructedAttributes > ServiceConstructedAttribute[name="${daParent.getAttribute('name')}"]`);
-        if (serviceDataAttr) {
-            if (serviceDataAttr
-                .querySelector(`SubDataAttribute[name="${ancestors[0].getAttribute('name')}"]`)
-                ?.getAttribute('type') == 'Originator') {
-                const subDataAttr = nsd72$1.querySelector(`ConstructedAttributes > ConstructedAttribute[name="Originator"] > SubDataAttribute[name="${bdaElementName}"]`);
-                return {
-                    label: getNsdocDocumentation(nsdoc72, subDataAttr?.getAttribute('descID')) ?? bdaElementName,
-                };
-            }
-            return {
-                label: getNsdocDocumentation(nsdoc81, serviceDataAttr
-                    .querySelector(`SubDataAttribute[name="${bdaElementName}"]`)
-                    ?.getAttribute('descID')) ?? bdaElementName,
-            };
-        }
-        else {
-            const dataAttrParent = nsd73$1.querySelector(`NS > CDCs > CDC[name="${daParent
-                .closest('DOType')
-                ?.getAttribute('cdc')}"] >
-        DataAttribute[name="${daParent.getAttribute('name')}"]`);
-            return {
-                label: getNsdocDocumentation(nsdoc73, getSubDataAttribute(dataAttrParent, bdaElementName)?.getAttribute('descID')) ?? bdaElementName,
-            };
-        }
-    }
-    /**
-     * Get the SubDataAttribute from the IEC-61850-7-3.
-     * @param parent - The parent element in which to search for a SubDataAttribute.
-     * @param bdaElementName - The name of the element to search.
-     * @returns A SubDataAttribute, or null.
-     */
-    function getSubDataAttribute(parent, bdaElementName) {
-        if (!parent) {
-            return null;
-        }
-        const subDataAttr = nsd73$1.querySelector(`ConstructedAttributes > ConstructedAttribute[name="${parent?.getAttribute('type')}"] > SubDataAttribute[name="${bdaElementName}"]`);
-        return (subDataAttr ??
-            getSubDataAttribute(nsd73$1.querySelector(`ConstructedAttributes > ConstructedAttribute[name="${parent?.getAttribute('type')}"] > SubDataAttribute`), bdaElementName));
-    }
-    /**
-     * Get the potential inherited data object based on a LNClass base.
-     * @param lnClassBase - The base of a LNClass element.
-     * @param doName - The name of the DO(I) to search for.
-     * @returns the DataObject in case found, otherwise null.
-     */
-    function getInheritedDataObject(lnClassBase, doName) {
-        if (!lnClassBase) {
-            return null;
-        }
-        const lnClass = nsd74$1.querySelector(`NS > LNClasses > AbstractLNClass[name="${lnClassBase}"]`);
-        const base = lnClass?.getAttribute('base');
-        return (lnClass?.querySelector(`DataObject[name="${doName}"]`) ??
-            getInheritedDataObject(base, doName));
-    }
     return {
-        nsdoc72: nsdoc72,
-        nsdoc73: nsdoc73,
-        nsdoc74: nsdoc74,
-        nsdoc81: nsdoc81,
-        getDataDescription: function getDataDescription(element, ancestors) {
-            return getDataDescriptions[element.tagName].getDataDescription(element, ancestors);
+        getDataDescription: (e) => {
+            return {
+                label: e.getAttribute('desc') ||
+                    e.getAttribute('lnClass') ||
+                    e.getAttribute('type') ||
+                    e.getAttribute('name') ||
+                    e.getAttribute('id') ||
+                    e.tagName,
+            };
         },
     };
-}
-/**
- * Get the documentation from a given nsdoc file.
- * @param nsdoc - The .nsdoc file to use for searching
- * @param id - The id of the doc to search for.
- * @returns - The documentation belonging to the id.
- */
-function getNsdocDocumentation(nsdoc, id) {
-    return nsdoc?.querySelector(`NSDoc > Doc[id="${id ?? ''}"]`)?.textContent;
 }
 
 function closestTo(node, selector) {
@@ -197921,12 +198104,12 @@ function closestTo(node, selector) {
  * @slot action - Places element in <nav/> section.
  * @slot icon - Action Pane Icon.
  * @slot - The default slot will be rendered into the pane body in a single column.
- * @cssprop [--oscd-action-pane-theme-primary=var(--md-sys-color-primary)] - Color for border on even levels.
- * @cssprop [--oscd-action-pane-theme-on-primary=var(--md-sys-color-on)-primary] - Pane color for the uneven levels.
- * @cssprop [--oscd-action-pane-theme-secondary=var(--md-sys-color-secondary)] - Color for border on uneven levels.
- * @cssprop [--oscd-action-pane-theme-surface=var(--md-sys-color-surface)] - Pane color for the even levels.
- * @cssprop [--oscd-action-pane-theme-on-surface=var(--md-sys-color-on-surface)] - Icon and label color.
- * @cssprop [--oscd-action-pane-theme-font=var(--md-sys-color-font)] - Font for label.
+ * @cssprop [--oscd-action-pane-container-color=var(--md-sys-color-surface, #fef7ff)] - Pane background.
+ * @cssprop [--oscd-action-pane-contrasted-container-color=var(--md-sys-color-on-primary, #fff)] - Background on even nesting levels.
+ * @cssprop [--oscd-action-pane-outline-color=var(--md-sys-color-primary, #6750a4)] - Pane outline.
+ * @cssprop [--oscd-action-pane-secondary-outline-color=var(--md-sys-color-secondary, #625b71)] - Outline when secondary.
+ * @cssprop [--oscd-action-pane-headline-color=var(--md-sys-color-on-surface, #1d1b20)] - Heading text color.
+ * @cssprop [--oscd-action-pane-headline-font-family=var(--md-ref-typeface-plain, Roboto)] - Heading font.
  *
  * @summary A responsive container rendering actions in a header.
  * @tag oscd-action-pane
@@ -197955,17 +198138,12 @@ class OscdActionPane extends ScopedElementsMixin$2(i$Z) {
         return Math.floor(base);
     }
     renderHeader() {
-        const content = b$4 `<span
+        const content = b$4 `<span class="icon"
         ><slot name="icon"
-          >${this.icon
-            ? b$4 `<oscd-icon>${this.icon}</oscd-icon>`
-            : A$d}</slot
+          >${this.icon ? b$4 `<oscd-icon>${this.icon}</oscd-icon>` : A$d}</slot
         ></span
-      >
-      ${this.label ?? A$d}
-      <nav>
-        <slot name="action"></slot>
-      </nav>`;
+      ><span class="label">${this.label ?? A$d}</span>
+      <nav><slot name="action"></slot></nav>`;
         const headingLevel = Math.floor(Math.max(this.resolvedLevel, 1));
         // Sometimes a TemplateResult is passed in as Label, not a string. So only when it's a string show a title.
         const title = this.label ?? '';
@@ -197988,13 +198166,15 @@ class OscdActionPane extends ScopedElementsMixin$2(i$Z) {
             contrasted: this.resolvedLevel % 2 === 0,
         })}"
     >
+      <oscd-elevation></oscd-elevation>
       ${this.renderHeader()}
       <div><slot></slot></div>
     </section>`;
     }
 }
 OscdActionPane.scopedElements = {
-    'oscd-icon': OscdIcon$4,
+    'oscd-elevation': OscdElevation$1,
+    'oscd-icon': OscdIcon$1,
 };
 OscdActionPane.styles = i$10 `
     :host {
@@ -198002,34 +198182,31 @@ OscdActionPane.styles = i$10 `
     }
 
     :host(:focus-within) section {
-      /* TODO consider using oscd-elevation instead */
-      box-shadow:
-        0 8px 10px 1px rgba(0, 0, 0, 0.14),
-        0 3px 14px 2px rgba(0, 0, 0, 0.12),
-        0 5px 5px -3px rgba(0, 0, 0, 0.2);
+      --md-elevation-level: 3;
       outline-width: 1px;
       transition: all 250ms linear;
     }
 
     section {
+      position: relative;
       background-color: var(
-        --oscd-action-pane-theme-surface,
-        var(--md-sys-color-surface)
+        --oscd-action-pane-container-color,
+        var(--md-sys-color-surface, #fef7ff)
       );
       transition: all 200ms linear;
       outline-style: solid;
       margin: 0px;
       outline-width: 0px;
       outline-color: var(
-        --oscd-action-pane-theme-primary,
-        var(--md-sys-color-primary)
+        --oscd-action-pane-outline-color,
+        var(--md-sys-color-primary, #6750a4)
       );
     }
 
     section.secondary {
       outline-color: var(
-        --oscd-action-pane-theme-secondary,
-        var(--md-sys-color-secondary)
+        --oscd-action-pane-secondary-outline-color,
+        var(--md-sys-color-secondary, #625b71)
       );
     }
 
@@ -198052,8 +198229,8 @@ OscdActionPane.styles = i$10 `
 
     .contrasted {
       background-color: var(
-        --oscd-action-pane-theme-on-primary,
-        var(--oscd-base2)
+        --oscd-action-pane-contrasted-container-color,
+        var(--md-sys-color-on-primary, #fff)
       );
     }
 
@@ -198062,10 +198239,13 @@ OscdActionPane.styles = i$10 `
     h3,
     h4 {
       color: var(
-        --oscd-action-pane-theme-on-surface,
-        var(--md-sys-color-on-surface)
+        --oscd-action-pane-headline-color,
+        var(--md-sys-color-on-surface, #1d1b20)
       );
-      font-family: var(--oscd-action-pane-theme-font, var(--oscd-text-font));
+      font-family: var(
+        --oscd-action-pane-headline-font-family,
+        var(--md-ref-typeface-plain, Roboto)
+      );
       font-weight: 300;
       overflow: clip visible;
       white-space: nowrap;
@@ -198073,18 +198253,34 @@ OscdActionPane.styles = i$10 `
       margin: 0px;
       line-height: 52px;
       padding-left: 0.3em;
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
+    }
+
+    .icon {
+      display: flex;
+      align-items: center;
+      flex: none;
+    }
+
+    .label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     nav {
-      float: right;
+      flex: none;
+      margin-left: auto;
       margin-right: 4px;
     }
 
-    oscd-icon,
     ::slotted([slot='icon']) {
-      vertical-align: middle;
-      position: relative;
-      top: -0.1em;
+      display: flex;
+      align-items: center;
+      line-height: var(--md-icon-size, 24px);
     }
   `;
 __decorate$2([
@@ -198323,7 +198519,7 @@ class BaseContainer extends ScopedElementsMixin$2(i$Z) {
         super();
         this.docVersion = -1;
         this.ancestors = [];
-        this.addEventListener('focus', event => {
+        this.addEventListener('focus', (event) => {
             event.stopPropagation();
             const pathOfAncestorNames = this.ancestors.map(ancestor => getTitleForElementPath(ancestor));
             pathOfAncestorNames.push(getTitleForElementPath(this.element));
@@ -198425,7 +198621,7 @@ OscdFilledField$1.styles = [styles$2y, styles$J];
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -199469,7 +199665,7 @@ const styles$H = i$10 `:host{color:unset;min-width:210px;display:flex}.field{cur
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 let InternalMenu$1 = class InternalMenu extends Menu$3 {
@@ -199527,8 +199723,8 @@ InternalMenu$1.styles = [styles$2E];
 let OscdMenu$1 = class OscdMenu extends ScopedElementsMixin$2(InternalMenu$1) {
 };
 OscdMenu$1.scopedElements = {
-    'md-focus-ring': OscdFocusRing$4,
-    'md-elevation': OscdElevation$4,
+    'md-focus-ring': OscdFocusRing$1,
+    'md-elevation': OscdElevation$1,
 };
 OscdMenu$1.styles = [styles$2E];
 
@@ -199539,7 +199735,7 @@ OscdMenu$1.styles = [styles$2E];
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 let InternalFilledSelect$1 = class InternalFilledSelect extends FilledSelect$1 {
@@ -199576,7 +199772,7 @@ let OscdFilledSelect$1 = class OscdFilledSelect extends ScopedElementsMixin$2(In
 };
 OscdFilledSelect$1.scopedElements = {
     'md-menu': OscdMenu$1,
-    'md-elevation': OscdElevation$4,
+    'md-elevation': OscdElevation$1,
     'md-filled-field': OscdFilledField$1,
 };
 OscdFilledSelect$1.styles = [styles$H, styles$I];
@@ -199889,7 +200085,7 @@ __decorate$2([
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -199925,8 +200121,8 @@ __decorate$2([
 let OscdSelectOption$1 = class OscdSelectOption extends ScopedElementsMixin$2(SelectOptionEl$1) {
 };
 OscdSelectOption$1.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
     'md-item': OscdItem$1,
 };
 OscdSelectOption$1.styles = [styles$2D];
@@ -200347,9 +200543,9 @@ class DaiValueCreateDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 DaiValueCreateDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-dialog': OscdDialog$1,
+    'oscd-outlined-button': OscdOutlinedButton$1,
+    'oscd-filled-button': OscdFilledButton$1,
     'oscd-filled-text-field': OscdFilledTextField,
     'dai-value-field': DaiValueField,
     'dai-timestamp-field': DaiTimestampField,
@@ -200469,7 +200665,7 @@ class DaiValueEditDialog extends ScopedElementsMixin$2(i$Z) {
             return null;
         }
         const vals = Array.from(this.instanceElement.querySelectorAll('Val'));
-        return (vals.find(val => {
+        return (vals.find((val) => {
             const current = parseInt(val.getAttribute('sGroup') ?? '0');
             return !Number.isNaN(current) && current > this.sGroup;
         }) ?? null);
@@ -200529,9 +200725,9 @@ class DaiValueEditDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 DaiValueEditDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-dialog': OscdDialog$1,
+    'oscd-outlined-button': OscdOutlinedButton$1,
+    'oscd-filled-button': OscdFilledButton$1,
     'oscd-filled-text-field': OscdFilledTextField,
     'dai-value-field': DaiValueField,
     'dai-timestamp-field': DaiTimestampField,
@@ -200618,8 +200814,8 @@ class InfoDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 InfoDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-dialog': OscdDialog$1,
+    'oscd-filled-button': OscdFilledButton$1,
     'oscd-filled-text-field': OscdFilledTextField,
 };
 InfoDialog.styles = i$10 `
@@ -200910,6 +201106,10 @@ function buildDoInfoGroups({ ancestors, nsdoc, templateElement, instanceElement,
                 label: 'Data object common data class',
                 value: doTypeElement?.getAttribute('cdc') ?? MISSING_VALUE,
             },
+            {
+                label: 'Data object Type',
+                value: templateElement?.getAttribute('type') ?? MISSING_VALUE,
+            },
         ],
         [
             {
@@ -201029,8 +201229,12 @@ function buildDaInfoGroups({ ancestors, nsdoc, templateElement, instanceElement,
                 value: templateElement?.getAttribute('fc') ?? MISSING_VALUE,
             },
             {
-                label: 'Data attribute type',
+                label: 'Data attribute base type',
                 value: templateElement?.getAttribute('bType') ?? MISSING_VALUE,
+            },
+            {
+                label: 'Data attribute type',
+                value: templateElement?.getAttribute('type') ?? MISSING_VALUE,
             },
             {
                 label: 'Data attribute value',
@@ -201295,7 +201499,7 @@ DAContainer.scopedElements = {
     'oscd-action-pane': OscdActionPane,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-scl-icon': OscdSclIcon,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'da-container': DAContainer,
     'dai-value-create-dialog': DaiValueCreateDialog,
     'dai-value-edit-dialog': DaiValueEditDialog,
@@ -201462,10 +201666,10 @@ class DOContainer extends ScopedElementsMixin$2(BaseContainer) {
     }
 }
 DOContainer.scopedElements = {
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-outlined-button': OscdOutlinedButton$1,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-scl-icon': OscdSclIcon,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-action-pane': OscdActionPane,
     'do-container': DOContainer,
     'da-container': DAContainer,
@@ -201583,11 +201787,11 @@ class LNContainer extends ScopedElementsMixin$2(BaseContainer) {
     }
 }
 LNContainer.scopedElements = {
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-outlined-button': OscdOutlinedButton$1,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-scl-icon': OscdSclIcon,
     'oscd-action-pane': OscdActionPane,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'do-container': DOContainer,
 };
 __decorate$2([
@@ -201641,7 +201845,7 @@ function createBayWizard$1(parent) {
         }),
     };
 }
-function updateAction$L(element) {
+function updateAction$P(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -201658,7 +201862,7 @@ function editBayWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$L(element),
+            action: updateAction$P(element),
         },
         content: renderBayWizard$1({
             name: element.getAttribute('name'),
@@ -201883,7 +202087,7 @@ function createConductingEquipmentWizard$1(parent) {
         }),
     };
 }
-function updateAction$K(element) {
+function updateAction$O(element) {
     return (inputs) => {
         const name = getValue$1(inputs.find(i => i.label === 'name'));
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -201900,7 +202104,7 @@ function editConductingEquipmentWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$K(element),
+            action: updateAction$O(element),
         },
         content: renderConductingEquipmentWizard$1({
             name: element.getAttribute('name'),
@@ -201933,6 +202137,7 @@ const patterns$1 = {
         '(SPG)|(ING)|(ENG)|(ORG)|(TSG)|(CUG)|(VSG)|(ASG)|(CURVE)|(CSG)|(DPL)|(LPL)|(CSD)|(CST)|' +
         '(BTS)|(UTS)|(LTS)|(GTS)|(MTS)|(NTS)|(STS)|(CTS)|(OTS)|(VSD)'};
 const maxLength$1 = {
+    cbName: 32,
     abstracDaName: 60,
     prefix: 11};
 const predefinedBasicTypeEnum$1 = [
@@ -201991,6 +202196,9 @@ const functionalConstraintEnum$1 = [
     'EX',
     'CO',
 ];
+const tSmpMod = ['SmpPerPeriod', 'SmpPerSec', 'SecPerSmp'];
+const tGSEControlType = ['GOOSE', 'GSSE'];
+const tSecurityEnable = ['None', 'Signature', 'SignatureAndEncryption'];
 const typeBase$1 = {
     IP: '([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])[.]([0-9]{1,2}|1[0-9]{2}|2[0-4][0-9]|25[0-5])',
     OSI: '[0-9A-F]+',
@@ -202066,7 +202274,7 @@ function createAddressElement$1(parent, inputs, instType) {
 function updateAddress$1(parent, inputs, instType) {
     const actions = [];
     const newAddress = createAddressElement$1(parent, inputs, instType);
-    const oldAddress = parent.querySelector('Address');
+    const oldAddress = parent.querySelector(':scope > Address');
     if (oldAddress !== null && existDiff$1(oldAddress, newAddress)) {
         actions.push({
             node: oldAddress,
@@ -202390,14 +202598,16 @@ function createConnectedApWizard$1(element) {
         ],
     };
 }
-function updateAction$J(element) {
+function updateAction$N(element) {
     return (inputs, wizard) => {
         const instType = wizard.querySelector('#instType').value === 'true';
         const addressContent = {};
         inputs.forEach(input => {
-            const key = input.label;
-            const value = getValue$1(input);
-            addressContent[key] = value;
+            if (!(input instanceof SclCheckbox)) {
+                const key = input.label;
+                const value = getValue$1(input);
+                addressContent[key] = value;
+            }
         });
         return updateAddress$1(element, addressContent, instType);
     };
@@ -202409,7 +202619,7 @@ function editConnectedApWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$J(element),
+            action: updateAction$N(element),
         },
         content: [...contentAddress$1({ element, types: getTypes$1(element) })],
     };
@@ -202965,7 +203175,7 @@ function createEnumValWizard$1(parent) {
         content: renderContent$8({ ord, desc, value }),
     };
 }
-function updateAction$I(element) {
+function updateAction$M(element) {
     return (inputs) => {
         const value = getValue$1(inputs.find(i => i.label === 'value')) ?? '';
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -203000,7 +203210,7 @@ function editEnumValWizard$1(element) {
         primary: {
             icon: '',
             label: 'Save',
-            action: updateAction$I(element),
+            action: updateAction$M(element),
         },
         content: renderContent$8({ ord, desc, value }),
     };
@@ -203017,12 +203227,12 @@ function contentFunctionWizard$1(options) {
     ></scl-text-field>`,
         b$4 `<scl-text-field
       label="desc"
-      .maybeValue=${options.desc}
+      .value=${options.desc}
       nullable
     ></scl-text-field>`,
         b$4 `<scl-text-field
       label="type"
-      .maybeValue=${options.type}
+      .value=${options.type}
       nullable
     ></scl-text-field>`,
     ];
@@ -203134,7 +203344,7 @@ function createEqFunctionWizard$1(parent) {
         ],
     };
 }
-function updateAction$H(element) {
+function updateAction$L(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -203156,7 +203366,7 @@ function editEqFunctionWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$H(element),
+            action: updateAction$L(element),
         },
         content: [
             ...contentFunctionWizard$1({
@@ -203207,7 +203417,7 @@ function createEqSubFunctionWizard$1(parent) {
         ],
     };
 }
-function updateAction$G(element) {
+function updateAction$K(element) {
     return (inputs) => {
         const attributes = {};
         const functionKeys = ['name', 'desc', 'type'];
@@ -203229,7 +203439,7 @@ function editEqSubFunctionWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$G(element),
+            action: updateAction$K(element),
         },
         content: [
             ...contentFunctionWizard$1({
@@ -203253,7 +203463,7 @@ function contentGeneralEquipmentWizard$1(options) {
     ></scl-text-field>`,
         b$4 `<scl-text-field
       label="desc"
-      .maybeValue=${options.desc}
+      .value=${options.desc}
       nullable
     ></scl-text-field>`,
         b$4 `<scl-text-field
@@ -203310,7 +203520,7 @@ function createGeneralEquipmentWizard$1(parent) {
         ],
     };
 }
-function updateAction$F(element) {
+function updateAction$J(element) {
     return (inputs) => {
         const attributes = {};
         const generalEquipmentKeys = ['name', 'desc', 'type', 'virtual'];
@@ -203333,7 +203543,7 @@ function editGeneralEquipmentWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$F(element),
+            action: updateAction$J(element),
         },
         content: [
             ...contentGeneralEquipmentWizard$1({
@@ -203419,7 +203629,7 @@ function createLineWizard$1(parent) {
         ],
     };
 }
-function updateAction$E(element) {
+function updateAction$I(element) {
     return (inputs) => {
         const attributes = {};
         const lineKeys = ['name', 'desc', 'type', 'nomFreq', 'numPhases'];
@@ -203438,7 +203648,7 @@ function editLineWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$E(element),
+            action: updateAction$I(element),
         },
         content: renderContent$7({
             name: element.getAttribute('name') ?? '',
@@ -203507,7 +203717,7 @@ function createPowerTransformerWizard$1(parent) {
         }),
     };
 }
-function updateAction$D(element) {
+function updateAction$H(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -203524,7 +203734,7 @@ function editPowerTransformerWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$D(element),
+            action: updateAction$H(element),
         },
         content: renderPowerTransformerWizard$1({
             name: element.getAttribute('name'),
@@ -203593,7 +203803,7 @@ function createProcessWizard$1(parent) {
         ],
     };
 }
-function updateAction$C(element) {
+function updateAction$G(element) {
     return (inputs) => {
         const attributes = {};
         const tapProcessKeys = ['name', 'desc', 'type'];
@@ -203618,7 +203828,7 @@ function editProcessWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$C(element),
+            action: updateAction$G(element),
         },
         content: [
             ...contentProcessWizard$1({
@@ -203789,7 +203999,7 @@ function createSubEquipmentWizard$1(parent) {
         ],
     };
 }
-function updateAction$B(element) {
+function updateAction$F(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'phase', 'virtual'];
@@ -203812,7 +204022,7 @@ function editSubEquipmentWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$B(element),
+            action: updateAction$F(element),
         },
         content: [
             ...contentSubEquipmentWizard$1({
@@ -203864,7 +204074,7 @@ function createSubFunctionWizard$1(parent) {
         ],
     };
 }
-function updateAction$A(element) {
+function updateAction$E(element) {
     return (inputs) => {
         const attributes = {};
         const subFunctionKeys = ['name', 'desc', 'type'];
@@ -203886,7 +204096,7 @@ function editSubFunctionWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$A(element),
+            action: updateAction$E(element),
         },
         content: [
             ...contentFunctionWizard$1({
@@ -204017,7 +204227,7 @@ function getBitRateAction$1(oldBitRate, BitRate, multiplier, SubNetwork) {
         { node: oldBitRate },
     ];
 }
-function updateAction$z(element) {
+function updateAction$D(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -204069,7 +204279,7 @@ function editSubNetworkWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$z(element),
+            action: updateAction$D(element),
         },
         content: renderContent$5({
             name,
@@ -204081,7 +204291,7 @@ function editSubNetworkWizard$1(element) {
     };
 }
 
-function render$9(options) {
+function render$d(options) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -204123,14 +204333,14 @@ function createSubstationWizard$1(parent) {
             label: 'add',
             action: createAction$q(parent),
         },
-        content: render$9({
+        content: render$d({
             name: '',
             reservedValues: reservedNames$1(parent, 'Substation'),
             desc: '',
         }),
     };
 }
-function updateAction$y(element) {
+function updateAction$C(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -204147,9 +204357,9 @@ function editSubstationWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$y(element),
+            action: updateAction$C(element),
         },
-        content: render$9({
+        content: render$d({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$1(element),
             desc: element.getAttribute('desc'),
@@ -204223,7 +204433,7 @@ function createTapChangerWizard$1(parent) {
         ],
     };
 }
-function updateAction$x(element) {
+function updateAction$B(element) {
     return (inputs) => {
         const attributes = {};
         const tapChangerKeys = ['name', 'desc', 'type', 'virtual'];
@@ -204246,7 +204456,7 @@ function editTapChangerWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$x(element),
+            action: updateAction$B(element),
         },
         content: [
             ...contentTapChangerWizard$1({
@@ -204260,7 +204470,7 @@ function editTapChangerWizard$1(element) {
     };
 }
 
-function render$8({ content }) {
+function render$c({ content }) {
     return [
         b$4 `<md-filled-textfield
       type="textarea"
@@ -204295,12 +204505,12 @@ function createTextWizard$1(parent) {
             label: 'add',
             action: createAction$o(parent),
         },
-        content: render$8({
+        content: render$c({
             content: '',
         }),
     };
 }
-function updateAction$w(element) {
+function updateAction$A(element) {
     return (inputs) => {
         const content = inputs.find(i => i.label === 'content').value;
         if (content === element.textContent) {
@@ -204323,9 +204533,9 @@ function editTextWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$w(element),
+            action: updateAction$A(element),
         },
-        content: render$8({
+        content: render$c({
             content: element.textContent || '',
         }),
     };
@@ -204397,7 +204607,7 @@ function createTransformerWindingWizard$1(parent) {
         ],
     };
 }
-function updateAction$v(element) {
+function updateAction$z(element) {
     return (inputs) => {
         const attributes = {};
         const transformerWindingKeys = ['name', 'desc', 'type', 'virtual'];
@@ -204420,7 +204630,7 @@ function editTransformerWindingWizard$1(element) {
         primary: {
             icon: 'save',
             label: 'save',
-            action: updateAction$v(element),
+            action: updateAction$z(element),
         },
         content: [
             ...contentTransformerWindingWizard$1({
@@ -204440,7 +204650,7 @@ const initial$2 = {
     Voltage: '110',
     multiplier: 'k',
 };
-function render$7(option) {
+function render$b(option) {
     return [
         b$4 `<scl-text-field
       label="name"
@@ -204530,7 +204740,7 @@ function createVoltageLevelWizard$1(parent) {
             label: 'add',
             action: createAction$m(parent),
         },
-        content: render$7({
+        content: render$b({
             name: '',
             reservedValues: reservedNames$1(parent, 'VoltageLevel'),
             desc: '',
@@ -204574,7 +204784,7 @@ function getVoltageAction$1(oldVoltage, Voltage, multiplier, voltageLevel) {
         { node: oldVoltage },
     ];
 }
-function updateAction$u(element) {
+function updateAction$y(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -204624,9 +204834,9 @@ function editVoltageLevelWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$u(element),
+            action: updateAction$y(element),
         },
-        content: render$7({
+        content: render$b({
             name: element.getAttribute('name') ?? '',
             reservedValues: reservedNames$1(element),
             desc: element.getAttribute('desc'),
@@ -204674,7 +204884,7 @@ function mxxTimeUpdateAction$1(gse, oldMxxTime, newTimeValue, option) {
         { node: oldMxxTime },
     ];
 }
-function updateAction$t(element) {
+function updateAction$x(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -204709,7 +204919,7 @@ function editGseWizard$1(element) {
         primary: {
             label: 'save',
             icon: 'save',
-            action: updateAction$t(element),
+            action: updateAction$x(element),
         },
         content: [
             ...contentAddress$1({ element, types }),
@@ -204728,6 +204938,89 @@ function editGseWizard$1(element) {
         type="number"
       ></scl-text-field>`,
         ],
+    };
+}
+
+function render$a(options) {
+    return [
+        b$4 `<scl-text-field
+      label="name"
+      .value=${options.name}
+      required
+      maxLength="${maxLength$1.cbName}"
+      .reservedValues=${options.reservedValues}
+      dialogInitialFocus
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="desc"
+      .value=${options.desc}
+      nullable
+    ></scl-text-field>`,
+        b$4 `<scl-select
+      label="type"
+      .selectOptions=${tGSEControlType}
+      .value=${options.type}
+      nullable
+    ></scl-select>`,
+        b$4 `<scl-text-field
+      label="appID"
+      .value=${options.appID}
+      required
+    ></scl-text-field>`,
+        b$4 `<scl-checkbox
+      label="fixedOffs"
+      .value=${options.fixedOffs}
+      nullable
+    ></scl-checkbox>`,
+        b$4 `<scl-select
+      label="securityEnabled"
+      .selectOptions=${tSecurityEnable}
+      .value=${options.securityEnabled}
+      nullable
+    ></scl-select>`,
+    ];
+}
+function updateAction$w(element) {
+    return (inputs) => {
+        const name = getValue$1(inputs.find(i => i.label === 'name'));
+        const desc = getValue$1(inputs.find(i => i.label === 'desc'));
+        const type = getValue$1(inputs.find(i => i.label === 'type'));
+        const appID = getValue$1(inputs.find(i => i.label === 'appID'));
+        const fixedOffs = getValue$1(inputs.find(i => i.label === 'fixedOffs'));
+        const securityEnabled = getValue$1(inputs.find(i => i.label === 'securityEnabled'));
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc') &&
+            type === element.getAttribute('type') &&
+            appID === element.getAttribute('appID') &&
+            fixedOffs === element.getAttribute('fixedOffs') &&
+            securityEnabled === element.getAttribute('securityEnabled')) {
+            return [];
+        }
+        return [
+            {
+                element,
+                attributes: { name, desc, type, appID, fixedOffs, securityEnabled },
+            },
+        ];
+    };
+}
+function editGSEControlWizard(element) {
+    return {
+        title: 'Edit GSEControl',
+        primary: {
+            icon: 'edit',
+            label: 'save',
+            action: updateAction$w(element),
+        },
+        content: render$a({
+            name: element.getAttribute('name') ?? '',
+            reservedValues: reservedNames$1(element),
+            desc: element.getAttribute('desc'),
+            type: element.getAttribute('type'),
+            appID: element.getAttribute('appID') ?? '',
+            fixedOffs: element.getAttribute('fixedOffs'),
+            securityEnabled: element.getAttribute('securityEnabled'),
+        }),
     };
 }
 
@@ -204767,7 +205060,7 @@ function renderEdit$1(name, iedNames, desc, type, manufacturer, owner) {
     ></scl-text-field>`,
     ];
 }
-function updateAction$s(element) {
+function updateAction$v(element) {
     return (inputs) => {
         const name = inputs.find(i => i.label === 'name').value;
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -204793,7 +205086,7 @@ function editIEDWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$s(element),
+            action: updateAction$v(element),
         },
         content: renderEdit$1(element.getAttribute('name') ?? '', iedNames, element.getAttribute('desc'), element.getAttribute('type'), element.getAttribute('manufacturer'), element.getAttribute('owner')),
     };
@@ -204805,7 +205098,7 @@ function createIEDWizard$1(parent) {
         primary: {
             icon: 'add',
             label: 'Create',
-            action: updateAction$s(parent),
+            action: updateAction$v(parent),
         },
         content: renderAdd$1(parent.getAttribute('name') ?? '', iedNames, parent.getAttribute('desc')),
     };
@@ -204831,7 +205124,7 @@ function reservedInstLDevice$1(currentElement) {
         .map(ld => ld.getAttribute('inst') ?? '')
         .filter(name => name !== currentElement.getAttribute('inst'));
 }
-function render$6(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
+function render$9(inst, ldName, desc, reservedInsts, allowLdName, disableInst) {
     const content = [
         allowLdName
             ? b$4 `<scl-text-field
@@ -204902,7 +205195,7 @@ function createAction$l(parent) {
         ];
     };
 }
-function updateAction$r(element) {
+function updateAction$u(element) {
     return (inputs) => {
         const ldNameAllowed = ldNameIsAllowed$1(element);
         const desc = getValue$1(inputs.find(i => i.label === 'desc'));
@@ -204931,7 +205224,7 @@ function createLDeviceWizard$1(parent) {
             label: 'save',
             action: createAction$l(parent),
         },
-        content: render$6(null, null, null, reservedInstLDevice$1(parent), ldNameIsAllowed$1(parent), false),
+        content: render$9(null, null, null, reservedInstLDevice$1(parent), ldNameIsAllowed$1(parent), false),
     };
 }
 function editLDeviceWizard$1(element) {
@@ -204940,13 +205233,13 @@ function editLDeviceWizard$1(element) {
         primary: {
             icon: 'edit',
             label: 'save',
-            action: updateAction$r(element),
+            action: updateAction$u(element),
         },
-        content: render$6(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$1(element), ldNameIsAllowed$1(element), true),
+        content: render$9(element.getAttribute('inst'), element.getAttribute('ldName'), element.getAttribute('desc'), reservedInstLDevice$1(element), ldNameIsAllowed$1(element), true),
     };
 }
 
-function updateAction$q(element) {
+function updateAction$t(element) {
     return (inputs, wizard) => {
         const action = [];
         const instType = wizard.querySelector('#instType').value === 'true';
@@ -204972,9 +205265,286 @@ function editSMvWizard$1(element) {
         primary: {
             label: 'save',
             icon: 'edit',
-            action: updateAction$q(element),
+            action: updateAction$t(element),
         },
         content: [...contentAddress$1({ element, types })],
+    };
+}
+
+function render$8(options) {
+    const fields = [
+        b$4 `<scl-text-field
+      label="name"
+      .value=${options.name}
+      required
+      maxLength="${maxLength$1.cbName}"
+      .reservedValues=${options.reservedValues}
+      dialogInitialFocus
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="desc"
+      .value=${options.desc}
+      nullable
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="smvID"
+      .value=${options.smvID}
+      required
+    ></scl-text-field>`,
+        b$4 `<scl-select
+      label="smpMod"
+      .selectOptions=${tSmpMod}
+      .value=${options.smpMod}
+      nullable
+    ></scl-select>`,
+        b$4 `<scl-text-field
+      label="smpRate"
+      .value=${options.smpRate}
+      required
+      type="number"
+      min="0"
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="nofASDU"
+      .value=${options.nofASDU}
+      required
+      type="number"
+      min="0"
+    ></scl-text-field>`,
+        b$4 `<scl-select
+      label="securityEnabled"
+      .selectOptions=${tSecurityEnable}
+      .value=${options.securityEnabled}
+      nullable
+    ></scl-select>`,
+    ];
+    if (options.multicast === 'false') {
+        fields.push(b$4 `<scl-checkbox
+        label="multicast"
+        .value=${'false'}
+        disabled
+      ></scl-checkbox>`);
+    }
+    return fields;
+}
+function updateAction$s(element) {
+    return (inputs) => {
+        const name = getValue$1(inputs.find(i => i.label === 'name'));
+        const desc = getValue$1(inputs.find(i => i.label === 'desc'));
+        const smvID = getValue$1(inputs.find(i => i.label === 'smvID'));
+        const smpMod = getValue$1(inputs.find(i => i.label === 'smpMod'));
+        const smpRate = getValue$1(inputs.find(i => i.label === 'smpRate'));
+        const nofASDU = getValue$1(inputs.find(i => i.label === 'nofASDU'));
+        const securityEnabled = getValue$1(inputs.find(i => i.label === 'securityEnabled'));
+        if (name === element.getAttribute('name') &&
+            desc === element.getAttribute('desc') &&
+            smvID === element.getAttribute('smvID') &&
+            smpMod === element.getAttribute('smpMod') &&
+            smpRate === element.getAttribute('smpRate') &&
+            nofASDU === element.getAttribute('nofASDU') &&
+            securityEnabled === element.getAttribute('securityEnabled')) {
+            return [];
+        }
+        return [
+            {
+                element,
+                attributes: {
+                    name,
+                    desc,
+                    smvID,
+                    smpMod,
+                    smpRate,
+                    nofASDU,
+                    securityEnabled,
+                },
+            },
+        ];
+    };
+}
+function editSampledValueControlWizard(element) {
+    return {
+        title: 'Edit SampledValueControl',
+        primary: {
+            icon: 'edit',
+            label: 'save',
+            action: updateAction$s(element),
+        },
+        content: render$8({
+            name: element.getAttribute('name') ?? '',
+            reservedValues: reservedNames$1(element),
+            desc: element.getAttribute('desc'),
+            smvID: element.getAttribute('smvID') ?? '',
+            smpMod: element.getAttribute('smpMod'),
+            smpRate: element.getAttribute('smpRate') ?? '',
+            nofASDU: element.getAttribute('nofASDU') ?? '',
+            securityEnabled: element.getAttribute('securityEnabled'),
+            multicast: element.getAttribute('multicast'),
+        }),
+    };
+}
+
+const smvOptKeys = [
+    'refreshTime',
+    'sampleRate',
+    'dataSet',
+    'security',
+    'synchSourceId',
+];
+function render$7(options) {
+    return smvOptKeys.map(key => b$4 `<scl-checkbox
+        label="${key}"
+        .value=${options[key]}
+        nullable
+      ></scl-checkbox>`);
+}
+function updateAction$r(element) {
+    return (inputs) => {
+        const attributes = {};
+        for (const key of smvOptKeys) {
+            attributes[key] = getValue$1(inputs.find(i => i.label === key));
+        }
+        if (!smvOptKeys.some(key => attributes[key] !== element.getAttribute(key)))
+            return [];
+        return [{ element, attributes }];
+    };
+}
+function editSmvOptsWizard(element) {
+    const options = {};
+    for (const key of smvOptKeys) {
+        options[key] = element.getAttribute(key);
+    }
+    return {
+        title: 'Edit SmvOpts',
+        primary: {
+            icon: 'edit',
+            label: 'save',
+            action: updateAction$r(element),
+        },
+        content: render$7(options),
+    };
+}
+
+function fcdaLabel(fcda) {
+    const parts = [];
+    const ldInst = fcda.getAttribute('ldInst');
+    if (ldInst)
+        parts.push(ldInst);
+    const prefix = fcda.getAttribute('prefix') ?? '';
+    const lnClass = fcda.getAttribute('lnClass') ?? '';
+    const lnInst = fcda.getAttribute('lnInst') ?? '';
+    if (lnClass)
+        parts.push(`${prefix}${lnClass}${lnInst}`);
+    const doName = fcda.getAttribute('doName');
+    if (doName)
+        parts.push(doName);
+    const daName = fcda.getAttribute('daName');
+    if (daName)
+        parts.push(daName);
+    const fc = fcda.getAttribute('fc');
+    if (fc)
+        parts.push(`[${fc}]`);
+    return parts.join('.');
+}
+function render$6(options) {
+    return [
+        b$4 `<scl-text-field
+      label="name"
+      .value=${options.name}
+      disabled
+      dialogInitialFocus
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="desc"
+      .value=${options.desc}
+      nullable
+    ></scl-text-field>`,
+        b$4 `<selection-list
+      id="fcda-list"
+      .items=${options.fcdas.map(fcda => ({
+            headline: fcdaLabel(fcda),
+            attachedElement: fcda,
+            selected: true,
+        }))}
+    ></selection-list>`,
+    ];
+}
+function updateAction$q(element) {
+    return (inputs, wizard) => {
+        const name = getValue$1(inputs.find(i => i.label === 'name'));
+        const desc = getValue$1(inputs.find(i => i.label === 'desc'));
+        const edits = [];
+        // Collect FCDA removals from the selection list
+        const list = wizard.querySelector('#fcda-list');
+        if (list) {
+            const selectedFcdas = new Set(list.selectedElements);
+            const allFcdas = Array.from(element.querySelectorAll('FCDA'));
+            for (const fcda of allFcdas) {
+                if (!selectedFcdas.has(fcda)) {
+                    edits.push({ node: fcda });
+                }
+            }
+        }
+        // Collect attribute changes
+        if (name !== element.getAttribute('name') ||
+            desc !== element.getAttribute('desc')) {
+            edits.push({ element, attributes: { name, desc } });
+        }
+        return edits;
+    };
+}
+function editDataSetWizard(element) {
+    return {
+        title: 'Edit DataSet',
+        primary: {
+            icon: 'edit',
+            label: 'save',
+            action: updateAction$q(element),
+        },
+        content: render$6({
+            name: element.getAttribute('name') ?? '',
+            desc: element.getAttribute('desc'),
+            fcdas: Array.from(element.querySelectorAll('FCDA')),
+        }),
+    };
+}
+
+function createDATypeAction(parent) {
+    return (inputs) => {
+        const daTypeAttrs = {};
+        const daTypeKeys = ['id', 'desc'];
+        daTypeKeys.forEach(key => {
+            daTypeAttrs[key] = getValue$1(inputs.find(i => i.label === key));
+        });
+        const daType = createElement$2(parent.ownerDocument, 'DAType', daTypeAttrs);
+        return [
+            { parent, node: daType, reference: getReference$2(parent, 'DAType') },
+        ];
+    };
+}
+function createDATypeWizard(parent) {
+    return {
+        title: 'Add DAType',
+        primary: {
+            icon: 'Save',
+            label: 'Save',
+            action: createDATypeAction(parent),
+        },
+        content: [
+            b$4 `<scl-text-field
+        label="id"
+        .value=${''}
+        required
+        maxlength="127"
+        minlength="1"
+        pattern="${patterns$1.nmToken}"
+      ></scl-text-field>`,
+            b$4 `<scl-text-field
+        label="desc"
+        .value=${null}
+        nullable
+        pattern="${patterns$1.normalizedString}"
+      ></scl-text-field>`,
+        ],
     };
 }
 
@@ -205010,7 +205580,7 @@ function createDOTypeWizard$1(parent) {
       ></scl-text-field>`,
             b$4 `<scl-text-field
         label="desc"
-        .maybeValue=${null}
+        .value=${null}
         nullable
         pattern="${patterns$1.normalizedString}"
       ></scl-text-field>`,
@@ -205379,6 +205949,105 @@ function createLNodeWizard$1(parent) {
         ],
     };
 }
+function contentLNodeWizard$1(options) {
+    const isIedRef = options.iedName !== 'None';
+    return [
+        b$4 `<scl-text-field
+      label="iedName"
+      .value=${options.iedName}
+      helper="iedName"
+      disabled
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="ldInst"
+      .value=${options.ldInst}
+      helper="ldInst"
+      nullable
+      disabled
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="prefix"
+      .value=${options.prefix}
+      helper="prefix"
+      pattern="${patterns$1.normalizedString}"
+      maxLength="11"
+      nullable
+      ?disabled=${isIedRef}
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="lnClass"
+      .value=${options.lnClass}
+      helper="lnClass"
+      disabled
+    ></scl-text-field>`,
+        b$4 `<scl-text-field
+      label="lnInst"
+      .value=${options.lnInst}
+      helper="lnInst"
+      type="number"
+      min="1"
+      max="99"
+      .reservedValues=${options.reservedLnInst}
+      ?disabled=${isIedRef}
+    ></scl-text-field>`,
+    ];
+}
+function updateLNodeAction$1(element) {
+    return (inputs) => {
+        const attributes = {};
+        const attributeKeys = ['iedName', 'ldInst', 'prefix', 'lnClass', 'lnInst'];
+        attributeKeys.forEach(key => {
+            attributes[key] = getValue$1(inputs.find(i => i.label === key));
+        });
+        if (attributeKeys.some(key => attributes[key] !== element.getAttribute(key))) {
+            const newElement = cloneElement$1(element, attributes);
+            const parent = element.parentElement ?? element.ownerDocument;
+            const nextSibling = element.nextSibling ?? null;
+            return [
+                { node: element },
+                ...(newElement
+                    ? [
+                        {
+                            node: newElement,
+                            parent,
+                            reference: nextSibling,
+                        },
+                    ]
+                    : []),
+            ];
+        }
+        return [];
+    };
+}
+function editLNodeWizard$1(element) {
+    const [iedName, ldInst, prefix, lnClass, lnInst] = [
+        'iedName',
+        'ldInst',
+        'prefix',
+        'lnClass',
+        'lnInst',
+    ].map(attr => element.getAttribute(attr));
+    const reservedLnInst = getChildElementsByTagName$1(element.parentElement, 'LNode')
+        .filter(sibling => sibling !== element &&
+        sibling.getAttribute('lnClass') === element.getAttribute('lnClass'))
+        .map(sibling => sibling.getAttribute('lnInst'));
+    return {
+        title: 'LNode',
+        primary: {
+            label: 'Save',
+            icon: 'save',
+            action: updateLNodeAction$1(element),
+        },
+        content: contentLNodeWizard$1({
+            iedName,
+            ldInst,
+            prefix,
+            lnClass,
+            lnInst,
+            reservedLnInst,
+        }),
+    };
+}
 
 function listLNodeTypes$1(doc) {
     return Array.from(doc.querySelectorAll(':root > DataTypeTemplates > LNodeType'))
@@ -205706,6 +206375,70 @@ function updateLN0Wizard$1(element) {
     };
 }
 
+function createBDaAction(parent) {
+    return (inputs) => {
+        const name = getValue$1(inputs.find(i => i.label === 'name'));
+        const desc = getValue$1(inputs.find(i => i.label === 'desc'));
+        const bType = getValue$1(inputs.find(i => i.label === 'bType'));
+        const type = bType === 'Enum' || bType === 'Struct'
+            ? getValue$1(inputs.find(i => i.label === 'type'))
+            : null;
+        const sAddr = getValue$1(inputs.find(i => i.label === 'sAddr'));
+        const valKind = getValue$1(inputs.find(i => i.label === 'valKind')) !== ''
+            ? getValue$1(inputs.find(i => i.label === 'valKind'))
+            : null;
+        const valImport = getValue$1(inputs.find(i => i.label === 'valImport')) !== ''
+            ? getValue$1(inputs.find(i => i.label === 'valImport'))
+            : null;
+        const valField = inputs.find(i => i.label === 'Val' && i.style.display !== 'none');
+        const Val = valField ? getValue$1(valField) : null;
+        const element = createElement$2(parent.ownerDocument, 'BDA', {
+            name,
+            desc,
+            bType,
+            type,
+            sAddr,
+            valKind,
+            valImport,
+        });
+        if (Val !== null) {
+            const valElement = createElement$2(parent.ownerDocument, 'Val', {});
+            valElement.textContent = Val;
+            element.appendChild(valElement);
+        }
+        return [
+            {
+                parent,
+                node: element,
+                reference: getReference$2(parent, 'BDA'),
+            },
+        ];
+    };
+}
+function createBDaWizard(element) {
+    const doc = element.ownerDocument;
+    const name = '';
+    const desc = null;
+    const bType = '';
+    const type = null;
+    const sAddr = null;
+    const Val = null;
+    const valKind = null;
+    const valImport = null;
+    const doOrEnumTypes = Array.from(doc.querySelectorAll('DAType, EnumType')).filter(doOrEnumType => doOrEnumType.getAttribute('id'));
+    const data = element.closest('DataTypeTemplates');
+    return {
+        title: 'Add BDA',
+        primary: {
+            icon: '',
+            label: 'save',
+            action: createBDaAction(element),
+        },
+        content: [
+            ...renderAbstractDataAttributeContent$1(name, desc, bType, doOrEnumTypes, type, sAddr, valKind, valImport, Val, data),
+        ],
+    };
+}
 function updateBDaAction$1(element) {
     return (inputs) => {
         const name = getValue$1(inputs.find(i => i.label === 'name'));
@@ -205812,7 +206545,7 @@ const wizards$1 = {
     },
     BDA: {
         edit: editBDaWizard$1,
-        create: emptyWizard$1,
+        create: createBDaWizard,
     },
     BitRate: {
         edit: emptyWizard$1,
@@ -205876,7 +206609,7 @@ const wizards$1 = {
     },
     DAType: {
         edit: emptyWizard$1,
-        create: emptyWizard$1,
+        create: createDATypeWizard,
     },
     DO: {
         edit: editDoWizard$1,
@@ -205895,7 +206628,7 @@ const wizards$1 = {
         create: emptyWizard$1,
     },
     DataSet: {
-        edit: emptyWizard$1,
+        edit: editDataSetWizard,
         create: emptyWizard$1,
     },
     DataSetDirectory: {
@@ -205974,6 +206707,10 @@ const wizards$1 = {
         edit: editGseWizard$1,
         create: emptyWizard$1,
     },
+    GSEControl: {
+        edit: editGSEControlWizard,
+        create: emptyWizard$1,
+    },
     GSEDir: {
         edit: emptyWizard$1,
         create: emptyWizard$1,
@@ -206031,7 +206768,7 @@ const wizards$1 = {
         create: emptyWizard$1,
     },
     LNode: {
-        edit: emptyWizard$1,
+        edit: editLNodeWizard$1,
         create: createLNodeWizard$1,
     },
     LNodeType: {
@@ -206122,6 +206859,10 @@ const wizards$1 = {
         edit: emptyWizard$1,
         create: emptyWizard$1,
     },
+    SampledValueControl: {
+        edit: editSampledValueControlWizard,
+        create: emptyWizard$1,
+    },
     SecPerSamples: {
         edit: emptyWizard$1,
         create: emptyWizard$1,
@@ -206175,7 +206916,7 @@ const wizards$1 = {
         create: emptyWizard$1,
     },
     SmvOpts: {
-        edit: emptyWizard$1,
+        edit: editSmvOptsWizard,
         create: emptyWizard$1,
     },
     SMVsc: {
@@ -206870,13 +207611,41 @@ function getWizard$1(wizardType) {
     return undefined;
 }
 function wizardContent$1(wizardType) {
-    return ((wizardType && getWizard$1(wizardType)?.content) || [
-        b$4 `<div>Invalid wizard type definition</div>`,
-    ]);
+    const wizard = wizardType && getWizard$1(wizardType);
+    if (wizard?.content) {
+        return wizard.content;
+    }
+    if (wizardType && isCreateWizard$1(wizardType)) {
+        return [
+            b$4 `<div>
+        Creating <strong>${wizardType.tagName}</strong> is not yet supported.
+      </div>`,
+        ];
+    }
+    if (wizardType && isEditWizard$1(wizardType)) {
+        return [
+            b$4 `<div class="unsupported-message">
+        <p>
+          Editing <strong>${wizardType.element.tagName}</strong> Elements is not
+          yet supported.
+        </p>
+      </div>`,
+        ];
+    }
+    return [b$4 `<div>Invalid wizard type definition</div>`];
 }
 function wizardTitle$1(wizardType) {
-    return ((wizardType && getWizard$1(wizardType)?.title) ||
-        'Invalid wizard type definition');
+    const wizard = wizardType && getWizard$1(wizardType);
+    if (wizard?.title) {
+        return wizard.title;
+    }
+    if (wizardType && isCreateWizard$1(wizardType)) {
+        return `Add ${wizardType.tagName}`;
+    }
+    if (wizardType && isEditWizard$1(wizardType)) {
+        return `Edit ${wizardType.element.tagName}`;
+    }
+    return 'Error';
 }
 function wizardAction$1(wizardType) {
     if (!wizardType) {
@@ -207050,13 +207819,22 @@ let OscdSclDialogs$1 = class OscdSclDialogs extends BaseElement$3 {
         }}"
             >Cancel</md-text-button
           >
-          <md-filled-button
-            form="add-data-object"
-            @click=${() => this.editorMode
-            ? this.applyTextEdits()
-            : this.applyFormValues(wizardAction$1(this.wizardType))}
-            >Save</md-filled-button
-          >
+          ${!this.editorMode && !(this.wizardType && getWizard$1(this.wizardType))
+            ? b$4 `<md-outlined-button
+                @click="${(event) => {
+                event.stopImmediatePropagation();
+                event.preventDefault();
+                this.editorMode = true;
+            }}"
+                >Use Editor</md-outlined-button
+              >`
+            : b$4 `<md-filled-button
+                form="add-data-object"
+                @click=${() => this.editorMode
+                ? this.applyTextEdits()
+                : this.applyFormValues(wizardAction$1(this.wizardType))}
+                >Save</md-filled-button
+              >`}
         </div>
       </md-dialog>
     </div>`;
@@ -207066,6 +207844,7 @@ OscdSclDialogs$1.scopedElements = {
     'md-dialog': MdDialog,
     'md-text-button': MdTextButton,
     'md-filled-button': MdFilledButton,
+    'md-outlined-button': MdOutlinedButton,
     'scl-checkbox': SclCheckbox,
     'scl-text-field': SclTextField,
     'scl-select': SclSelect,
@@ -207190,6 +207969,17 @@ OscdSclDialogs$1.styles = i$10 `
       display: block;
       margin-top: 16px;
     }
+
+    .unsupported-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .unsupported-message md-outlined-button {
+      align-self: flex-end;
+    }
   `;
 __decorate$2([
     n$1k({ type: Object })
@@ -207258,7 +208048,7 @@ class LDeviceContainer extends ScopedElementsMixin$2(BaseContainer) {
         return `${nameOrInst}${desc ? ` \u2014 ${desc}` : ''}${ldName ? ` \u2014 ${ldName}` : ''}`;
     }
     getLnElements() {
-        return Array.from(this.element.querySelectorAll(':scope > LN,LN0')).filter(element => {
+        return Array.from(this.element.querySelectorAll(':scope > LN,LN0')).filter((element) => {
             const lnClass = element.getAttribute('lnClass') ?? '';
             return this.selectedLNClasses.includes(lnClass);
         });
@@ -207319,7 +208109,7 @@ LDeviceContainer.scopedElements = {
     'oscd-action-pane': OscdActionPane,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-scl-icon': OscdSclIcon,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'ln-container': LNContainer,
     'oscd-scl-dialogs': OscdSclDialogs$1,
 };
@@ -207398,8 +208188,8 @@ class ServerContainer extends ScopedElementsMixin$2(BaseContainer) {
         return b$4 `${name}${ref}${desc ? ` \u2014 ${desc}` : ''}`;
     }
     getLDeviceElements() {
-        return Array.from(this.element.querySelectorAll(':scope > LDevice')).filter(element => {
-            return (Array.from(element.querySelectorAll(':scope > LN,LN0')).filter(element => {
+        return Array.from(this.element.querySelectorAll(':scope > LDevice')).filter((element) => {
+            return (Array.from(element.querySelectorAll(':scope > LN,LN0')).filter((element) => {
                 const lnClass = element.getAttribute('lnClass') ?? '';
                 return this.selectedLNClasses.includes(lnClass);
             }).length > 0);
@@ -207433,7 +208223,7 @@ class ServerContainer extends ScopedElementsMixin$2(BaseContainer) {
     }
 }
 ServerContainer.scopedElements = {
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-scl-icon': OscdSclIcon,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-action-pane': OscdActionPane,
@@ -207454,7 +208244,7 @@ __decorate$2([
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -207475,9 +208265,9 @@ __decorate$2([
 class OscdMenuItem extends ScopedElementsMixin$2(MenuItemEl$2) {
 }
 OscdMenuItem.scopedElements = {
-    'md-ripple': OscdRipple$4,
+    'md-ripple': OscdRipple$1,
     'md-item': OscdItem$1,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-focus-ring': OscdFocusRing$1,
 };
 OscdMenuItem.styles = [styles$2D];
 
@@ -207488,7 +208278,7 @@ OscdMenuItem.styles = [styles$2D];
  */
 /**
  * @license
- * Copyright 2025 Omicron Energy GmbH
+ * Copyright 2026 OMICRON electronics GmbH
  * SPDX-License-Identifier: Apache-2.0
  */
 /**
@@ -207504,8 +208294,8 @@ OscdMenuItem.styles = [styles$2D];
 class OscdSwitch extends ScopedElementsMixin$2(Switch) {
 }
 OscdSwitch.scopedElements = {
-    'md-ripple': OscdRipple$4,
-    'md-focus-ring': OscdFocusRing$4,
+    'md-ripple': OscdRipple$1,
+    'md-focus-ring': OscdFocusRing$1,
 };
 OscdSwitch.styles = [styles$L];
 
@@ -207697,7 +208487,7 @@ class OscdSclTextField extends ScopedElementsMixin$2(i$Z) {
 OscdSclTextField.scopedElements = {
     'oscd-filled-text-field': OscdFilledTextField,
     'oscd-switch': OscdSwitch,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-menu': OscdMenu$1,
     'oscd-menu-item': OscdMenuItem,
@@ -207913,14 +208703,14 @@ class AccessPointEditDialog extends ScopedElementsMixin$2(i$Z) {
           ${renderApNameField({
             value: this.apName,
             ied: this.element.closest('IED'),
-            onInput: value => {
+            onInput: (value) => {
                 this.apName = value;
             },
             currentName: this.element.getAttribute('name') ?? '',
         })}
           ${renderDescField({
             value: this.desc,
-            onInput: value => {
+            onInput: (value) => {
                 this.desc = value;
             },
         })}
@@ -207943,10 +208733,10 @@ class AccessPointEditDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 AccessPointEditDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
+    'oscd-dialog': OscdDialog$1,
     'oscd-filled-text-field': OscdFilledTextField,
-    'oscd-filled-button': OscdFilledButton$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-filled-button': OscdFilledButton$1,
+    'oscd-outlined-button': OscdOutlinedButton$1,
     'oscd-scl-text-field': OscdSclTextField,
 };
 AccessPointEditDialog.styles = i$10 `
@@ -208109,7 +208899,6 @@ function renderLogSettingsServices() {
 }
 
 class OscdFormGroup extends i$Z {
-    // eslint-disable-next-line class-methods-use-this
     render() {
         return b$4 `<slot></slot>`;
     }
@@ -208131,7 +208920,7 @@ class OscdFormDivider extends ScopedElementsMixin$2(i$Z) {
     }
 }
 OscdFormDivider.scopedElements = {
-    'oscd-divider': OscdDivider$4,
+    'oscd-divider': OscdDivider$1,
 };
 OscdFormDivider.styles = i$10 `
     :host {
@@ -208163,16 +208952,13 @@ class OscdForm extends i$Z {
             return null;
         }, this.data);
     }
-    // eslint-disable-next-line class-methods-use-this
     setValue(_path, _value) {
         // No-op for now (readonly)
     }
-    // eslint-disable-next-line class-methods-use-this
     getError(_path) {
         // No validation yet
         return null;
     }
-    // eslint-disable-next-line class-methods-use-this
     render() {
         return b$4 `<slot></slot>`;
     }
@@ -208653,9 +209439,7 @@ class OscdSclCheckbox extends ScopedElementsMixin$2(i$Z) {
         <div class="input container">
           <label
             class="input element"
-            style="${this.disabled || this.isNull
-            ? `color:rgba(0, 0, 0, 0.38)`
-            : ``}"
+            style="${this.disabled || this.isNull ? `color:rgba(0, 0, 0, 0.38)` : ``}"
           >
             <oscd-checkbox
               touch-target="wrapper"
@@ -209908,11 +210692,11 @@ class ServicesAction extends ScopedElementsMixin$2(i$Z) {
     }
 }
 ServicesAction.scopedElements = {
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-icon-button': OscdIconButton$1,
-    'oscd-dialog': OscdDialog$2,
-    'oscd-filled-button': OscdFilledButton$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-dialog': OscdDialog$1,
+    'oscd-filled-button': OscdFilledButton$1,
+    'oscd-outlined-button': OscdOutlinedButton$1,
     'oscd-form': OscdForm,
     'oscd-form-field': OscdFormField,
     'oscd-form-divider': OscdFormDivider,
@@ -210016,7 +210800,7 @@ class AccessPointContainer extends ScopedElementsMixin$2(BaseContainer) {
         return `${name}${desc ? ` \u2014 ${desc}` : ''}`;
     }
     getLnElements() {
-        return Array.from(this.element.querySelectorAll(':scope > LN')).filter(element => {
+        return Array.from(this.element.querySelectorAll(':scope > LN')).filter((element) => {
             const lnClass = element.getAttribute('lnClass') ?? '';
             return this.selectedLNClasses.includes(lnClass);
         });
@@ -210084,7 +210868,7 @@ class AccessPointContainer extends ScopedElementsMixin$2(BaseContainer) {
     }
 }
 AccessPointContainer.scopedElements = {
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-scl-icon': OscdSclIcon,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-action-pane': OscdActionPane,
@@ -210210,13 +210994,13 @@ class AccessPointCreateDialog extends ScopedElementsMixin$2(i$Z) {
           ${renderApNameField({
             value: this.apName,
             ied: this.ied,
-            onInput: value => {
+            onInput: (value) => {
                 this.apName = value;
             },
         })}
           ${renderDescField({
             value: this.desc,
-            onInput: value => {
+            onInput: (value) => {
                 this.desc = value;
             },
         })}
@@ -210242,10 +211026,10 @@ class AccessPointCreateDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 AccessPointCreateDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
+    'oscd-dialog': OscdDialog$1,
     'oscd-filled-text-field': OscdFilledTextField,
-    'oscd-filled-button': OscdFilledButton$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-filled-button': OscdFilledButton$1,
+    'oscd-outlined-button': OscdOutlinedButton$1,
     'oscd-switch': OscdSwitch,
     'oscd-filled-select': OscdFilledSelect$1,
     'oscd-select-option': OscdSelectOption$1,
@@ -210399,7 +211183,7 @@ class IedContainer extends ScopedElementsMixin$2(BaseContainer) {
     }
 }
 IedContainer.scopedElements = {
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'oscd-icon-button': OscdIconButton$1,
     'oscd-action-pane': OscdActionPane,
     'access-point-container': AccessPointContainer,
@@ -210500,9 +211284,9 @@ class ConfirmDeleteDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 ConfirmDeleteDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
-    'oscd-outlined-button': OscdOutlinedButton$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-dialog': OscdDialog$1,
+    'oscd-outlined-button': OscdOutlinedButton$1,
+    'oscd-filled-button': OscdFilledButton$1,
 };
 ConfirmDeleteDialog.styles = i$10 `
     oscd-filled-button {
@@ -210621,10 +211405,10 @@ class VirtualIedCreateDialog extends ScopedElementsMixin$2(i$Z) {
     }
 }
 VirtualIedCreateDialog.scopedElements = {
-    'oscd-dialog': OscdDialog$2,
+    'oscd-dialog': OscdDialog$1,
     'oscd-filled-textfield': OscdFilledTextField,
-    'oscd-outlined-button': OscdOutlinedButton$2,
-    'oscd-filled-button': OscdFilledButton$2,
+    'oscd-outlined-button': OscdOutlinedButton$1,
+    'oscd-filled-button': OscdFilledButton$1,
 };
 VirtualIedCreateDialog.styles = i$10 `
     .dialog-content {
@@ -210683,7 +211467,7 @@ class OscdEditorIED extends ScopedElementsMixin$2(i$Z) {
         const ieds = this.doc
             ? Array.from(this.doc.querySelectorAll(':root > IED')).sort((a, b) => compareNames$1(a, b))
             : [];
-        ieds.forEach(ied => {
+        ieds.forEach((ied) => {
             this.iedMap[ied.getAttribute('name') || ''] = ied;
         });
         return ieds;
@@ -210694,7 +211478,7 @@ class OscdEditorIED extends ScopedElementsMixin$2(i$Z) {
         if (currentIed) {
             return Array.from(currentIed.querySelectorAll('LN0, LN'))
                 .filter(element => element.hasAttribute('lnClass'))
-                .filter(element => {
+                .filter((element) => {
                 const lnClass = element.getAttribute('lnClass') ?? '';
                 if (uniqueLNClassList.includes(lnClass)) {
                     return false;
@@ -210908,24 +211692,26 @@ class OscdEditorIED extends ScopedElementsMixin$2(i$Z) {
     }
 }
 OscdEditorIED.scopedElements = {
-    'oscd-outlined-button': OscdOutlinedButton$2,
+    'oscd-outlined-button': OscdOutlinedButton$1,
     'oscd-filter-button': OscdFilterButton,
     'oscd-list-item': OscdListItem$1,
     'oscd-scl-icon': OscdSclIcon,
-    'oscd-icon': OscdIcon$4,
+    'oscd-icon': OscdIcon$1,
     'element-path': ElementPath,
     'ied-container': IedContainer,
     'oscd-scl-dialogs': OscdSclDialogs$1,
     'virtual-ied-create-dialog': VirtualIedCreateDialog,
     'confirm-delete-dialog': ConfirmDeleteDialog,
 };
-OscdEditorIED.styles = i$10 `
-    * {
+OscdEditorIED.styles = [
+    oscdMd3Mappings,
+    i$10 `
+    :host {
       /* patch theme colors defined in shell until we can correct them */
       --md-icon-button-disabled-icon-color: var(--oscd-base00);
-    }
-    :host {
+
       position: relative;
+      --oscd-action-pane-contrasted-container-color: var(--oscd-base2);
     }
 
     .header,
@@ -210956,11 +211742,8 @@ OscdEditorIED.styles = i$10 `
       padding-right: 12px;
       min-width: 0;
     }
-
-    oscd-action-pane {
-      --oscd-action-pane-theme-on-primary: var(--oscd-base2);
-    }
-  `;
+  `
+];
 __decorate$2([
     n$1k({ type: Object })
 ], OscdEditorIED.prototype, "doc", void 0);
@@ -258148,11 +258931,6 @@ window.customElements.define = (name, cl, conf) => {
 };
 
 const oscdShell = document.querySelector("oscd-shell");
-try {
-  loadPlugins(oscdShell);
-} catch (err) {
-  console.error("Error loading plugins:", err);
-}
 
 const params = new URL(document.location).searchParams;
 for (const [name, value] of params) {
@@ -258200,4 +258978,13 @@ if (isElectron) {
     },
     { passive: false },
   );
+}
+
+try {
+  await loadPlugins(oscdShell);
+  if (isElectron) {
+    window.electronAPI.ready();
+  }
+} catch (err) {
+  console.error("Error loading plugins:", err);
 }
