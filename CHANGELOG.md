@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.3...oscd-academy-v0.0.4) (2026-10-13)
+
+
+### Features
+
+* Update icons (blue background) and app title (consistency) ([f889de8](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/f889de88f5b8d241ab27e0165fcacba76120c869))
+
 ## [0.0.3](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.2...oscd-academy-v0.0.3) (2026-10-12)
 
 
