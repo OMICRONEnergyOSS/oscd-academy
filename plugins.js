@@ -3,6 +3,7 @@ import OscdMenuOpen from "@omicronenergy/oscd-menu-commons/oscd-menu-open.js";
 import OscdMenuSave from "@omicronenergy/oscd-menu-commons/oscd-menu-save.js";
 import OscdMenuUndo from "@omicronenergy/oscd-menu-commons/oscd-menu-undo.js";
 import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
+import OscdMenuRemoveIEDs from "@openpowershift/oscd-menu-remove-ieds";
 import OscdMenuValidate from "@omicronenergy/oscd-menu-validate";
 
 // import OscdEditorSld from "@omicronenergy/oscd-editor-sld";
@@ -58,6 +59,7 @@ export const loadPlugins = async (oscdShell) => {
   registry.define("oscd-menu-new", OscdMenuNew);
   registry.define("oscd-menu-undo", OscdMenuUndo);
   registry.define("oscd-menu-redo", OscdMenuRedo);
+  registry.define("oscd-menu-remove-ieds", OscdMenuRemoveIEDs);
   registry.define("oscd-menu-validate", OscdMenuValidate);
   registry.define("oscd-background-editv1", OscdBackgroundEditV1);
   registry.define("oscd-background-wizard-events", OscdBackgroundWizardEvents);
@@ -150,7 +152,7 @@ export const loadPlugins = async (oscdShell) => {
             translations: { de: "Remove IEDs" },
             icon: "delete",
             requireDoc: true,
-            src: "plugins/oscd-remove-ieds/oscd-remove-ieds.js",
+            tagName: "oscd-menu-remove-ieds",
           },
         ],
       },

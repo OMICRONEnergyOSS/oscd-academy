@@ -10,10 +10,6 @@
 	path = plugins/process-icd-creator
 	url = https://github.com/JakobVogelsang/process-icd-creator.git
 	branch = gh-pages
-[submodule "plugins/oscd-remove-ieds"]
-	path = plugins/oscd-remove-ieds
-	url = https://github.com/danyill/oscd-remove-ieds.git
-	branch = gh-pages
 [submodule "plugins/oscd-subscriber-later-binding"]
 	path = plugins/oscd-subscriber-later-binding
 	url = https://github.com/danyill/oscd-subscriber-later-binding.git
