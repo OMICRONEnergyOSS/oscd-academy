@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.5](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.4...oscd-academy-v0.0.5) (2026-10-22)
+
+
+### Features
+
+* switch to new oscd-menu-remove-ieds ([e455914](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/e455914381ffe54030ec9a591a2572888e36018d))
+
 ## [0.0.4](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.3...oscd-academy-v0.0.4) (2026-10-13)
 
 
