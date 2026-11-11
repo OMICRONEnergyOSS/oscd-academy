@@ -109,6 +109,10 @@
   --mdc-theme-text-disabled-on-light: rgba(255, 255, 255, 0.38);
 }
 
+oscd-shell {
+  --md-sys-color-on-surface-variant: var(--oscd-theme-base00);
+}
+
 abbr {
   text-decoration: none;
   border-bottom: none;

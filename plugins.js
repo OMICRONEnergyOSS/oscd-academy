@@ -1,6 +1,8 @@
 import OscdMenuNew from "@omicronenergy/oscd-menu-commons/oscd-menu-new.js";
 import OscdMenuOpen from "@omicronenergy/oscd-menu-commons/oscd-menu-open.js";
 import OscdMenuSave from "@omicronenergy/oscd-menu-commons/oscd-menu-save.js";
+import OscdMenuFileClose from "@omicronenergy/oscd-menu-commons/oscd-menu-file-close.js";
+import OscdMenuFileRename from "@omicronenergy/oscd-menu-commons/oscd-menu-file-rename.js";
 import OscdMenuUndo from "@omicronenergy/oscd-menu-commons/oscd-menu-undo.js";
 import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
 import OscdMenuRemoveIEDs from "@openpowershift/oscd-menu-remove-ieds";
@@ -56,6 +58,8 @@ export const loadPlugins = async (oscdShell) => {
   const registry = oscdShell.registry;
   registry.define("oscd-menu-open", OscdMenuOpen);
   registry.define("oscd-menu-save", OscdMenuSave);
+  registry.define("oscd-menu-file-close", OscdMenuFileClose);
+  registry.define("oscd-menu-file-rename", OscdMenuFileRename);
   registry.define("oscd-menu-new", OscdMenuNew);
   registry.define("oscd-menu-undo", OscdMenuUndo);
   registry.define("oscd-menu-redo", OscdMenuRedo);
@@ -107,6 +111,20 @@ export const loadPlugins = async (oscdShell) => {
             icon: "save",
             requireDoc: true,
             tagName: "oscd-menu-save",
+          },
+          {
+            name: "Rename File",
+            translations: { de: "Datei umbenennen" },
+            icon: "edit",
+            requireDoc: true,
+            tagName: "oscd-menu-file-rename",
+          },
+          {
+            name: "Close File",
+            translations: { de: "Datei schließen" },
+            icon: "close",
+            requireDoc: true,
+            tagName: "oscd-menu-file-close",
           },
         ],
       },
