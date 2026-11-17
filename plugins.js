@@ -5,6 +5,7 @@ import OscdMenuFileClose from "@omicronenergy/oscd-menu-commons/oscd-menu-file-c
 import OscdMenuFileRename from "@omicronenergy/oscd-menu-commons/oscd-menu-file-rename.js";
 import OscdMenuUndo from "@omicronenergy/oscd-menu-commons/oscd-menu-undo.js";
 import OscdMenuRedo from "@omicronenergy/oscd-menu-commons/oscd-menu-redo.js";
+import OscdMenuImportIed from "@omicronenergy/oscd-menu-import-ied";
 import OscdMenuRemoveIEDs from "@openpowershift/oscd-menu-remove-ieds";
 import OscdMenuValidate from "@omicronenergy/oscd-menu-validate";
 
@@ -63,6 +64,7 @@ export const loadPlugins = async (oscdShell) => {
   registry.define("oscd-menu-new", OscdMenuNew);
   registry.define("oscd-menu-undo", OscdMenuUndo);
   registry.define("oscd-menu-redo", OscdMenuRedo);
+  registry.define("oscd-menu-import-ied", OscdMenuImportIed);
   registry.define("oscd-menu-remove-ieds", OscdMenuRemoveIEDs);
   registry.define("oscd-menu-validate", OscdMenuValidate);
   registry.define("oscd-background-editv1", OscdBackgroundEditV1);
@@ -147,7 +149,7 @@ export const loadPlugins = async (oscdShell) => {
             translations: { de: "Import IEDs" },
             requireDoc: true,
             icon: "snippet_folder",
-            src: "plugins/scl-import-ied/scl-import-ied.js",
+            tagName: "oscd-menu-import-ied",
           },
           {
             name: "Rename IEDs",

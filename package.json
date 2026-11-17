@@ -119,6 +119,7 @@
     "@omicronenergy/oscd-editor-subscriber-msgbinding": "^0.0.4",
     "@omicronenergy/oscd-editor-template": "^0.0.1",
     "@omicronenergy/oscd-menu-commons": "^0.0.3",
+    "@omicronenergy/oscd-menu-import-ied": "^0.0.1",
     "@omicronenergy/oscd-menu-validate": "^0.0.2",
     "@omicronenergy/oscd-shell": "^0.0.18",
     "@open-wc/scoped-elements": "^3.0.6",
