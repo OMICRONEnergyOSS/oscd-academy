@@ -5,7 +5,7 @@ import { importMetaAssets } from "@web/rollup-plugin-import-meta-assets";
 import copy from "rollup-plugin-copy";
 import { generateSW } from "rollup-plugin-workbox";
 import path from "path";
-const outputDir = "bundle";
+const outputDir = "dist";
 
 export default [
   {
@@ -14,7 +14,7 @@ export default [
       html({
         minify: true,
         // injectServiceWorker: true,
-        // serviceWorkerPath: "bundle/sw.js",
+        // serviceWorkerPath: "dist/sw.js",
       }),
       /** Resolve bare module imports */
       nodeResolve(),

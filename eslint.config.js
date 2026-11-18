@@ -24,7 +24,7 @@ export default [
     "plugin:@typescript-eslint/recommended",
   ),
   {
-    ignores: ["dist/", "node_modules", "coverage", "doc"],
+    ignores: ["dist/", "dist-electron/", "node_modules", "coverage", "doc"],
   },
 
   {

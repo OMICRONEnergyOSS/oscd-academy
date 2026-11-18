@@ -16,9 +16,11 @@ Plugin configuration lives in `plugins.js`. For an imported plugin, add its impo
 
 ## Releases
 
-The release workflow uses [Release Please](https://github.com/googleapis/release-please). Conventional Commits are used to prepare release pull requests; when one is merged, the workflow publishes the browser build to GitHub Pages and builds desktop installers on native Linux and Windows runners.
+The release workflow uses [Release Please](https://github.com/googleapis/release-please). Conventional Commits are used to prepare release pull requests; when one is merged, the workflow builds desktop installers on native Linux and Windows runners.
 
-Browser deployment uses `npm run deploy` to publish `bundle/` to the `gh-pages` branch. Configure GitHub Pages to **Deploy from a branch**, selecting **gh-pages** and **/(root)**. The workflow requires a `GH_TOKEN` secret with repository contents-write access; unlike `GITHUB_TOKEN`, its pushes can trigger the branch-based Pages build.
+The Continuous Deployment workflow uses the shared workflow to run `npm run bundle` and publish `dist/` to the `deploy` branch on every push to `main`. Configure GitHub Pages to **Deploy from a branch**, selecting **deploy** and **/(root)**. For manual deployment, `npm run deploy` publishes the same output to the same branch.
+
+The web bundle in `dist/` is also packaged into the desktop app. Electron build commands write unpacked apps and installers to `dist-electron/`, keeping desktop output separate from the web bundle.
 
 Desktop targets are Linux AppImage, `.deb`, and `.rpm` packages, plus Windows NSIS and `.msi` installers and a portable `.exe`. Both packaged apps must pass startup and local-file-opening smoke tests before any installers are uploaded to the [release assets](https://github.com/OMICRONEnergyOSS/oscd-academy/releases). Code signing is not provided.
 

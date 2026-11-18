@@ -7,6 +7,7 @@ node_modules
 
 ## build artifacts
 /dist
+/dist-electron
 /bundle
 coverage
 doc

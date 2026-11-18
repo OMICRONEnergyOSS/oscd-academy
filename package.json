@@ -26,14 +26,14 @@
     "preinstall": "git submodule update --init --recursive",
     "lint": "eslint .",
     "format": "eslint . --fix",
-    "bundle": "rimraf bundle && rollup -c rollup.config.js",
-    "deploy": "npm run bundle && gh-pages -d bundle --nojekyll",
+    "bundle": "rimraf dist && rollup -c rollup.config.js",
+    "deploy": "npm run bundle && gh-pages -d dist -b deploy --nojekyll",
     "start": "wds --node-resolve",
-    "start:bundle": "concurrently -k -r \"npm run bundle -- --watch\" \"sleep 10 && wds --watch --root-dir ./bundle\"",
-    "electron:pack": "rimraf dist && electron-builder build  --win --linux --x64 --dir",
-    "electron:build": "rimraf dist && electron-builder build  --win --linux --x64",
-    "electron:build:linux": "rimraf dist && electron-builder build --linux --x64 --publish never",
-    "electron:build:windows": "rimraf dist && electron-builder build --win --x64 --publish never",
+    "start:bundle": "concurrently -k -r \"npm run bundle -- --watch\" \"sleep 10 && wds --watch --root-dir ./dist\"",
+    "electron:pack": "rimraf dist-electron && electron-builder build  --win --linux --x64 --dir",
+    "electron:build": "rimraf dist-electron && electron-builder build  --win --linux --x64",
+    "electron:build:linux": "rimraf dist-electron && electron-builder build --linux --x64 --publish never",
+    "electron:build:windows": "rimraf dist-electron && electron-builder build --win --x64 --publish never",
     "electron:smoke": "node test/electron.smoke.spec.js",
     "electron": "electron ."
   },
@@ -42,13 +42,16 @@
     "appId": "openscd-academy",
     "artifactName": "${name}_${os}_${arch}_${version}.${ext}",
     "extends": "electron-builder.cjs",
+    "directories": {
+      "output": "dist-electron"
+    },
     "files": [
       "main.js",
       "preload.js",
-      "bundle/**/*",
+      "dist/**/*",
       "build/icons/png/icon.png",
-      "!bundle/**/.git",
-      "!bundle/**/.git/**/*"
+      "!dist/**/.git",
+      "!dist/**/.git/**/*"
     ],
     "linux": {
       "maintainer": "OMICRONEnergyOSS",
