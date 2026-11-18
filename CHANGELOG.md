@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.5](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.4...oscd-academy-v0.0.5) (2026-11-18)
+
+
+### Features
+
+* switch to new oscd-menu-remove-ieds ([e455914](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/e455914381ffe54030ec9a591a2572888e36018d))
+* switch to oscd-menu-import-ied (drop deleted scl-import-ied) ([4ac6742](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/4ac67429b9a2e90d45a4bd98c46a7642c14f6c50))
+
+
+### Bug Fixes
+
+* dialogs must not appear grayed out ([c01e6ff](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/c01e6ff167abfecfd9ce74d0a16e4cf05fcc9ac8))
+* updated temp SLD Designer with improved tooltips ([ae2b270](https://github.com/OMICRONEnergyOSS/oscd-academy/commit/ae2b2704734961423f36fa296798e4e36a66c052))
+
 ## [0.0.4](https://github.com/OMICRONEnergyOSS/oscd-academy/compare/oscd-academy-v0.0.3...oscd-academy-v0.0.4) (2026-10-13)
 
 
