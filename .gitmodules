@@ -1,3 +1,7 @@
+[submodule "plugins/scl-import-ied"]
+	path = plugins/scl-import-ied
+	url = https://github.com/openenergytools/scl-import-ied
+	branch = gh-pages
 [submodule "plugins/oscd-template-generator"]
 	path = plugins/oscd-template-generator
 	url = https://github.com/com-pas/oscd-template-generator.git
