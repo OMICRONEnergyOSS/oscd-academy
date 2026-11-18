@@ -1,0 +1,27 @@
+name: 'Setup Node Environment'
+description: 'Setup Node, cache and clean install'
+
+inputs:
+  registry-url:
+    description: 'the url for the registry (github or npm)'
+    required: false
+    default: 'https://registry.npmjs.org'
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        registry-url: ${{ inputs.registry-url }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      # Plugin install scripts must not update the distribution's pinned submodules.
+      run: npm ci --ignore-scripts
+      shell: bash
+
+    - name: Install Electron binary
+      run: npm rebuild electron
+      shell: bash

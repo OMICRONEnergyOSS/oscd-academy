@@ -1,0 +1,19 @@
+node_modules
+*.tsbuildinfo
+
+## editors
+/.idea
+/.vscode
+
+## build artifacts
+/dist
+/dist-electron
+/bundle
+coverage
+doc
+screenshots/*/failed/
+locales.ts
+locales
+custom-elements.json
+
+temp
