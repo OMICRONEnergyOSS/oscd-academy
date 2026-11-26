@@ -67,6 +67,7 @@ export default [
         ],
         verbose: true,
         flatten: false,
+        filter: (source) => path.basename(source) !== ".git",
       }),
 
       /** Create and inject a service worker */

@@ -6,10 +6,53 @@ on:
     branches:
       - main
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     permissions:
-      contents: write
-    uses: OMICRONEnergyOSS/oscd-gh-workflows/.github/workflows/continuous-deployment.yml@main
-    secrets:
-      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: OMICRONEnergyOSS/oscd-gh-workflows/.github/actions/setup-node-env@main
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v6
+
+      - name: Build
+        run: npm run bundle
+
+      - name: Verify deployment files
+        shell: bash
+        run: |
+          plugin=plugins/oscd-editor-sld-temp/oscd-editor-sld.js
+          sha256sum "$plugin" "dist/$plugin"
+          if ! cmp -s "$plugin" "dist/$plugin"; then
+            echo "::error::Built SLD plugin differs from the checked-out submodule"
+            exit 1
+          fi
+          if [ -n "$(find dist -name .git -print -quit)" ]; then
+            echo "::error::Deployment files contain Git metadata"
+            exit 1
+          fi
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
